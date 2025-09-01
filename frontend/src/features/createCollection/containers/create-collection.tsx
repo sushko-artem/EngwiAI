@@ -1,9 +1,11 @@
 import { memo, useCallback, useRef, useState } from "react";
 import { NewCard } from "../ui/new-card";
 import { nanoid } from "nanoid";
-import { Header } from "../ui/header";
 import { useNavigate } from "react-router-dom";
 import { ModalConfirm } from "@shared/ui/modal-confirm";
+import { Header } from "@shared/ui/header";
+import backArrow from "@assets/images/arrow-left.svg";
+import save from "@assets/images/check.png";
 
 export type CollectionStateType = {
   id: string;
@@ -89,7 +91,13 @@ export const CreateCollection = memo(() => {
       {isModalOpen && (
         <ModalConfirm modalText={MODAL_TEXT} confirmAction={confirmAction} />
       )}
-      <Header save={saveCollection} back={back} />
+      <Header
+        rightIconAction={saveCollection}
+        leftIconAction={back}
+        leftIcon={backArrow}
+        rightIcon={save}
+        title="Создать коллекцию"
+      />
       <div className="m-auto text-center grid gap-0.5 max-w-[500px] w-[70%] sm:w-[60%] md:w-[50%]">
         <div className="flex flex-col align-middle justify-center text-center my-4">
           <span className="font-comic text-fuchsia-800 text-xl md:text-2xl">

@@ -4,6 +4,7 @@ import { AnimationPage } from "pages/StartAnimation";
 import { SignInPage } from "pages/SignIn";
 import { SignUpPage } from "pages/SignUp";
 import { CreateCollectionPage } from "pages/CreateCollection";
+import { FlashCardsPage } from "pages/FlashCards";
 
 const routes = [
   {
@@ -21,6 +22,10 @@ const routes = [
   {
     path: "/create-collection",
     element: <CreateCollectionPage />,
+  },
+  {
+    path: "/flash-cards",
+    element: <FlashCardsPage />,
   },
   {
     path: "*",
