@@ -4,10 +4,11 @@ import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import cross from "@assets/images/cross.webp";
 import confirm from "@assets/images/confirm.png";
-import { Card } from "../ui/card";
+import { FlashCard } from "../ui/flashCard";
 import { Progress } from "@shared/ui/progress";
 import { ModalFlash } from "../ui/modal-flash";
 import { useNavigate } from "react-router-dom";
+import { MenuOptions } from "../ui/option-menu";
 
 type Card = {
   term: string;
@@ -29,9 +30,11 @@ const collection = [
 export const FlashCardsContainer = () => {
   const [cards] = useState<Card[]>(collection);
   const [unmemTerms, setUnmemTerms] = useState<Card[]>([]);
+  const [isReversed, setIsReversed] = useState(false);
   const [index, setIndex] = useState(0);
   const [key, setKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const naigate = useNavigate();
   const progress = ((index + 1) / cards.length) * 100;
   const currentCard = cards[index];
@@ -40,7 +43,13 @@ export const FlashCardsContainer = () => {
     naigate("/collections");
   };
 
-  const options = () => {};
+  const options = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const handleClick = (status: boolean) => {
     if (!status) {
@@ -54,6 +63,10 @@ export const FlashCardsContainer = () => {
     setIndex((state) => state + 1);
   };
 
+  const handleSwitchChange = () => {
+    setIsReversed((state) => !state);
+  };
+
   return (
     <>
       {isModalOpen && (
@@ -62,6 +75,14 @@ export const FlashCardsContainer = () => {
           moduleLength={cards.length}
           unknownTerms={unmemTerms.length}
           back={back}
+        />
+      )}
+      {isMenuOpen && (
+        <MenuOptions
+          onSwitchChange={handleSwitchChange}
+          isMenuOpen={isMenuOpen}
+          onClose={closeMenu}
+          isReversed={isReversed}
         />
       )}
       <Header
@@ -75,7 +96,7 @@ export const FlashCardsContainer = () => {
         Collection
       </h1>
       <div className="flex flex-col align-middle justify-center mt-10">
-        <Card key={key} card={currentCard} />
+        <FlashCard key={key} card={currentCard} isReversed={isReversed} />
       </div>
       <div className="mt-3 m-auto max-w-[350px] md:max-w-[500px] text-center text-sm font-comic">
         <Progress className="bg-transparent" value={progress} />

@@ -2,13 +2,14 @@ import { memo, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 
 type CardPropsType = {
+  isReversed: boolean;
   card: {
     term: string;
     translation: string;
   };
 };
 
-export const Card = memo(({ card }: CardPropsType) => {
+export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
   const [flipped, setFlipped] = useState(false);
   const { transform, opacity } = useSpring({
     opacity: flipped ? 1 : 0,
@@ -29,7 +30,7 @@ export const Card = memo(({ card }: CardPropsType) => {
             transform,
           }}
         >
-          {card.term}
+          {isReversed ? card.translation : card.term}
         </animated.div>
         <animated.div
           className="card-container font-roboto text-lg md:text-2xl"
@@ -39,7 +40,7 @@ export const Card = memo(({ card }: CardPropsType) => {
             rotateX: "180deg",
           }}
         >
-          {card.translation}
+          {isReversed ? card.term : card.translation}
         </animated.div>
       </div>
     </div>
