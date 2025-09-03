@@ -28,6 +28,14 @@ const routes = [
     element: <FlashCardsPage />,
   },
   {
+    path: "/collections",
+    element: <div>COLLECTIONS</div>,
+  },
+  {
+    path: "/dashboard",
+    element: <div>DASHBOARD</div>,
+  },
+  {
     path: "*",
     element: <div>"Not Found"</div>,
   },
