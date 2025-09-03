@@ -38,8 +38,8 @@ export const CreateCollection = memo(() => {
   );
 
   const saveCollection = useCallback(() => {
-    console.log(collection);
-  }, [collection]);
+    console.log(collection, collectionName);
+  }, [collection, collectionName]);
 
   const back = useCallback(() => {
     if (
