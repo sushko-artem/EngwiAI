@@ -16,7 +16,7 @@ export const SignInForm = () => {
     validationSchema: AuthSchema,
     onSubmit: (data: AuthSchema) => console.log(data),
   });
-  console.log("render SignInForm");
+
   return (
     <>
       <AuthFormLayout
@@ -38,7 +38,7 @@ export const SignInForm = () => {
               <div className="text-red-500 text-xs">{formik.errors.email}</div>
             ) : null}
             <InputField
-              type="text"
+              type="password"
               name="password"
               id="password"
               label="Пароль"

@@ -28,10 +28,17 @@ export class AuthService {
     if (user) {
       throw new ConflictException('Пользователь с таким email уже существует');
     }
-    return await this.userService.save(dto).catch((err) => {
-      this.logger.error(err);
-      throw new InternalServerErrorException('Невозможно создать пользователя.');
-    });
+    return await this.userService
+      .save(dto)
+      .then((user) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        throw new InternalServerErrorException('Невозможно создать пользователя.');
+      });
   }
 
   async login(dto: LoginUserDto, userAgent: string) {

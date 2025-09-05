@@ -6,8 +6,12 @@ import { GoogleAuth } from "../ui/google-auth-button";
 import { InputField } from "../ui/input-field";
 import { AuthLink } from "../ui/link";
 import { useFormik } from "formik";
+import { useAuth } from "@shared/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export const SignUpForm = () => {
+  const navigate = useNavigate();
+  const { register } = useAuth();
   const formik = useFormik<RegisterSchema>({
     initialValues: {
       name: "",
@@ -16,7 +20,21 @@ export const SignUpForm = () => {
       confirmPassword: "",
     },
     validationSchema: RegisterSchema,
-    onSubmit: (data: RegisterSchema) => console.log(data),
+    onSubmit: async (data: RegisterSchema) => {
+      const user = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      };
+      const res = await register(user);
+      if (res.success) {
+        navigate("/sign-in");
+      } else if (res.cause === 409) {
+        formik.setErrors({ email: res.error });
+      } else {
+        formik.setStatus({ backendError: res.error });
+      }
+    },
   });
   return (
     <>
@@ -51,7 +69,7 @@ export const SignUpForm = () => {
               <div className="text-red-500 text-xs">{formik.errors.email}</div>
             ) : null}
             <InputField
-              type="text"
+              type="password"
               name="password"
               id="password"
               label="Пароль"
@@ -66,7 +84,7 @@ export const SignUpForm = () => {
               </div>
             ) : null}
             <InputField
-              type="text"
+              type="password"
               name="confirmPassword"
               id="confirmPassword"
               label="Подтвердите пароль"
@@ -80,6 +98,11 @@ export const SignUpForm = () => {
                 {formik.errors.confirmPassword}
               </div>
             ) : null}
+            {formik.status?.backendError && (
+              <div className="text-white text-md mt-4 p-2 bg-red-400 rounded">
+                Ошибка! {formik.status.backendError}
+              </div>
+            )}
             <Button
               className="hover:cursor-pointer mt-6"
               type="submit"
