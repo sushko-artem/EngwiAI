@@ -3,6 +3,7 @@ import { COLLECTION_ENDPOINTS } from "@shared/api/endpoints/collection";
 import type {
   ICollectionDto,
   ICollectionResponse,
+  ICollectionCardsResponse,
 } from "@shared/api/types/collection";
 
 export const collectionsService = {
@@ -10,4 +11,6 @@ export const collectionsService = {
     apiClient.post(COLLECTION_ENDPOINTS.CREATE, dto),
   getList: (): Promise<ICollectionResponse[]> =>
     apiClient.get(COLLECTION_ENDPOINTS.LIST),
+  getOne: (id: string): Promise<ICollectionCardsResponse> =>
+    apiClient.get(`${COLLECTION_ENDPOINTS.GET_ONE}${id}`),
 };

@@ -106,7 +106,6 @@ export const CreateCollection = memo(() => {
     }, 50);
   };
 
-  // Нужно нормально обработать ограничение отправки карточек с пустыми полями!
   const confirmAction = (value: boolean) => {
     if (!isEmptyFields && value) {
       navigate("/dashboard");

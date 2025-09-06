@@ -31,7 +31,7 @@ const routes = [
     ),
   },
   {
-    path: "/flash-cards",
+    path: "/flash-cards/:collectionId",
     element: (
       <ProtectedRoute>
         <FlashCardsPage />

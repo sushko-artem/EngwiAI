@@ -11,9 +11,6 @@ export interface ICollectionDto {
 export interface ICollectionCardsResponse {
   id: string;
   name: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
   cards: ICard[];
 }
 

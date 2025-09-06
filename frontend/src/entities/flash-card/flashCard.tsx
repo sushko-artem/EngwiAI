@@ -4,7 +4,7 @@ import { useSpring, animated } from "@react-spring/web";
 type CardPropsType = {
   isReversed: boolean;
   card: {
-    term: string;
+    word: string;
     translation: string;
   };
 };
@@ -30,7 +30,7 @@ export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
             transform,
           }}
         >
-          {isReversed ? card.translation : card.term}
+          {isReversed ? card.translation : card.word}
         </animated.div>
         <animated.div
           className="card-container font-roboto text-lg md:text-2xl"
@@ -40,7 +40,7 @@ export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
             rotateX: "180deg",
           }}
         >
-          {isReversed ? card.term : card.translation}
+          {isReversed ? card.word : card.translation}
         </animated.div>
       </div>
     </div>
