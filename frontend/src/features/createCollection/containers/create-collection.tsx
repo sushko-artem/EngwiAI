@@ -1,5 +1,5 @@
 import { memo, useCallback, useRef, useState } from "react";
-import { NewCard } from "../ui/new-card";
+import { NewCard } from "@entities/new-card/new-card";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 import { ModalConfirm } from "@shared/ui/modal-confirm";
@@ -92,6 +92,8 @@ export const CreateCollection = memo(() => {
         <ModalConfirm modalText={MODAL_TEXT} confirmAction={confirmAction} />
       )}
       <Header
+        leftIconTitle="вернуться на главную"
+        rightIconTitle="сохранить"
         rightIconAction={saveCollection}
         leftIconAction={back}
         leftIcon={backArrow}

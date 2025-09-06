@@ -19,14 +19,37 @@ import ms from 'ms';
 import { Itokens } from './interfaces';
 import { GoogleGuard } from './guards/google.guard';
 import { User } from '@prisma/client';
+import { TokensService } from 'src/tokens/tokens.service';
+import { UserService } from '@user/user.service';
 
 @Public()
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly tokensService: TokensService,
+    private readonly userService: UserService,
     private readonly configService: ConfigService,
   ) {}
+
+  @Get('me')
+  async getMe(@Cookie('refreshToken') refreshToken: string) {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+    try {
+      const payload = await this.tokensService.verifyRefreshToken(refreshToken);
+      const user = await this.userService.findOne(payload.id);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    } catch (error) {
+      throw new UnauthorizedException(error);
+    }
+  }
 
   @Post('register')
   @HttpCode(201)
@@ -35,7 +58,11 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() dto: LoginUserDto, @Res() response: Response, @UserAgent() userAgent: string) {
+  async login(
+    @Body() dto: LoginUserDto,
+    @Res({ passthrough: true }) response: Response,
+    @UserAgent() userAgent: string,
+  ) {
     const tokens = await this.authService.login(dto, userAgent);
     this.saveTokensToCookies(tokens, response);
     return { message: 'Login successful' };

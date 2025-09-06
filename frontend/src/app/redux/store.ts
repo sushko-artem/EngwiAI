@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import animationReducer from "@redux/slices/animation.slice";
+import authReducer from "@redux/slices/auth.slice";
 
 export const store = configureStore({
   reducer: {
-    animation: animationReducer,
+    auth: authReducer,
   },
 });
 

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSpring, animated } from "@react-spring/web";
-import logo from "@assets/images/logo_project.png";
+import logo from "@assets/images/logo_project.webp";
 import { useEffect, useState } from "react";
 
 export const StartAnimation = () => {
@@ -11,7 +11,7 @@ export const StartAnimation = () => {
 
   useEffect(() => {
     if (isAnimated) {
-      navigate("/sign-up");
+      navigate("/dashboard");
     }
   }, [isAnimated, navigate]);
 
@@ -46,7 +46,7 @@ export const StartAnimation = () => {
     onRest: () => {
       setIsAnimated(true);
       sessionStorage.setItem("isAnimationCompleted", "true");
-      navigate("/sign-up");
+      navigate("/dashboard");
     },
   });
 

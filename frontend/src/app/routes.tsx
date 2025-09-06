@@ -5,6 +5,8 @@ import { SignInPage } from "pages/SignIn";
 import { SignUpPage } from "pages/SignUp";
 import { CreateCollectionPage } from "pages/CreateCollection";
 import { FlashCardsPage } from "pages/FlashCards";
+import { DashboardPage } from "pages/Dashboard";
+import { CollectionList } from "@features/collectionList";
 
 const routes = [
   {
@@ -29,15 +31,15 @@ const routes = [
   },
   {
     path: "/collections",
-    element: <div>COLLECTIONS</div>,
+    element: <CollectionList />,
   },
   {
     path: "/dashboard",
-    element: <div>DASHBOARD</div>,
+    element: <DashboardPage />,
   },
   {
     path: "*",
-    element: <div>"Not Found"</div>,
+    element: <div>"Error 404! Страница не найдена!"</div>,
   },
 ];
 

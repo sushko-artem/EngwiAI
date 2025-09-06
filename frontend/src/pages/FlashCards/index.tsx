@@ -1,3 +1,3 @@
-import { FlashCardsContainer } from "@features/flashCards";
+import { FlashCardsContainer } from "@features/flashCardsCollection";
 
 export const FlashCardsPage = () => <FlashCardsContainer />;

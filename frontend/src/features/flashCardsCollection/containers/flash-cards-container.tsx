@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Header } from "@shared/ui/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import cross from "@assets/images/cross.webp";
 import confirm from "@assets/images/confirm.png";
-import { FlashCard } from "../ui/flashCard";
+import { FlashCard } from "@entities/flash-card/flashCard";
 import { Progress } from "@shared/ui/progress";
 import { ModalFlash } from "../ui/modal-flash";
 import { useNavigate } from "react-router-dom";
@@ -35,17 +35,17 @@ export const FlashCardsContainer = () => {
   const [key, setKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const naigate = useNavigate();
+  const navigate = useNavigate();
   const progress = ((index + 1) / cards.length) * 100;
   const currentCard = cards[index];
 
-  const back = () => {
-    naigate("/collections");
-  };
+  const back = useCallback(() => {
+    navigate("/collections");
+  }, [navigate]);
 
-  const options = () => {
+  const options = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
-  };
+  }, []);
 
   const closeMenu = () => {
     setIsMenuOpen(false);
@@ -86,6 +86,8 @@ export const FlashCardsContainer = () => {
         />
       )}
       <Header
+        leftIconTitle="вернуться к списку коллекций"
+        rightIconTitle="настройки"
         rightIconAction={options}
         leftIconAction={back}
         leftIcon={backArrow}

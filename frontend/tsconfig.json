@@ -28,6 +28,7 @@
       "@features/*": ["features/*"],
       "@shared/*": ["shared/*"],
       "@assets/*": ["assets/*"],
+      "@entities/*": ["entities/*"],
       "@redux/*": ["app/redux/*"]
     }
   },
