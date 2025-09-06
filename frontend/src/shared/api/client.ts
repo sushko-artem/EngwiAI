@@ -33,8 +33,7 @@ class ApiClient {
       try {
         await this.handleRefreshToken();
         return this.request<T>(endpoint, options, false);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (refreshError) {
+      } catch {
         throw new Error("Session expired", { cause: 401 });
       }
     }
@@ -45,7 +44,7 @@ class ApiClient {
         const errorResponse = await response.json();
         errorMessage = errorResponse.message || response.statusText;
       } catch {
-        errorMessage = (await response.text()) || response.statusText;
+        errorMessage = response.statusText;
       }
       throw new Error(errorMessage, {
         cause: response.status,
