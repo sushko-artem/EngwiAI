@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@redux/hooks";
-import { setAuth, setUser } from "@redux/slices/auth.slice";
+import { setAuth, setUser } from "@features/auth/model/auth.slice";
 import type { ILoginUserDto, IRegisterUserDto } from "@shared/api/index";
 import { authService } from "@shared/api/services/authService";
 import { useCallback, useState } from "react";

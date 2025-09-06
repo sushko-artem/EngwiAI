@@ -6,7 +6,7 @@ import { GoogleAuth } from "../ui/google-auth-button";
 import { InputField } from "../ui/input-field";
 import { AuthLink } from "../ui/link";
 import { useFormik } from "formik";
-import { useAuth } from "@features/auth/model/hooks/useAuth";
+import { useAuth } from "@features/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@shared/ui/loader";
 
