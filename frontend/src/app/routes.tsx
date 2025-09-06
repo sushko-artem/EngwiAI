@@ -6,7 +6,8 @@ import { SignUpPage } from "pages/SignUp";
 import { CreateCollectionPage } from "pages/CreateCollection";
 import { FlashCardsPage } from "pages/FlashCards";
 import { DashboardPage } from "pages/Dashboard";
-import { CollectionList } from "@features/collectionList";
+import { CollectionPage } from "pages/Collections";
+import { ProtectedRoute } from "@shared/protected-route";
 
 const routes = [
   {
@@ -23,19 +24,35 @@ const routes = [
   },
   {
     path: "/create-collection",
-    element: <CreateCollectionPage />,
+    element: (
+      <ProtectedRoute>
+        <CreateCollectionPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/flash-cards",
-    element: <FlashCardsPage />,
+    element: (
+      <ProtectedRoute>
+        <FlashCardsPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/collections",
-    element: <CollectionList />,
+    element: (
+      <ProtectedRoute>
+        <CollectionPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/dashboard",
-    element: <DashboardPage />,
+    element: (
+      <ProtectedRoute>
+        <DashboardPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "*",

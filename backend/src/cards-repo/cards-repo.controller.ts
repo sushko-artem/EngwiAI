@@ -13,14 +13,14 @@ export class CardsRepoController {
     return this.cardsRepoService.createCollection(user.id, dto);
   }
 
-  @Get(':id')
-  async getCollection(@Param('id', ParseUUIDPipe) id: string) {
-    return this.cardsRepoService.getCollection(id);
-  }
-
   @Get('list')
   async getCollectionsList(@GetCurrentUser() user: User) {
     return this.cardsRepoService.getCollectionsList(user.id);
+  }
+
+  @Get(':id')
+  async getCollection(@Param('id', ParseUUIDPipe) id: string) {
+    return this.cardsRepoService.getCollection(id);
   }
 
   @Delete('delete/:id')

@@ -29,7 +29,7 @@ export const SignUpForm = () => {
       };
       const res = await register(user);
       if (res.success) {
-        navigate("/sign-in");
+        navigate("/sign-in", { replace: true });
       } else if (res.cause === 409) {
         formik.setErrors({ email: res.error });
       } else {

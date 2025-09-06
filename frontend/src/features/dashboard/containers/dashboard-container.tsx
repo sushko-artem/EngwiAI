@@ -4,8 +4,11 @@ import logout from "@assets/images/logout.svg";
 import logo from "@assets/images/logo.png";
 import { ActionsDashboard } from "../ui/dashboard-actions";
 import { actions } from "../model/action-button-model";
+import { useAuth } from "@features/auth/hooks";
 
 export const Dashboard = memo(() => {
+  const { logOut } = useAuth();
+
   return (
     <>
       <Header
@@ -15,7 +18,7 @@ export const Dashboard = memo(() => {
         leftIconTitle="EngwiAI"
         rightIconTitle="Выйти из приложения"
         leftIconAction={() => {}}
-        rightIconAction={() => {}}
+        rightIconAction={logOut}
       />
       <ActionsDashboard actions={actions} />
     </>

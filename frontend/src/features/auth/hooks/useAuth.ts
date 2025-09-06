@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@redux/hooks";
-import { setAuth, setUser } from "@features/auth/model/auth.slice";
+import { setUser, logout } from "@features/auth/model/auth.slice";
 import type { ILoginUserDto, IRegisterUserDto } from "@shared/api/index";
 import { authService } from "@shared/api/services/authService";
 import { useCallback, useState } from "react";
@@ -30,13 +30,14 @@ export const useAuth = () => {
     [dispatch]
   );
 
-  const login = useCallback(
+  const logIn = useCallback(
     async (dto: ILoginUserDto) => {
       setLoading(true);
       setError(null);
       try {
         await authService.login(dto);
-        dispatch(setAuth(true));
+        const user = await authService.getUser(dto.email);
+        dispatch(setUser(user));
         return { success: true };
       } catch (err) {
         const message = err instanceof Error ? err.message : "Ошибка входа";
@@ -50,5 +51,18 @@ export const useAuth = () => {
     [dispatch]
   );
 
-  return { loading, error, register, login };
+  const logOut = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await authService.logout();
+      dispatch(logout());
+    } catch (err) {
+      console.error("Ошибка при выходе:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [dispatch]);
+
+  return { loading, error, register, logIn, logOut };
 };

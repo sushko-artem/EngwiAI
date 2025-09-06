@@ -6,19 +6,34 @@ import { AuthLink } from "../ui/link";
 import { AuthSchema } from "../lib/auth-schema";
 import { Button } from "@shared/ui/button";
 import { InputField } from "../ui/input-field";
+import { useAuth } from "../hooks";
+import { useNavigate } from "react-router-dom";
+import { Loader } from "@shared/ui/loader";
 
 export const SignInForm = () => {
+  const { logIn, loading } = useAuth();
+  const navigate = useNavigate();
   const formik = useFormik<AuthSchema>({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: AuthSchema,
-    onSubmit: (data: AuthSchema) => console.log(data),
+    onSubmit: async (data: AuthSchema) => {
+      const res = await logIn(data);
+      if (res.success) {
+        navigate("/dashboard", { replace: true });
+      } else if (res.cause === 401) {
+        formik.setErrors({ email: res.error });
+      } else {
+        formik.setStatus({ backendError: res.error });
+      }
+    },
   });
 
   return (
     <>
+      {loading && <Loader />}
       <AuthFormLayout
         title="ВХОД"
         description="Введите данные, чтобы войти в приложение."
@@ -52,6 +67,11 @@ export const SignInForm = () => {
                 {formik.errors.password}
               </div>
             ) : null}
+            {formik.status?.backendError && (
+              <div className="text-white text-md mt-4 p-2 bg-red-400 rounded">
+                Ошибка! {formik.status.backendError}
+              </div>
+            )}
             <Button
               className="hover:cursor-pointer mt-6"
               type="submit"
