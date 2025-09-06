@@ -17,4 +17,9 @@ export const authService = {
     apiClient.post(AUTH_ENDPOINTS.LOGIN, dto),
   logout: (): Promise<IAuthResponse> => apiClient.get(AUTH_ENDPOINTS.LOGOUT),
   refresh: (): Promise<IAuthResponse> => apiClient.get(AUTH_ENDPOINTS.REFRESH),
+  googleAuth: (): void => {
+    window.location.href = AUTH_ENDPOINTS.GOOGLE_AUTH;
+  },
+  getGoogleAuthSuccess: (): Promise<IUser> =>
+    apiClient.get(AUTH_ENDPOINTS.GOOGLE_SUCCESS),
 };
