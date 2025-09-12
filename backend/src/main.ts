@@ -6,6 +6,10 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
+  app.enableCors({
+    origin: ['https://engwi-ai.vercel.app'],
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

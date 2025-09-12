@@ -32,6 +32,12 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Get('health')
+  @HttpCode(200)
+  health() {
+    return { status: 'OK', timestamp: new Date().toISOString() };
+  }
+
   @Get('me')
   async getMe(@Cookie('refreshToken') refreshToken: string) {
     if (!refreshToken) {
