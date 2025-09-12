@@ -119,34 +119,36 @@ export class AuthController {
   }
 
   private saveTokensToCookies(tokens: Itokens, response: Response) {
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
     response.cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV', 'development') === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: ms(this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES')),
       path: '/',
     });
     response.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV', 'development') === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: ms(this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES')),
       path: '/',
     });
   }
 
   private deleteTokensFromCookies(response: Response) {
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
     response.cookie('accessToken', '', {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV', 'development') === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
       expires: new Date(0),
     });
     response.cookie('refreshToken', '', {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV', 'development') === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
       expires: new Date(0),
     });
