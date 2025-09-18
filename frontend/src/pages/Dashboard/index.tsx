@@ -1,3 +1,3 @@
-import { Dashboard } from "@features/dashboard";
+import { Dashboard } from "@features/collections";
 
 export const DashboardPage = () => <Dashboard />;

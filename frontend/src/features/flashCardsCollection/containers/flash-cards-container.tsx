@@ -4,12 +4,12 @@ import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import cross from "@assets/images/cross.webp";
 import confirm from "@assets/images/confirm.png";
-import { FlashCard } from "@entities/flash-card/flashCard";
+import { FlashCard } from "@entities/flashCard";
 import { Progress } from "@shared/ui/progress";
 import { ModalFlash } from "../ui/modal-flash";
 import { useNavigate } from "react-router-dom";
 import { MenuOptions } from "../ui/option-menu";
-import { useCollection } from "@features/dashboard/hooks/useCollection";
+import { useCollection } from "@features/collections/hooks/useCollection";
 import { Loader } from "@shared/ui/loader";
 
 type Card = {
@@ -59,7 +59,7 @@ export const FlashCardsContainer = memo(
         return;
       }
       setKey((key) => key + 1);
-      setIndex((state) => state + 1);
+      setIndex((index) => index + 1);
     };
 
     const handleSwitchChange = () => {

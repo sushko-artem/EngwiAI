@@ -1,15 +1,17 @@
 import { Card, CardContent } from "@shared/ui/card";
 import cross from "@assets/images/cross.webp";
 import { memo } from "react";
-import type { CollectionStateType } from "@features/createCollection/containers/create-collection";
 
-type CardInfoPropType = {
+export type EditableCardType = {
+  id: string;
+  word: string;
+  translation: string;
   isDeleting?: boolean;
   deleteCard: (id: string) => void;
   setValue: (value: string, id: string, field: "word" | "translation") => void;
 };
 
-export const NewCard = memo(
+export const EditableCard = memo(
   ({
     id,
     word,
@@ -17,7 +19,7 @@ export const NewCard = memo(
     isDeleting = false,
     setValue,
     deleteCard,
-  }: CollectionStateType & CardInfoPropType) => {
+  }: EditableCardType) => {
     return (
       <div
         className={`
@@ -42,6 +44,7 @@ export const NewCard = memo(
           <CardContent className="p-2">
             <span>Термин</span>
             <input
+              name="term"
               value={word}
               onChange={(e) => setValue(e.target.value, id, "word")}
               className="border-b-1 border-b-gray-600 outline-0 text-center focus:border-b-2 font-roboto my-2 w-full"
@@ -50,6 +53,7 @@ export const NewCard = memo(
             />
             <span>Перевод</span>
             <input
+              name="translation"
               value={translation}
               onChange={(e) => setValue(e.target.value, id, "translation")}
               className="border-b-1 border-b-gray-600 outline-0 text-center focus:border-b-2 font-roboto my-2 w-full"
