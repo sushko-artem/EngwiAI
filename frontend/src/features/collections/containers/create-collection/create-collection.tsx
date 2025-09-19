@@ -19,14 +19,15 @@ export const CreateCollection = memo(() => {
   const [collectionName, setCollectionName] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
+  const [isWarning, setIsWarning] = useState(false);
   const { createCollection } = useCollections();
   const navigate = useNavigate();
 
   const saveCollection = useCallback(async () => {
-    console.log(collection);
     if (collection.length < 1) return;
     if (!collectionName.trim()) {
       setModalText("Придумайте название коллекции!");
+      setIsWarning(true);
       setModalOpen(true);
       return;
     }
@@ -37,6 +38,7 @@ export const CreateCollection = memo(() => {
 
     if (hasEmptyFields) {
       setModalText("Все поля карточек должны быть заполнены!");
+      setIsWarning(true);
       setModalOpen(true);
       return;
     }
@@ -68,6 +70,7 @@ export const CreateCollection = memo(() => {
       collection.some((item) => item.word || item.translation)
     ) {
       setModalText("Все несохранённые данные будут утеряны!");
+      setIsWarning(false);
       setModalOpen(true);
     } else navigate("/dashboard");
   }, [navigate, collection]);
@@ -83,7 +86,11 @@ export const CreateCollection = memo(() => {
   return (
     <>
       {isModalOpen && (
-        <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
+        <ModalConfirm
+          modalText={modalText}
+          confirmAction={confirmAction}
+          isWarning={isWarning}
+        />
       )}
       <Header
         leftIconTitle="вернуться на главную"
