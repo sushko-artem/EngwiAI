@@ -1,14 +1,14 @@
 import { memo, useCallback, useState } from "react";
-import { Header } from "@shared/ui/header";
+import { Header } from "@widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import cross from "@assets/images/cross.webp";
 import confirm from "@assets/images/confirm.png";
 import { FlashCard } from "@entities/flashCard";
 import { Progress } from "@shared/ui/progress";
-import { ModalFlash } from "../ui/modal-flash";
+import { ModalFlash } from "./ui/modal-flash";
 import { useNavigate } from "react-router-dom";
-import { MenuOptions } from "../ui/option-menu";
+import { MenuOptions } from "./ui/option-menu";
 import { useCollection } from "@features/collections/hooks/useCollection";
 import { Loader } from "@shared/ui/loader";
 
@@ -24,7 +24,6 @@ interface IFlashCardsContainerProps {
 export const FlashCardsContainer = memo(
   ({ collectionId }: IFlashCardsContainerProps) => {
     const { loading, collection } = useCollection(collectionId as string);
-    // const [cards] = useState<Card[]>(collection);
     const [unmemTerms, setUnmemTerms] = useState<Card[]>([]);
     const [isReversed, setIsReversed] = useState(false);
     const [index, setIndex] = useState(0);
@@ -99,7 +98,7 @@ export const FlashCardsContainer = memo(
           rightIcon={option}
           title="Флэш - карты"
         />
-        <h1 className="text-center underline text-fuchsia-800 font-comic text-xl md:text-2xl mt-8">
+        <h1 className="text-center text-fuchsia-800 font-comic text-xl md:text-2xl mt-8">
           {collection.name}
         </h1>
         <div className="flex flex-col align-middle justify-center mt-10">

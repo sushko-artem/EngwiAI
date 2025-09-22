@@ -1,8 +1,8 @@
 import { memo, useCallback, useState } from "react";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
-import { ModalConfirm } from "@shared/ui/modal-confirm";
-import { Header } from "@shared/ui/header";
+import { ModalConfirm } from "widgets/modal-confirm";
+import { Header } from "@widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
 import { useCollections } from "@features/collections/hooks/useCollections";

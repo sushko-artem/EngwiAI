@@ -1,5 +1,5 @@
 import { CollectionList } from "@features/collections/containers/collection-list";
-import { Header } from "@shared/ui/header";
+import { Header } from "widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
