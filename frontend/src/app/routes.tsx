@@ -8,6 +8,7 @@ import { FlashCardsPage } from "pages/FlashCards";
 import { DashboardPage } from "pages/Dashboard";
 import { CollectionPage } from "pages/Collections";
 import { ProtectedRoute } from "@shared/protected-route";
+import { EditCollectionPage } from "pages/EditCollection";
 
 const routes = [
   {
@@ -35,6 +36,14 @@ const routes = [
     element: (
       <ProtectedRoute>
         <FlashCardsPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/edit-collection/:collectionId",
+    element: (
+      <ProtectedRoute>
+        <EditCollectionPage />
       </ProtectedRoute>
     ),
   },

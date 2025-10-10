@@ -1,8 +1,10 @@
 import { memo, useRef, useEffect } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { Switch } from "@shared/ui/switch";
+import { useNavigate } from "react-router-dom";
 
 type MenuOptionsPropsType = {
+  collectionId: string;
   isMenuOpen: boolean;
   isReversed: boolean;
   onClose: () => void;
@@ -11,13 +13,14 @@ type MenuOptionsPropsType = {
 
 export const MenuOptions = memo(
   ({
+    collectionId,
     isMenuOpen,
     onClose,
     onSwitchChange,
     isReversed,
   }: MenuOptionsPropsType) => {
     const menuRef = useRef<HTMLDivElement>(null);
-
+    const navigate = useNavigate();
     const [menuSpring, menuApi] = useSpring(() => ({
       from: {
         opacity: 0,
@@ -64,6 +67,10 @@ export const MenuOptions = memo(
       };
     }, [isMenuOpen, menuApi, overlayApi, onClose]);
 
+    const editCollection = () => {
+      navigate(`/edit-collection/${collectionId}`);
+    };
+
     return (
       <>
         <animated.div
@@ -90,7 +97,9 @@ export const MenuOptions = memo(
             <label htmlFor="switch side">Перевернуть карточки</label>
           </div>
           <div className="flex text-center justify-center p-4 font-jost  border-2 rounded-b-md">
-            <button className="cursor-pointer">Редактировать коллекцию</button>
+            <button onClick={editCollection} className="cursor-pointer">
+              Редактировать коллекцию
+            </button>
           </div>
         </animated.div>
       </>

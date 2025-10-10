@@ -75,6 +75,7 @@ export const FlashCardsContainer = memo(
         {loading && <Loader />}
         {isModalOpen && (
           <ModalFlash
+            collectionId={collection.id}
             moduleName={collection.name}
             moduleLength={collection.cards.length}
             unknownTerms={unmemTerms.length}
@@ -87,6 +88,7 @@ export const FlashCardsContainer = memo(
             isMenuOpen={isMenuOpen}
             onClose={closeMenu}
             isReversed={isReversed}
+            collectionId={collection.id}
           />
         )}
         <Header

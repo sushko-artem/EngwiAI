@@ -1,23 +1,24 @@
-import { EditableCard, type EditableCardType } from "@entities/editableCard";
+import { EditableCard } from "@entities/editableCard";
 import { nanoid } from "nanoid";
 import { memo, useCallback, useRef } from "react";
 
-export type CollectionStateType = Pick<
-  EditableCardType,
-  "id" | "word" | "translation" | "isDeleting"
-> & {
+export type EditableCardType = {
+  id: string;
+  word: string;
+  translation: string;
+  isDeleting?: boolean;
   isNew?: boolean;
   isUpdated?: boolean;
 };
 
 type EditableCollectionPropsType = {
   name: string;
-  collection: CollectionStateType[];
+  collection: EditableCardType[];
   onNameChange: (name: string) => void;
   onCollectionChange: (
     collection:
-      | CollectionStateType[]
-      | ((prev: CollectionStateType[]) => CollectionStateType[])
+      | EditableCardType[]
+      | ((prev: EditableCardType[]) => EditableCardType[])
   ) => void;
   onDelete?: (originalId: string) => void;
 };

@@ -8,11 +8,11 @@ import save from "@assets/images/check.png";
 import { useCollections } from "@features/collections/hooks/useCollections";
 import {
   EditableCollection,
-  type CollectionStateType,
+  type EditableCardType,
 } from "@entities/editableCollection";
 
 export const CreateCollection = memo(() => {
-  const [collection, setCollection] = useState<CollectionStateType[]>([
+  const [collection, setCollection] = useState<EditableCardType[]>([
     { id: nanoid(), word: "", translation: "" },
     { id: nanoid(), word: "", translation: "" },
   ]);
@@ -45,6 +45,7 @@ export const CreateCollection = memo(() => {
 
     try {
       const cards = collection.map((card) => ({
+        id: card.id,
         word: card.word.trim(),
         translation: card.translation.trim(),
       }));

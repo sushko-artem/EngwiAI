@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 type ModalPropType = {
+  collectionId: string;
   moduleName: string;
   moduleLength: number;
   unknownTerms: number;
@@ -6,11 +9,18 @@ type ModalPropType = {
 };
 
 export const ModalFlash = ({
+  collectionId,
   moduleName,
   moduleLength,
   unknownTerms,
   back,
 }: ModalPropType) => {
+  const navigate = useNavigate();
+
+  const editCollection = () => {
+    navigate(`/edit-collection/${collectionId}`);
+  };
+
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-[10px] flex flex-col animate-blure transition-all">
       <section className="m-auto w-[60%] md:w-80 border-2 border-gray-300 rounded-lg p-4 bg-[rgba(255,255,235,1)] animate-appearing transition-all">
@@ -28,7 +38,10 @@ export const ModalFlash = ({
           <span className="text-red-500">Изучил: {unknownTerms}</span>
         </div>
         <div className="flex flex-col m-auto mt-4 max-w-[80%]">
-          <div className="border-2 rounded-md bg-amber-100 p-1 text-center hover:cursor-pointer font-comic active:bg-amber-200 transition-all">
+          <div
+            onClick={editCollection}
+            className="border-2 rounded-md bg-amber-100 p-1 text-center hover:cursor-pointer font-comic active:bg-amber-200 transition-all"
+          >
             Редактировать модуль
           </div>
           <div

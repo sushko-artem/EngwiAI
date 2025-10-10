@@ -17,7 +17,7 @@ export const CollectionPage = () => {
         leftIconTitle="вернуться на главную"
         leftIconAction={back}
       />
-      <CollectionList />;
+      <CollectionList />
     </>
   );
 };

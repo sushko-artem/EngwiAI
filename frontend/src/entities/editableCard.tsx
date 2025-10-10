@@ -42,7 +42,7 @@ export const EditableCard = memo(
             />
           </div>
           <CardContent className="p-2">
-            <span>Термин</span>
+            <span className="text-fuchsia-800 font-bold">Термин</span>
             <input
               name="term"
               value={word}
@@ -51,7 +51,7 @@ export const EditableCard = memo(
               type="text"
               autoComplete="off"
             />
-            <span>Перевод</span>
+            <span className="text-fuchsia-800 font-bold">Перевод</span>
             <input
               name="translation"
               value={translation}

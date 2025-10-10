@@ -1,4 +1,5 @@
 export interface ICard {
+  id: string;
   word: string;
   translation: string;
 }
@@ -6,6 +7,13 @@ export interface ICard {
 export interface ICollectionDto {
   name: string;
   cards: ICard[];
+}
+
+export interface IUpdateCollectionDto {
+  newName?: string;
+  updatedCards?: ICard[];
+  newCards?: Array<{ word: string; translation: string }>;
+  deletedCards?: string[];
 }
 
 export interface ICollectionCardsResponse {

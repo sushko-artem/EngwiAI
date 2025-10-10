@@ -1,9 +1,6 @@
 import useSWR from "swr";
-import { collectionsService } from "@shared/api/services/collectionsService";
-import type {
-  ICollectionDto,
-  ICollectionResponse,
-} from "@shared/api/types/collection";
+import { collectionsService } from "@shared/api";
+import type { ICollectionDto, ICollectionResponse } from "@shared/api";
 
 export const useCollections = () => {
   const {
@@ -12,17 +9,12 @@ export const useCollections = () => {
     isLoading,
     mutate,
   } = useSWR<ICollectionResponse[]>("collections", collectionsService.getList, {
-    revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
 
   const createCollection = async (dto: ICollectionDto) => {
     try {
       const newCollection = await collectionsService.create(dto);
-      mutate(
-        (current) => (current ? [...current, newCollection] : [newCollection]),
-        false
-      );
       return { success: true, data: newCollection };
     } catch (err) {
       const message =
