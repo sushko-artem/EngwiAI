@@ -14,4 +14,5 @@ export type {
   ICollectionCardsResponse,
   ICollectionDto,
   ICollectionResponse,
+  IUpdateCollectionDto,
 } from "./types/collection";

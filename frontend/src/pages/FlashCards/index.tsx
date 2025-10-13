@@ -1,4 +1,4 @@
-import { FlashCardsContainer } from "@features/flashCardsCollection";
+import { FlashCardsContainer } from "@features/collections/containers/flash-cards/flash-cards-container";
 import { useParams } from "react-router-dom";
 
 export const FlashCardsPage = () => {

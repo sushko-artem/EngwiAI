@@ -1,12 +1,11 @@
+import { authService } from "@shared/api";
 import { memo } from "react";
 
 export const GoogleAuth = memo(({ description }: { description: string }) => {
   return (
     <button
       className="bg-amber-50 w-full rounded-[5px] border-1 p-2 flex hover:cursor-pointer"
-      onClick={() => {
-        console.log("GoogleAuth");
-      }}
+      onClick={authService.googleAuth}
     >
       <img
         className="w-[30px]"

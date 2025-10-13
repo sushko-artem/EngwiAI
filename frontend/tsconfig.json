@@ -29,6 +29,7 @@
       "@shared/*": ["shared/*"],
       "@assets/*": ["assets/*"],
       "@entities/*": ["entities/*"],
+      "@widgets/*": ["widgets/*"],
       "@redux/*": ["app/redux/*"]
     }
   },

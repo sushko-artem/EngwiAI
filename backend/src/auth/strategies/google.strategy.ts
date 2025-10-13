@@ -19,6 +19,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
+  authorizationParams(): { [key: string]: string } {
+    return {
+      access_type: 'offline',
+      prompt: 'select_account',
+    };
+  }
+
   async validate(accessToken: string, _: string, profile: IGoogleProfile, done: VerifyCallback) {
     try {
       if (!profile.emails[0].verified) {
