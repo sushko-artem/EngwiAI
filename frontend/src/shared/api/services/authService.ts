@@ -18,8 +18,7 @@ export const authService = {
   logout: (): Promise<IAuthResponse> => apiClient.get(AUTH_ENDPOINTS.LOGOUT),
   refresh: (): Promise<IAuthResponse> => apiClient.get(AUTH_ENDPOINTS.REFRESH),
   googleAuth: (): void => {
-    window.location.href = AUTH_ENDPOINTS.GOOGLE_AUTH;
+    const baseUrl = import.meta.env.VITE_API_URL;
+    window.location.href = `${baseUrl}${AUTH_ENDPOINTS.GOOGLE_AUTH}`;
   },
-  getGoogleAuthSuccess: (): Promise<IUser> =>
-    apiClient.get(AUTH_ENDPOINTS.GOOGLE_SUCCESS),
 };

@@ -36,12 +36,10 @@ services:
     volumes:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
       - backend
-    environment:
-      VITE_API_URL: "/api"
     env_file:
       - ./frontend/.env.local
     restart: unless-stopped

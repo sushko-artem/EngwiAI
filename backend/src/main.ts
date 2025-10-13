@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
   app.enableCors({
-    origin: ['https://engwi-ai.vercel.app', 'http://localhost:3000', 'https://engwiai.onrender.com'],
+    origin: ['https://engwi-ai.vercel.app', 'http://localhost', 'http://localhost:3000'],
     credentials: true,
   });
   app.useGlobalPipes(

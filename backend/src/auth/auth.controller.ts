@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Query,
-  Req,
-  Res,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto, RegisterUserDto } from './DTO';
 import { Request, Response } from 'express';
@@ -95,11 +84,6 @@ export class AuthController {
     return { message: 'Token refreshed' };
   }
 
-  @Get('success') //TEST PAGE
-  success(@Query() user: User) {
-    return { user };
-  }
-
   @UseGuards(GoogleGuard)
   @Get('google')
   googleAuth() {}
@@ -115,7 +99,7 @@ export class AuthController {
     };
     const tokens = await this.authService.googleAuthGenerateTokens(payload, userAgent);
     this.saveTokensToCookies(tokens, response);
-    return response.redirect(`http://localhost:4200/api/auth/success?=${JSON.stringify(user)}`);
+    return response.redirect(`${this.configService.get('FRONTEND_URL')}/dashboard`);
   }
 
   private saveTokensToCookies(tokens: Itokens, response: Response) {

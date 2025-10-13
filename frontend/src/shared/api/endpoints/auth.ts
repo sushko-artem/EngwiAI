@@ -6,5 +6,4 @@ export const AUTH_ENDPOINTS = {
   LOGOUT: "/auth/logout",
   REFRESH: "/auth/refresh",
   GOOGLE_AUTH: "/auth/google",
-  GOOGLE_SUCCESS: "/auth/success",
 };
