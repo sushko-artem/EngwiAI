@@ -4,6 +4,7 @@ import {
   type ICollectionCardsResponse,
   type IUpdateCollectionDto,
 } from "@shared/api";
+import { useCallback } from "react";
 
 export const useCollection = (id: string) => {
   const { data, error, isLoading, mutate } = useSWR<ICollectionCardsResponse>(
@@ -14,18 +15,21 @@ export const useCollection = (id: string) => {
     }
   );
 
-  const updateCollection = async (dto: IUpdateCollectionDto) => {
-    try {
-      await collectionsService.update(id, dto);
-      return { success: true };
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Ошибка редактирования коллекции";
-      return { success: false, error: message };
-    }
-  };
+  const updateCollection = useCallback(
+    async (dto: IUpdateCollectionDto) => {
+      try {
+        await collectionsService.update(id, dto);
+        return { success: true };
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Ошибка редактирования коллекции";
+        return { success: false, error: message };
+      }
+    },
+    [id]
+  );
 
   return {
     updateCollection,

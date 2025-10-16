@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { collectionsService } from "@shared/api";
 import type { ICollectionDto, ICollectionResponse } from "@shared/api";
+import { useCallback } from "react";
 
 export const useCollections = () => {
   const {
@@ -12,7 +13,7 @@ export const useCollections = () => {
     revalidateOnReconnect: false,
   });
 
-  const createCollection = async (dto: ICollectionDto) => {
+  const createCollection = useCallback(async (dto: ICollectionDto) => {
     try {
       const newCollection = await collectionsService.create(dto);
       return { success: true, data: newCollection };
@@ -21,7 +22,7 @@ export const useCollections = () => {
         err instanceof Error ? err.message : "Ошибка создания коллекции";
       return { success: false, error: message };
     }
-  };
+  }, []);
 
   return {
     collections: collections || [],
