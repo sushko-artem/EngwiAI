@@ -47,7 +47,6 @@ export const EditableCollection = memo(
       },
     });
 
-    console.log("COLLECTION");
     return (
       <div className="m-auto text-center grid gap-0.5 max-w-[500px] w-[70%] sm:w-[60%] md:w-[50%]">
         <div className="flex flex-col align-middle justify-center text-center my-4">

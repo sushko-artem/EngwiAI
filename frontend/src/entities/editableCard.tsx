@@ -16,7 +16,6 @@ type EditableCardPropsType = {
 export const EditableCard = memo(
   ({ id, word, translation }: EditableCardPropsType) => {
     const dispatch = useAppDispatch();
-    console.log(`render CARD ${id}`);
     return (
       <Card className="relative my-1 text-center p-2 font-comic bg-[rgba(255,241,228,0.8)] shadow-[2px_3px_8px_rgba(0,0,0,0.5)] md:text-xl transition-all">
         <div className="absolute w-[18px] right-1.5 top-1.5 hover:scale-[1.2] cursor-pointer transition-all">

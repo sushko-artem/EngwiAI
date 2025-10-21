@@ -9,11 +9,13 @@ type CollectionType = {
 
 interface ICollectionState {
   editableCollection: CollectionType | null;
+  deletedCards: Array<string>;
   mode: "create" | "edit" | null;
 }
 
 const initialState: ICollectionState = {
   editableCollection: null,
+  deletedCards: [],
   mode: null,
 };
 
@@ -31,8 +33,16 @@ const collectionsSlice = createSlice({
       };
       state.mode = "create";
     },
+    setExistedCollection: (state, action: PayloadAction<CollectionType>) => {
+      state.editableCollection = {
+        name: action.payload.name,
+        cards: action.payload.cards,
+      };
+      state.mode = "edit";
+    },
     clearCollection: (state) => {
       state.editableCollection = null;
+      state.deletedCards = [];
       state.mode = null;
     },
     addCard: (state) => {
@@ -51,6 +61,7 @@ const collectionsSlice = createSlice({
     },
     deleteCard: (state, action: PayloadAction<string>) => {
       if (!state.editableCollection) return;
+      state.deletedCards.push(action.payload);
       state.editableCollection.cards = state.editableCollection.cards.filter(
         (card) => card.id !== action.payload
       );
@@ -74,7 +85,7 @@ const collectionsSlice = createSlice({
       );
       if (card) {
         card[field] = value;
-        if (state.mode === "edit") {
+        if (state.mode === "edit" && !card.isNew) {
           card.isUpdated = true;
         }
       }
@@ -84,6 +95,7 @@ const collectionsSlice = createSlice({
 
 export const {
   initDefaultCollection,
+  setExistedCollection,
   clearCollection,
   addCard,
   updateCollectionName,

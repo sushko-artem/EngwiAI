@@ -4,12 +4,14 @@ import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
 import { useNavigate } from "react-router-dom";
 import { ModalConfirm } from "@widgets/modal-confirm";
-import {
-  EditableCollection,
-  type EditableCardType,
-} from "@entities/editableCollection";
+import { EditableCollection } from "@entities/editableCollection";
 import { useCollection } from "@features/collections/hooks/useCollection";
 import { Loader } from "@shared/ui/loader";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import {
+  clearCollection,
+  setExistedCollection,
+} from "@features/collections/model/collections.slice";
 import { createUpdateDto } from "./helpers/createUpdateDto";
 
 interface IEditCollectionProps {
@@ -17,63 +19,76 @@ interface IEditCollectionProps {
 }
 
 export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
-  const { loading, collection, updateCollection } = useCollection(collectionId);
-  const [editedCollection, setEditedCollection] = useState<EditableCardType[]>(
-    []
+  const { collection, error, update, updateCollection } =
+    useCollection(collectionId);
+  const editableCollection = useAppSelector(
+    (state) => state.collections.editableCollection
   );
-  const [editedCollectionName, setEditedCollectionName] = useState("");
+  const deletedCards = useAppSelector(
+    (state) => state.collections.deletedCards
+  );
+  const dispatch = useAppDispatch();
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
   const navigate = useNavigate();
-  const deletedCards = useRef<Array<string>>([]);
+  const originalCollectionRef = useRef(collection);
+  const editableCollectionRef = useRef(editableCollection);
+  const deletedCardsRef = useRef(deletedCards);
+
+  useEffect(() => {
+    editableCollectionRef.current = editableCollection;
+    deletedCardsRef.current = deletedCards;
+  }, [editableCollection, deletedCards]);
 
   useEffect(() => {
     if (collection) {
-      setEditedCollection(collection.cards);
-      setEditedCollectionName(collection.name);
+      originalCollectionRef.current = collection;
+      dispatch(setExistedCollection(collection));
     }
-  }, [collection]);
+    return () => {
+      dispatch(clearCollection());
+    };
+  }, [dispatch, collection]);
 
   const saveCollection = useCallback(async () => {
-    if (!collection) return;
-    const updatedCards = editedCollection.filter((card) => card.isUpdated);
-    const newCards = editedCollection.filter((card) => card.isNew);
+    if (!originalCollectionRef.current || !editableCollectionRef.current)
+      return;
     const dto = createUpdateDto(
-      collection,
-      editedCollectionName,
-      updatedCards,
-      newCards,
-      deletedCards.current
+      originalCollectionRef.current,
+      editableCollectionRef.current,
+      deletedCardsRef.current
     );
     if (Object.keys(dto).length > 0) {
-      const result = await updateCollection(dto);
-      if (result.success) navigate("/collections");
+      const res = await updateCollection(dto);
+      if (res.success) {
+        navigate("/collections");
+      } else {
+        setModalText(`${res.error}`);
+        setModalOpen(true);
+      }
+    }
+  }, [updateCollection, navigate]);
+
+  const back = useCallback(() => {
+    const isNameUpdated =
+      editableCollectionRef.current?.name !==
+      originalCollectionRef.current?.name;
+    const isCardsUpdated =
+      editableCollectionRef.current?.cards.some(
+        (card) => card.isUpdated || card.isNew
+      ) ||
+      editableCollectionRef.current?.cards.length !==
+        originalCollectionRef.current?.cards.length;
+    const isUpdated = isNameUpdated || isCardsUpdated;
+    if (isUpdated) {
+      setModalText(
+        "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!"
+      );
+      setModalOpen(true);
     } else {
       navigate("/collections");
     }
-  }, [
-    editedCollection,
-    collection,
-    updateCollection,
-    editedCollectionName,
-    navigate,
-  ]);
-
-  const back = useCallback(() => {
-    if (!collection) navigate("/collections");
-    setModalText("Все несохранённые данные будут утеряны!");
-    setModalOpen(true);
-  }, [collection, navigate]);
-
-  const handleDelete = useCallback(
-    (id: string) => {
-      const deletedCard = editedCollection.find((card) => card.id === id);
-      if (!deletedCard?.isNew) {
-        deletedCards.current.push(id);
-      }
-    },
-    [editedCollection]
-  );
+  }, [navigate]);
 
   const confirmAction = (value: boolean) => {
     if (value) {
@@ -85,7 +100,7 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
 
   return (
     <>
-      {loading && <Loader />}
+      {update && <Loader />}
       {isModalOpen && (
         <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
       )}
@@ -95,20 +110,22 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
         rightIconAction={saveCollection}
         leftIconAction={back}
         leftIcon={backArrow}
-        rightIcon={save}
-        title="Редактирование"
+        rightIcon={update ? undefined : save}
+        title={update ? "Сохранение..." : "Редактирование"}
       />
-      {!collection ? (
-        <div className="text-3xl font-jost text-fuchsia-800 flex flex-col h-[50vh] justify-center text-center">
-          <span>Ошибка!</span> Коллекция не найдена!
-        </div>
+      {!editableCollection ? (
+        error ? (
+          <div className="text-3xl font-jost text-fuchsia-800 flex flex-col h-[50vh] justify-center text-center">
+            <span>Ошибка!</span> Коллекция не найдена!
+            <span className="text-red-500 text-lg">{error.message}</span>
+          </div>
+        ) : (
+          <Loader />
+        )
       ) : (
         <EditableCollection
-          onNameChange={setEditedCollectionName}
-          onCollectionChange={setEditedCollection}
-          onDelete={handleDelete}
-          name={editedCollectionName}
-          collection={editedCollection}
+          name={editableCollection.name}
+          collection={editableCollection.cards}
         />
       )}
     </>
