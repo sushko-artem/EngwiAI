@@ -1,12 +1,16 @@
-import { Header } from "@widgets/header";
 import logout from "@assets/images/logout.svg";
 import logo from "@assets/images/logo.png";
-import { ActionsDashboard } from "@widgets/dashboardActions/ui/dashboard-actions";
+import { ActionsDashboard, Header } from "@widgets/index";
 import { actions } from "./lib/actions-config";
-import { useAuth } from "@features/auth/hooks";
+import { useLogOutMutation } from "@features/auth";
+import { useCallback } from "react";
 
 export const DashboardPage = () => {
-  const { logOut } = useAuth();
+  const [logOut] = useLogOutMutation();
+
+  const handleLogOut = useCallback(async () => {
+    logOut().unwrap().catch(console.error);
+  }, [logOut]);
 
   return (
     <>
@@ -17,7 +21,7 @@ export const DashboardPage = () => {
         leftIconTitle="EngwiAI"
         rightIconTitle="Выйти из приложения"
         leftIconAction={() => {}}
-        rightIconAction={logOut}
+        rightIconAction={handleLogOut}
       />
       <ActionsDashboard actions={actions} />
     </>

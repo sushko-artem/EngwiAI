@@ -1,4 +1,4 @@
-import type { EditableCardType } from "@entities/editableCollection";
+import type { EditableCardType } from "entities";
 import type {
   ICollectionCardsResponse,
   IUpdateCollectionDto,

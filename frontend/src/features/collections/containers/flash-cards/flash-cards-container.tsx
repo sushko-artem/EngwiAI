@@ -1,16 +1,14 @@
 import { memo, useCallback, useState } from "react";
-import { Header } from "@widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import cross from "@assets/images/cross.webp";
 import confirm from "@assets/images/confirm.png";
-import { FlashCard } from "@entities/flashCard";
 import { Progress } from "@shared/ui/progress";
-import { ModalFlash } from "./ui/modal-flash";
+import { ModalFlash, MenuOptions, useCollection } from "@features/collections";
 import { useNavigate } from "react-router-dom";
-import { MenuOptions } from "./ui/option-menu";
-import { useCollection } from "@features/collections/hooks/useCollection";
 import { Loader } from "@shared/ui/loader";
+import { Header } from "@widgets/header";
+import { FlashCard } from "@entities/flashCard";
 
 type Card = {
   word: string;

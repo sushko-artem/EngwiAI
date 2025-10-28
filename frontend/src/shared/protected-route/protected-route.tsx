@@ -1,18 +1,26 @@
-import { useInitAuth } from "@features/auth/hooks/useInitAuth";
-import { useAppSelector } from "@redux/hooks";
+import { useGetMeQuery } from "@features/auth";
+import { getErrorMessage, isFetchBaseQueryError } from "@shared/api";
 import { Loader } from "@shared/ui/loader";
-import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isInitialized = useAppSelector((state) => state.auth.isInitialized);
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const isLoading = useAppSelector((state) => state.auth.isLoading);
+  const { data: user, isLoading, error } = useGetMeQuery();
+  const navigate = useNavigate();
 
-  useInitAuth();
+  useEffect(() => {
+    if (error) {
+      if (
+        isFetchBaseQueryError(error) &&
+        getErrorMessage(error) === "Refresh token not found"
+      )
+        navigate("/sign-in");
+    }
+  }, [error, navigate]);
 
-  if (!isInitialized || isLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
-  return isAuthenticated ? children : <Navigate to="/sign-in" replace />;
+  return user ? children : <Navigate to="/sign-in" replace />;
 };

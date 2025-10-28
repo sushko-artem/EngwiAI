@@ -1,11 +1,8 @@
+import { memo } from "react";
 import { Card, CardContent } from "@shared/ui/card";
 import cross from "@assets/images/cross.webp";
-import { memo } from "react";
 import { useAppDispatch } from "@redux/hooks";
-import {
-  deleteCard,
-  updateCard,
-} from "@features/collections/model/collections.slice";
+import { deleteCard, updateCard } from "@features/collections";
 
 type EditableCardPropsType = {
   id: string;

@@ -1,17 +1,20 @@
 import { useFormik } from "formik";
-import { AuthFormLayout } from "../ui/auth-form-layout";
-import { BottomAuthLayout } from "../ui/bottom-layout";
-import { GoogleAuth } from "../ui/google-auth-button";
-import { AuthLink } from "../ui/link";
-import { AuthSchema } from "../lib/auth-schema";
-import { Button } from "@shared/ui/button";
-import { InputField } from "../ui/input-field";
-import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
+import {
+  AuthFormLayout,
+  BottomAuthLayout,
+  GoogleAuth,
+  AuthLink,
+  AuthSchema,
+  InputField,
+  useLoginMutation,
+} from "@features/auth";
+import { Button } from "@shared/ui/button";
 import { Loader } from "@shared/ui/loader";
+import { getErrorMessage, isFetchBaseQueryError } from "@shared/api";
 
 export const SignInForm = () => {
-  const { logIn, loading } = useAuth();
+  const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
   const formik = useFormik<AuthSchema>({
     initialValues: {
@@ -20,20 +23,32 @@ export const SignInForm = () => {
     },
     validationSchema: AuthSchema,
     onSubmit: async (data: AuthSchema) => {
-      const res = await logIn(data);
-      if (res.success) {
+      try {
+        await login(data).unwrap();
         navigate("/dashboard", { replace: true });
-      } else if (res.cause === 401) {
-        formik.setErrors({ email: res.error });
-      } else {
-        formik.setStatus({ backendError: res.error });
+      } catch (error) {
+        if (isFetchBaseQueryError(error)) {
+          if (error.status === 401) {
+            const errorData = error.data as {
+              message: string;
+              error: string;
+            };
+            formik.setErrors({ [errorData.error]: errorData.message });
+          } else {
+            formik.setStatus({ backendError: getErrorMessage(error) });
+          }
+        } else {
+          formik.setStatus({
+            backendError: "Проблемы с соединением. Попробуйте позже.",
+          });
+        }
       }
     },
   });
 
   return (
     <>
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       <AuthFormLayout
         title="ВХОД"
         description="Введите данные, чтобы войти в приложение."

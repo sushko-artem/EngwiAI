@@ -1,11 +1,10 @@
-import { apiClient } from "@shared/api/client";
-import { COLLECTION_ENDPOINTS } from "@shared/api/endpoints/collection";
+import { apiClient, COLLECTION_ENDPOINTS } from "@shared/api";
 import type {
   ICollectionDto,
   ICollectionResponse,
   ICollectionCardsResponse,
   IUpdateCollectionDto,
-} from "@shared/api/types/collection";
+} from "@shared/api";
 
 export const collectionsService = {
   create: (dto: ICollectionDto): Promise<ICollectionResponse> =>

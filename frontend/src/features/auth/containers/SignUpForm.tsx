@@ -1,18 +1,21 @@
 import { Button } from "@shared/ui/button";
-import { RegisterSchema } from "../lib/register-schema";
-import { AuthFormLayout } from "../ui/auth-form-layout";
-import { BottomAuthLayout } from "../ui/bottom-layout";
-import { GoogleAuth } from "../ui/google-auth-button";
-import { InputField } from "../ui/input-field";
-import { AuthLink } from "../ui/link";
+import {
+  RegisterSchema,
+  AuthFormLayout,
+  BottomAuthLayout,
+  GoogleAuth,
+  InputField,
+  AuthLink,
+  useRegisterMutation,
+} from "@features/auth";
 import { useFormik } from "formik";
-import { useAuth } from "@features/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@shared/ui/loader";
+import { getErrorMessage, isFetchBaseQueryError } from "@shared/api";
 
 export const SignUpForm = () => {
+  const [register, { isLoading }] = useRegisterMutation();
   const navigate = useNavigate();
-  const { register, loading } = useAuth();
   const formik = useFormik<RegisterSchema>({
     initialValues: {
       name: "",
@@ -27,19 +30,27 @@ export const SignUpForm = () => {
         email: data.email,
         password: data.password,
       };
-      const res = await register(user);
-      if (res.success) {
+      try {
+        await register(user).unwrap();
         navigate("/sign-in", { replace: true });
-      } else if (res.cause === 409) {
-        formik.setErrors({ email: res.error });
-      } else {
-        formik.setStatus({ backendError: res.error });
+      } catch (error) {
+        if (isFetchBaseQueryError(error)) {
+          if (error.status === 409) {
+            formik.setErrors({ email: getErrorMessage(error) });
+          } else {
+            formik.setStatus({ backendError: getErrorMessage(error) });
+          }
+        } else {
+          formik.setStatus({
+            backendError: "Проблемы с соединением. Попробуйте позже.",
+          });
+        }
       }
     },
   });
   return (
     <>
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       <AuthFormLayout
         title="РЕГИСТРАЦИЯ"
         form={

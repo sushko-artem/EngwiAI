@@ -1,16 +1,15 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ModalConfirm } from "widgets/modal-confirm";
-import { Header } from "@widgets/header";
+import { ModalConfirm, Header } from "@widgets/index";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
-import { useCollections } from "@features/collections/hooks/useCollections";
 import { EditableCollection } from "@entities/editableCollection";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   clearCollection,
   initDefaultCollection,
-} from "@features/collections/model/collections.slice";
+  useCollections,
+} from "@features/collections";
 import { Loader } from "@shared/ui/loader";
 
 export const CreateCollection = memo(() => {

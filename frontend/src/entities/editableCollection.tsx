@@ -1,11 +1,8 @@
-import { EditableCard } from "@entities/editableCard";
-import { useTransition, animated } from "@react-spring/web";
-import {
-  addCard,
-  updateCollectionName,
-} from "@features/collections/model/collections.slice";
-import { useAppDispatch } from "@redux/hooks";
 import { memo, useRef } from "react";
+import { useTransition, animated } from "@react-spring/web";
+import { EditableCard } from "@entities/editableCard";
+import { addCard, updateCollectionName } from "@features/collections";
+import { useAppDispatch } from "@redux/hooks";
 
 export type EditableCardType = {
   id: string;

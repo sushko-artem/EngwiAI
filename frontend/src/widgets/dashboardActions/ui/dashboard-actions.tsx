@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { IActionButtonProps } from "../model/types/action-interface";
+import type { IActionButtonProps } from "../types/action-interface";
 import { ActionButton } from "./actionButton";
 
 type ActionsDashboardPropsType = {

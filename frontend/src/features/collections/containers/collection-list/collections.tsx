@@ -1,6 +1,5 @@
-import { useCollections } from "@features/collections/hooks/useCollections";
+import { useCollections, ActionButtonModule } from "@features/collections";
 import { Loader } from "@shared/ui/loader";
-import { ActionButtonModule } from "./ui/action-button-module";
 
 export const CollectionList = () => {
   const { collections, loading } = useCollections();

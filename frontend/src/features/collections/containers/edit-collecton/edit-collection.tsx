@@ -1,18 +1,17 @@
-import { Header } from "@widgets/header";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Header, ModalConfirm } from "@widgets/index";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
-import { useNavigate } from "react-router-dom";
-import { ModalConfirm } from "@widgets/modal-confirm";
 import { EditableCollection } from "@entities/editableCollection";
-import { useCollection } from "@features/collections/hooks/useCollection";
 import { Loader } from "@shared/ui/loader";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   clearCollection,
   setExistedCollection,
-} from "@features/collections/model/collections.slice";
-import { createUpdateDto } from "./helpers/createUpdateDto";
+  useCollection,
+  createUpdateDto,
+} from "@features/collections";
 
 interface IEditCollectionProps {
   collectionId: string;
