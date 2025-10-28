@@ -7,19 +7,18 @@ import { EditableCollection } from "@entities/editableCollection";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   clearCollection,
+  selectEditableCollection,
   initDefaultCollection,
-  useCollections,
+  useCreateCollectionMutation,
 } from "@features/collections";
 import { Loader } from "@shared/ui/loader";
 
 export const CreateCollection = memo(() => {
-  const collection = useAppSelector(
-    (state) => state.collections.editableCollection
-  );
+  const collection = useAppSelector(selectEditableCollection);
+  const [createCollection, { isLoading }] = useCreateCollectionMutation();
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
   const [isWarning, setIsWarning] = useState(false);
-  const { createCollection } = useCollections();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const collectionRef = useRef(collection);
@@ -52,17 +51,13 @@ export const CreateCollection = memo(() => {
           word: card.word.trim(),
           translation: card.translation.trim(),
         }));
-        const res = await createCollection({
+        await createCollection({
           name: collectionRef.current.name.trim(),
           cards,
-        });
-        if (res.success) {
-          navigate("/dashboard");
-        } else {
-          console.error("Ошибка:", res.error);
-        }
+        }).unwrap();
+        navigate("/dashboard");
       } catch (error) {
-        console.error("Ошибка запроса:", error);
+        console.error("Ошибка создания коллекции:", error);
       }
     }
   }, [navigate, createCollection]);
@@ -92,6 +87,7 @@ export const CreateCollection = memo(() => {
 
   return (
     <>
+      {isLoading && <Loader />}
       {isModalOpen && (
         <ModalConfirm
           modalText={modalText}

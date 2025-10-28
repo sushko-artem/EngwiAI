@@ -34,15 +34,11 @@ export const SignUpForm = () => {
         await register(user).unwrap();
         navigate("/sign-in", { replace: true });
       } catch (error) {
-        if (isFetchBaseQueryError(error)) {
-          if (error.status === 409) {
-            formik.setErrors({ email: getErrorMessage(error) });
-          } else {
-            formik.setStatus({ backendError: getErrorMessage(error) });
-          }
+        if (isFetchBaseQueryError(error) && error.status === 409) {
+          formik.setErrors({ email: getErrorMessage(error) });
         } else {
           formik.setStatus({
-            backendError: "Проблемы с соединением. Попробуйте позже.",
+            backendError: getErrorMessage(error),
           });
         }
       }

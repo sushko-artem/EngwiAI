@@ -9,23 +9,27 @@ import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   clearCollection,
   setExistedCollection,
-  useCollection,
   createUpdateDto,
+  selectDeletedCards,
+  selectEditableCollection,
+  useGetCollectionQuery,
+  useUpdateCollectionMutation,
 } from "@features/collections";
+import { getErrorMessage } from "@shared/api";
 
 interface IEditCollectionProps {
   collectionId: string;
 }
 
 export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
-  const { collection, error, update, updateCollection } =
-    useCollection(collectionId);
-  const editableCollection = useAppSelector(
-    (state) => state.collections.editableCollection
-  );
-  const deletedCards = useAppSelector(
-    (state) => state.collections.deletedCards
-  );
+  const {
+    data: collection,
+    error,
+    isLoading,
+  } = useGetCollectionQuery(collectionId);
+  const [updateCollection] = useUpdateCollectionMutation();
+  const editableCollection = useAppSelector(selectEditableCollection);
+  const deletedCards = useAppSelector(selectDeletedCards);
   const dispatch = useAppDispatch();
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
@@ -58,15 +62,15 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
       deletedCardsRef.current
     );
     if (Object.keys(dto).length > 0) {
-      const res = await updateCollection(dto);
-      if (res.success) {
+      try {
+        await updateCollection({ id: collectionId, dto }).unwrap();
         navigate("/collections");
-      } else {
-        setModalText(`${res.error}`);
+      } catch (error) {
+        setModalText(getErrorMessage(error));
         setModalOpen(true);
       }
     }
-  }, [updateCollection, navigate]);
+  }, [navigate, updateCollection, collectionId]);
 
   const back = useCallback(() => {
     const isNameUpdated =
@@ -99,7 +103,7 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
 
   return (
     <>
-      {update && <Loader />}
+      {isLoading && <Loader />}
       {isModalOpen && (
         <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
       )}
@@ -109,14 +113,16 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
         rightIconAction={saveCollection}
         leftIconAction={back}
         leftIcon={backArrow}
-        rightIcon={update ? undefined : save}
-        title={update ? "Сохранение..." : "Редактирование"}
+        rightIcon={save}
+        title={"Редактирование"}
       />
       {!editableCollection ? (
         error ? (
           <div className="text-3xl font-jost text-fuchsia-800 flex flex-col h-[50vh] justify-center text-center">
             <span>Ошибка!</span> Коллекция не найдена!
-            <span className="text-red-500 text-lg">{error.message}</span>
+            <span className="text-red-500 text-lg">
+              Error: {getErrorMessage(error)}
+            </span>
           </div>
         ) : (
           <Loader />

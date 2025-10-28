@@ -27,19 +27,15 @@ export const SignInForm = () => {
         await login(data).unwrap();
         navigate("/dashboard", { replace: true });
       } catch (error) {
-        if (isFetchBaseQueryError(error)) {
-          if (error.status === 401) {
-            const errorData = error.data as {
-              message: string;
-              error: string;
-            };
-            formik.setErrors({ [errorData.error]: errorData.message });
-          } else {
-            formik.setStatus({ backendError: getErrorMessage(error) });
-          }
+        if (isFetchBaseQueryError(error) && error.status === 401) {
+          const errorData = error.data as {
+            message: string;
+            error: string;
+          };
+          formik.setErrors({ [errorData.error]: errorData.message });
         } else {
           formik.setStatus({
-            backendError: "Проблемы с соединением. Попробуйте позже.",
+            backendError: getErrorMessage(error),
           });
         }
       }

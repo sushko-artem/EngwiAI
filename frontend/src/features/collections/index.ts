@@ -6,8 +6,6 @@ export { EditCollection } from "./containers/edit-collecton/edit-collection";
 export { ModalFlash } from "./containers/flash-cards/ui/modal-flash";
 export { MenuOptions } from "./containers/flash-cards/ui/option-menu";
 export { FlashCardsContainer } from "./containers/flash-cards/flash-cards-container";
-export { useCollection } from "./hooks/useCollection";
-export { useCollections } from "./hooks/useCollections";
 export { default as collectionReducer } from "./model/collections.slice";
 export {
   initDefaultCollection,
@@ -17,4 +15,13 @@ export {
   updateCollectionName,
   updateCard,
   deleteCard,
+  selectEditableCollection,
+  selectDeletedCards,
 } from "./model/collections.slice";
+export {
+  collectionsApi,
+  useGetCollectionsQuery,
+  useCreateCollectionMutation,
+  useGetCollectionQuery,
+  useUpdateCollectionMutation,
+} from "./api/collections-api";
