@@ -1,20 +1,21 @@
+import type { EditableCardType } from "entities";
 import type {
-  ICard,
   ICollectionCardsResponse,
   IUpdateCollectionDto,
 } from "@shared/api";
 
 export const createUpdateDto = (
   originalCollection: ICollectionCardsResponse,
-  editedName: string,
-  updatedCards: ICard[],
-  newCards: Array<{ word: string; translation: string }>,
+  editedCollection: { name: string; cards: EditableCardType[] },
   deletedCards: string[]
 ) => {
   const dto: Partial<IUpdateCollectionDto> = {};
 
-  if (editedName !== originalCollection.name) {
-    dto.newName = editedName;
+  const updatedCards = editedCollection.cards.filter((card) => card.isUpdated);
+  const newCards = editedCollection.cards.filter((card) => card.isNew);
+
+  if (editedCollection.name !== originalCollection.name) {
+    dto.newName = editedCollection.name;
   }
 
   if (updatedCards.length > 0) {

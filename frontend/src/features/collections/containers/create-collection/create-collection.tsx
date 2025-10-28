@@ -1,80 +1,81 @@
-import { memo, useCallback, useState } from "react";
-import { nanoid } from "nanoid";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ModalConfirm } from "widgets/modal-confirm";
-import { Header } from "@widgets/header";
+import { ModalConfirm, Header } from "@widgets/index";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
-import { useCollections } from "@features/collections/hooks/useCollections";
+import { EditableCollection } from "@entities/editableCollection";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
-  EditableCollection,
-  type EditableCardType,
-} from "@entities/editableCollection";
+  clearCollection,
+  selectEditableCollection,
+  initDefaultCollection,
+  useCreateCollectionMutation,
+} from "@features/collections";
+import { Loader } from "@shared/ui/loader";
 
 export const CreateCollection = memo(() => {
-  const [collection, setCollection] = useState<EditableCardType[]>([
-    { id: nanoid(), word: "", translation: "" },
-    { id: nanoid(), word: "", translation: "" },
-  ]);
-  const [collectionName, setCollectionName] = useState("");
+  const collection = useAppSelector(selectEditableCollection);
+  const [createCollection, { isLoading }] = useCreateCollectionMutation();
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
   const [isWarning, setIsWarning] = useState(false);
-  const { createCollection } = useCollections();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const collectionRef = useRef(collection);
+
+  useEffect(() => {
+    collectionRef.current = collection;
+  }, [collection]);
+
+  useEffect(() => {
+    dispatch(initDefaultCollection());
+    return () => {
+      dispatch(clearCollection());
+    };
+  }, [dispatch]);
 
   const saveCollection = useCallback(async () => {
-    if (collection.length < 1) return;
-    if (!collectionName.trim()) {
-      setModalText("Придумайте название коллекции!");
+    if (
+      !collectionRef.current?.name.trim() ||
+      collectionRef.current?.cards.some(
+        (card) => !card.word.trim() || !card.translation.trim()
+      )
+    ) {
+      setModalText("Все поля должны быть заполнены!");
       setIsWarning(true);
       setModalOpen(true);
-      return;
-    }
-
-    const hasEmptyFields = collection.some(
-      (item) => !item.word.trim() || !item.translation.trim()
-    );
-
-    if (hasEmptyFields) {
-      setModalText("Все поля карточек должны быть заполнены!");
-      setIsWarning(true);
-      setModalOpen(true);
-      return;
-    }
-
-    try {
-      const cards = collection.map((card) => ({
-        id: card.id,
-        word: card.word.trim(),
-        translation: card.translation.trim(),
-      }));
-
-      const res = await createCollection({
-        name: collectionName.trim(),
-        cards,
-      });
-
-      if (res.success) {
+    } else {
+      try {
+        const cards = collectionRef.current.cards.map((card) => ({
+          id: card.id,
+          word: card.word.trim(),
+          translation: card.translation.trim(),
+        }));
+        await createCollection({
+          name: collectionRef.current.name.trim(),
+          cards,
+        }).unwrap();
         navigate("/dashboard");
-      } else {
-        console.error("Ошибка:", res.error);
+      } catch (error) {
+        console.error("Ошибка создания коллекции:", error);
       }
-    } catch (err) {
-      console.error("Ошибка запроса:", err);
     }
-  }, [collection, collectionName, createCollection, navigate]);
+  }, [navigate, createCollection]);
 
   const back = useCallback(() => {
     if (
-      collection.length &&
-      collection.some((item) => item.word || item.translation)
+      collectionRef.current?.name.trim() ||
+      collectionRef.current?.cards.find(
+        (card) => card.word.trim() || card.translation.trim()
+      )
     ) {
-      setModalText("Все несохранённые данные будут утеряны!");
+      setModalText("Все несохраненные данные будут потеряны!");
       setIsWarning(false);
       setModalOpen(true);
-    } else navigate("/dashboard");
-  }, [navigate, collection]);
+    } else {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
 
   const confirmAction = (value: boolean) => {
     if (value) {
@@ -86,6 +87,7 @@ export const CreateCollection = memo(() => {
 
   return (
     <>
+      {isLoading && <Loader />}
       {isModalOpen && (
         <ModalConfirm
           modalText={modalText}
@@ -102,12 +104,14 @@ export const CreateCollection = memo(() => {
         rightIcon={save}
         title="Новая коллекция"
       />
-      <EditableCollection
-        collection={collection}
-        name={collectionName}
-        onNameChange={setCollectionName}
-        onCollectionChange={setCollection}
-      />
+      {collection ? (
+        <EditableCollection
+          collection={collection.cards}
+          name={collection.name}
+        />
+      ) : (
+        <Loader />
+      )}
     </>
   );
 });

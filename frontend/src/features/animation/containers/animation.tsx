@@ -2,23 +2,20 @@ import { useNavigate } from "react-router-dom";
 import { useSpring, animated } from "@react-spring/web";
 import logo from "@assets/images/logo_project.webp";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@redux/hooks";
-import { useInitAuth } from "@features/auth/hooks/useInitAuth";
+import { useGetMeQuery } from "@features/auth";
 
 export const StartAnimation = () => {
   const [isAnimated, setIsAnimated] = useState(
     sessionStorage.getItem("isAnimationCompleted") === "true"
   );
   const navigate = useNavigate();
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-
-  useInitAuth();
+  const { data: user, isLoading } = useGetMeQuery();
 
   useEffect(() => {
-    if (isAnimated) {
-      navigate(isAuthenticated ? "/dashboard" : "/sign-in", { replace: true });
+    if (isAnimated && !isLoading) {
+      navigate(user ? "/dashboard" : "/sign-in", { replace: true });
     }
-  }, [isAnimated, navigate, isAuthenticated]);
+  }, [isAnimated, navigate, user, isLoading]);
 
   const springs = useSpring({
     from: {
@@ -41,7 +38,7 @@ export const StartAnimation = () => {
       });
       setIsAnimated(true);
       sessionStorage.setItem("isAnimationCompleted", "true");
-      navigate(isAuthenticated ? "/dashboard" : "/sign-in", { replace: true });
+      navigate(user ? "/dashboard" : "/sign-in", { replace: true });
     },
     config: {
       tension: 170,

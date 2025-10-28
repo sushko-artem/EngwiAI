@@ -1,12 +1,13 @@
+import { memo, useRef } from "react";
+import { useTransition, animated } from "@react-spring/web";
 import { EditableCard } from "@entities/editableCard";
-import { nanoid } from "nanoid";
-import { memo, useCallback, useRef } from "react";
+import { addCard, updateCollectionName } from "@features/collections";
+import { useAppDispatch } from "@redux/hooks";
 
 export type EditableCardType = {
   id: string;
   word: string;
   translation: string;
-  isDeleting?: boolean;
   isNew?: boolean;
   isUpdated?: boolean;
 };
@@ -14,83 +15,34 @@ export type EditableCardType = {
 type EditableCollectionPropsType = {
   name: string;
   collection: EditableCardType[];
-  onNameChange: (name: string) => void;
-  onCollectionChange: (
-    collection:
-      | EditableCardType[]
-      | ((prev: EditableCardType[]) => EditableCardType[])
-  ) => void;
-  onDelete?: (originalId: string) => void;
 };
 
 export const EditableCollection = memo(
-  ({
-    name,
-    collection,
-    onNameChange,
-    onCollectionChange,
-    onDelete,
-  }: EditableCollectionPropsType) => {
+  ({ name, collection }: EditableCollectionPropsType) => {
+    const dispatch = useAppDispatch();
     const endRef = useRef<HTMLDivElement>(null);
-
-    const setName = useCallback(
-      (name: string) => {
-        onNameChange(name);
+    const transitions = useTransition(collection, {
+      keys: (item) => item.id,
+      from: {
+        opacity: 0,
+        transform: "translateY(-20px) scale(0.95)",
+        maxHeight: 0,
       },
-      [onNameChange]
-    );
-
-    const setValue = useCallback(
-      (value: string, id: string, field: "word" | "translation") => {
-        onCollectionChange((prevCollection) => {
-          return prevCollection.map((card) => {
-            if (card.id === id) {
-              const updatedCard = { ...card, [field]: value };
-              if (!card.isNew && card[field] !== value) {
-                updatedCard.isUpdated = true;
-              }
-              return updatedCard;
-            }
-            return card;
-          });
-        });
+      enter: {
+        opacity: 1,
+        transform: "translateY(0px) scale(1)",
+        maxHeight: 200,
       },
-      [onCollectionChange]
-    );
-
-    const addCard = useCallback(() => {
-      onCollectionChange((prevCollection) => [
-        ...prevCollection,
-        { id: nanoid(), word: "", translation: "", isNew: true },
-      ]);
-
-      setTimeout(() => {
-        endRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
-      }, 50);
-    }, [onCollectionChange]);
-
-    const deleteCard = useCallback(
-      (id: string) => {
-        onCollectionChange((prevCollection) =>
-          prevCollection.map((card) =>
-            card.id === id ? { ...card, isDeleting: true } : card
-          )
-        );
-
-        setTimeout(() => {
-          if (onDelete) {
-            onDelete(id);
-          }
-          onCollectionChange((prevCollection) =>
-            prevCollection.filter((card) => card.id !== id)
-          );
-        }, 250);
+      leave: {
+        opacity: 0,
+        transform: "translateY(-20px) scale(0.7)",
+        maxHeight: 0,
       },
-      [onCollectionChange, onDelete]
-    );
+      config: {
+        tension: 200,
+        friction: 25,
+      },
+    });
 
     return (
       <div className="m-auto text-center grid gap-0.5 max-w-[500px] w-[70%] sm:w-[60%] md:w-[50%]">
@@ -100,35 +52,42 @@ export const EditableCollection = memo(
           </span>
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => dispatch(updateCollectionName(e.target.value))}
             autoComplete="off"
             name="name"
             type="text"
             className="self-center block w-[80%] border-b-1 border-b-gray-600 outline-0 text-center focus:border-b-2 font-roboto md:text-xl placeholder:font-jost placeholder:text-red-700/50"
           />
         </div>
-        <div className="grid grid-cols-1 gap-2 transition-all duration-300 ease-in-out">
-          {collection.map((item) => (
-            <EditableCard
-              isDeleting={item.isDeleting}
-              setValue={setValue}
-              deleteCard={deleteCard}
-              word={item.word}
-              translation={item.translation}
-              key={item.id}
-              id={item.id}
-            />
+        <div className="flex flex-col gap-2 transition-all duration-300 ease-in-out">
+          {transitions((style, item) => (
+            <animated.div style={style}>
+              <EditableCard
+                word={item.word}
+                translation={item.translation}
+                key={item.id}
+                id={item.id}
+              />
+            </animated.div>
           ))}
         </div>
         <div className="fixed bottom-4 right-4 z-50 lg:right-60">
           <div
-            onClick={addCard}
+            onClick={() => {
+              dispatch(addCard());
+              setTimeout(() => {
+                endRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "nearest",
+                });
+              }, 200);
+            }}
             className="flex justify-center items-center text-2xl rounded-[50%] text-white bg-blue-400 w-[50px] h-[50px] cursor-pointer hover:bg-blue-500 transition-all shadow-lg"
           >
             +
           </div>
         </div>
-        <div ref={endRef} className="h-0" />
+        <div ref={endRef} className="h-0 mt-8" />
       </div>
     );
   }

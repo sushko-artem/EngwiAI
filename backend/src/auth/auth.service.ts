@@ -46,8 +46,10 @@ export class AuthService {
       this.logger.error(err);
       throw new InternalServerErrorException('Нет связи с базой данных');
     });
-    if (!user || !user?.password || !compareSync(dto.password, user.password)) {
-      throw new UnauthorizedException('Не верно указан email или пароль');
+    if (!user) {
+      throw new UnauthorizedException('Не верно указан email', 'email');
+    } else if (!user?.password || !compareSync(dto.password, user.password)) {
+      throw new UnauthorizedException('Не верно указан пароль', 'password');
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name, password, createdAt, updatedAt, ...payload } = user;

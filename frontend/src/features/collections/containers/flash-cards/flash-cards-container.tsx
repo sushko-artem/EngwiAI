@@ -1,16 +1,18 @@
 import { memo, useCallback, useState } from "react";
-import { Header } from "@widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import cross from "@assets/images/cross.webp";
 import confirm from "@assets/images/confirm.png";
-import { FlashCard } from "@entities/flashCard";
 import { Progress } from "@shared/ui/progress";
-import { ModalFlash } from "./ui/modal-flash";
+import {
+  ModalFlash,
+  MenuOptions,
+  useGetCollectionQuery,
+} from "@features/collections";
 import { useNavigate } from "react-router-dom";
-import { MenuOptions } from "./ui/option-menu";
-import { useCollection } from "@features/collections/hooks/useCollection";
 import { Loader } from "@shared/ui/loader";
+import { Header } from "@widgets/header";
+import { FlashCard } from "@entities/flashCard";
 
 type Card = {
   word: string;
@@ -18,12 +20,12 @@ type Card = {
 };
 
 interface IFlashCardsContainerProps {
-  collectionId?: string;
+  collectionId: string;
 }
 
 export const FlashCardsContainer = memo(
   ({ collectionId }: IFlashCardsContainerProps) => {
-    const { loading, collection } = useCollection(collectionId as string);
+    const { data: collection, isLoading } = useGetCollectionQuery(collectionId);
     const [unmemTerms, setUnmemTerms] = useState<Card[]>([]);
     const [isReversed, setIsReversed] = useState(false);
     const [index, setIndex] = useState(0);
@@ -72,7 +74,7 @@ export const FlashCardsContainer = memo(
 
     return (
       <>
-        {loading && <Loader />}
+        {isLoading && <Loader />}
         {isModalOpen && (
           <ModalFlash
             collectionId={collection.id}

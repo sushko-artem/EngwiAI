@@ -1,13 +1,13 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import type { IActionButtonProps } from "../model/types/action-interface";
+import type { IActionButtonProps } from "../types/action-interface";
 
 export const ActionButton = memo(({ title, url }: IActionButtonProps) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     navigate(url);
-  };
+  }, [url, navigate]);
 
   return (
     <div
