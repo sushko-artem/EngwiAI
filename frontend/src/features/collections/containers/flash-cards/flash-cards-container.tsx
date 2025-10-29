@@ -8,11 +8,13 @@ import {
   ModalFlash,
   MenuOptions,
   useGetCollectionQuery,
+  useDeleteCollectionMutation,
 } from "@features/collections";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@shared/ui/loader";
 import { Header } from "@widgets/header";
 import { FlashCard } from "@entities/flashCard";
+import { ModalConfirm } from "@widgets/modal-confirm";
 
 type Card = {
   word: string;
@@ -26,11 +28,14 @@ interface IFlashCardsContainerProps {
 export const FlashCardsContainer = memo(
   ({ collectionId }: IFlashCardsContainerProps) => {
     const { data: collection, isLoading } = useGetCollectionQuery(collectionId);
+    const [deleteCollection] = useDeleteCollectionMutation();
     const [unmemTerms, setUnmemTerms] = useState<Card[]>([]);
     const [isReversed, setIsReversed] = useState(false);
     const [index, setIndex] = useState(0);
     const [key, setKey] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+    const [modalText, setModalText] = useState("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const progress = collection
@@ -45,6 +50,12 @@ export const FlashCardsContainer = memo(
     const options = useCallback(() => {
       setIsMenuOpen((prev) => !prev);
     }, []);
+
+    const handleDelete = useCallback(() => {
+      setIsMenuOpen(false);
+      setModalText(`Удалить коллекцию "${collection?.name}"`);
+      setIsModalConfirmOpen(true);
+    }, [collection]);
 
     const closeMenu = () => {
       setIsMenuOpen(false);
@@ -67,6 +78,20 @@ export const FlashCardsContainer = memo(
       setIsReversed((state) => !state);
     };
 
+    const confirmAction = async (value: boolean) => {
+      if (value) {
+        setIsModalConfirmOpen(false);
+        navigate("/collections");
+        try {
+          await deleteCollection(collectionId).unwrap();
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        setIsModalConfirmOpen(false);
+      }
+    };
+
     if (!collection) {
       return <div>Коллекция не найдена!</div>;
     }
@@ -75,6 +100,9 @@ export const FlashCardsContainer = memo(
     return (
       <>
         {isLoading && <Loader />}
+        {isModalConfirmOpen && (
+          <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
+        )}
         {isModalOpen && (
           <ModalFlash
             collectionId={collection.id}
@@ -91,6 +119,7 @@ export const FlashCardsContainer = memo(
             onClose={closeMenu}
             isReversed={isReversed}
             collectionId={collection.id}
+            onDelete={handleDelete}
           />
         )}
         <Header

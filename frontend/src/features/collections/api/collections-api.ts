@@ -32,7 +32,7 @@ export const collectionsApi = api.injectEndpoints({
       { id: string; dto: IUpdateCollectionDto }
     >({
       query: ({ id, dto }) => ({
-        url: `${COLLECTION_ENDPOINTS.UPDATE}/${id}`,
+        url: `${COLLECTION_ENDPOINTS.UPDATE}${id}`,
         method: "POST",
         body: dto,
       }),
@@ -45,6 +45,32 @@ export const collectionsApi = api.injectEndpoints({
       query: (id) => `${COLLECTION_ENDPOINTS.GET_ONE}${id}`,
       providesTags: (_, __, id) => [{ type: "Collection", id }],
     }),
+    deleteCollection: builder.mutation<{ id: string }, string>({
+      query: (id) => ({
+        url: `${COLLECTION_ENDPOINTS.DELETE}${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_, __, id) => [
+        { type: "Collection", id },
+        { type: "Collection", id: "LIST" },
+      ],
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          collectionsApi.util.updateQueryData(
+            "getCollections",
+            undefined,
+            (draft) => {
+              return draft.filter((collection) => collection.id !== id);
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -53,4 +79,5 @@ export const {
   useCreateCollectionMutation,
   useGetCollectionQuery,
   useUpdateCollectionMutation,
+  useDeleteCollectionMutation,
 } = collectionsApi;

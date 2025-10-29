@@ -24,4 +24,5 @@ export {
   useCreateCollectionMutation,
   useGetCollectionQuery,
   useUpdateCollectionMutation,
+  useDeleteCollectionMutation,
 } from "./api/collections-api";

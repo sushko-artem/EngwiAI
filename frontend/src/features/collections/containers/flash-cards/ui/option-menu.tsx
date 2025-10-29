@@ -9,6 +9,7 @@ type MenuOptionsPropsType = {
   isReversed: boolean;
   onClose: () => void;
   onSwitchChange: () => void;
+  onDelete: () => void;
 };
 
 export const MenuOptions = memo(
@@ -16,6 +17,7 @@ export const MenuOptions = memo(
     collectionId,
     isMenuOpen,
     onClose,
+    onDelete,
     onSwitchChange,
     isReversed,
   }: MenuOptionsPropsType) => {
@@ -91,14 +93,21 @@ export const MenuOptions = memo(
             <Switch
               onCheckedChange={onSwitchChange}
               checked={isReversed}
-              className="my-auto mr-2"
+              className="my-auto mr-2 cursor-pointer"
               id="switch side"
             />
-            <label htmlFor="switch side">Перевернуть карточки</label>
+            <label className="cursor-pointer" htmlFor="switch side">
+              Перевернуть карточки
+            </label>
           </div>
-          <div className="flex text-center justify-center p-4 font-jost  border-2 rounded-b-md">
+          <div className="flex text-center justify-center p-4 font-jost  border-1">
             <button onClick={editCollection} className="cursor-pointer">
               Редактировать коллекцию
+            </button>
+          </div>
+          <div className="flex text-center justify-center p-4 font-jost  border-1 border-t-0 rounded-b-md">
+            <button onClick={onDelete} className="cursor-pointer">
+              Удалить коллекцию
             </button>
           </div>
         </animated.div>
