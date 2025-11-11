@@ -5,7 +5,7 @@ import cross from "@assets/images/cross.webp";
 type ActionButtonModulePropsType = {
   collectionName: string;
   id: string;
-  onDelete: (id: string, name: string) => void;
+  onDelete(id: string): void;
 };
 
 export const ActionButtonModule = memo(
@@ -18,7 +18,7 @@ export const ActionButtonModule = memo(
 
     const handleDelete = async (e: React.MouseEvent) => {
       e.stopPropagation();
-      onDelete(id, collectionName);
+      onDelete(id);
     };
 
     return (

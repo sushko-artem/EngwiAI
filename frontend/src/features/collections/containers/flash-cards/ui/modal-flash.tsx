@@ -5,7 +5,7 @@ type ModalPropType = {
   moduleName: string;
   moduleLength: number;
   unknownTerms: number;
-  back: () => void;
+  back(): void;
 };
 
 export const ModalFlash = ({

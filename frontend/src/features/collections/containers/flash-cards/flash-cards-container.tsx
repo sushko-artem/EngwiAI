@@ -34,14 +34,15 @@ export const FlashCardsContainer = memo(
     const [index, setIndex] = useState(0);
     const [key, setKey] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
-    const [modalText, setModalText] = useState("");
+    const [modaleMode, setModaleMode] = useState<"warn" | "confirm" | null>(
+      null
+    );
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const progress = collection
       ? ((index + 1) / collection.cards.length) * 100
       : null;
-    const currentCard = collection?.cards[index];
+    const currentCard = collection?.cards[index] as Card;
 
     const back = useCallback(() => {
       navigate("/collections");
@@ -53,9 +54,8 @@ export const FlashCardsContainer = memo(
 
     const handleDelete = useCallback(() => {
       setIsMenuOpen(false);
-      setModalText(`Удалить коллекцию "${collection?.name}"`);
-      setIsModalConfirmOpen(true);
-    }, [collection]);
+      setModaleMode("confirm");
+    }, []);
 
     const closeMenu = () => {
       setIsMenuOpen(false);
@@ -80,7 +80,7 @@ export const FlashCardsContainer = memo(
 
     const confirmAction = async (value: boolean) => {
       if (value) {
-        setIsModalConfirmOpen(false);
+        setModaleMode(null);
         navigate("/collections");
         try {
           await deleteCollection(collectionId).unwrap();
@@ -88,7 +88,7 @@ export const FlashCardsContainer = memo(
           console.error(error);
         }
       } else {
-        setIsModalConfirmOpen(false);
+        setModaleMode(null);
       }
     };
 
@@ -100,8 +100,11 @@ export const FlashCardsContainer = memo(
     return (
       <>
         {isLoading && <Loader />}
-        {isModalConfirmOpen && (
-          <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
+        {modaleMode && (
+          <ModalConfirm mode={modaleMode} confirmAction={confirmAction}>
+            {modaleMode === "confirm" &&
+              `Удалить коллекцию "${collection?.name}"?`}
+          </ModalConfirm>
         )}
         {isModalOpen && (
           <ModalFlash
@@ -131,38 +134,46 @@ export const FlashCardsContainer = memo(
           rightIcon={option}
           title="Флэш - карты"
         />
-        <h1 className="text-center text-fuchsia-800 font-comic text-xl md:text-2xl mt-8">
-          {collection.name}
-        </h1>
-        <div className="flex flex-col align-middle justify-center mt-10">
-          <FlashCard key={key} card={currentCard} isReversed={isReversed} />
-        </div>
-        <div className="mt-3 m-auto max-w-[350px] md:max-w-[500px] text-center text-sm font-comic">
-          <Progress className="bg-transparent" value={progress} />
-          <span>
-            {index + 1}/{collection.cards.length}
-          </span>
-        </div>
-        <div className="flex mt-4 align-middle justify-around md:justify-evenly">
-          <div
-            onClick={() => handleClick(false)}
-            className="flex border-2 rounded-lg border-red-400 bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all"
-          >
-            <div className="my-auto w-[50px]">
-              <img src={cross} width={100} alt="не знаю" />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <section>
+            <h1 className="text-center text-fuchsia-800 font-comic text-xl md:text-2xl mt-8">
+              {collection.name}
+            </h1>
+            <div className="flex flex-col align-middle justify-center mt-10">
+              <FlashCard key={key} card={currentCard} isReversed={isReversed} />
             </div>
-            <span className="my-auto p-2 font-roboto font-bold">Изучено</span>
-          </div>
-          <div
-            onClick={() => handleClick(true)}
-            className="flex border-2 rounded-lg border-green-400 bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all"
-          >
-            <div className="my-auto w-[60px] pl-2">
-              <img src={confirm} width={100} alt="знаю" />
+            <div className="mt-3 m-auto max-w-[350px] md:max-w-[500px] text-center text-sm font-comic">
+              <Progress className="bg-transparent" value={progress} />
+              <span>
+                {index + 1}/{collection.cards.length}
+              </span>
             </div>
-            <span className="my-auto p-2 font-roboto font-bold">Знаю!</span>
-          </div>
-        </div>
+            <div className="flex mt-4 align-middle justify-around md:justify-evenly">
+              <div
+                onClick={() => handleClick(false)}
+                className="flex border-2 rounded-lg border-red-400 bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all"
+              >
+                <div className="my-auto w-[50px]">
+                  <img src={cross} width={100} alt="не знаю" />
+                </div>
+                <span className="my-auto p-2 font-roboto font-bold">
+                  Изучено
+                </span>
+              </div>
+              <div
+                onClick={() => handleClick(true)}
+                className="flex border-2 rounded-lg border-green-400 bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all"
+              >
+                <div className="my-auto w-[60px] pl-2">
+                  <img src={confirm} width={100} alt="знаю" />
+                </div>
+                <span className="my-auto p-2 font-roboto font-bold">Знаю!</span>
+              </div>
+            </div>
+          </section>
+        )}
       </>
     );
   }

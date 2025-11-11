@@ -1,10 +1,5 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header, ModalConfirm } from "@widgets/index";
-import backArrow from "@assets/images/arrow-left.svg";
-import save from "@assets/images/check.png";
-import { EditableCollection } from "@entities/editableCollection";
-import { Loader } from "@shared/ui/loader";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   clearCollection,
@@ -16,22 +11,15 @@ import {
   useUpdateCollectionMutation,
 } from "@features/collections";
 import { getErrorMessage } from "@shared/api";
+import type { ModalModeType } from "@widgets/modal-confirm";
 
-interface IEditCollectionProps {
-  collectionId: string;
-}
-
-export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
-  const {
-    data: collection,
-    error,
-    isLoading,
-  } = useGetCollectionQuery(collectionId);
-  const [updateCollection] = useUpdateCollectionMutation();
+export const useEditCollection = (collectionId: string) => {
+  const { data: collection, error } = useGetCollectionQuery(collectionId);
+  const [updateCollection, { isLoading }] = useUpdateCollectionMutation();
   const editableCollection = useAppSelector(selectEditableCollection);
   const deletedCards = useAppSelector(selectDeletedCards);
   const dispatch = useAppDispatch();
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
   const [modalText, setModalText] = useState("");
   const navigate = useNavigate();
   const originalCollectionRef = useRef(collection);
@@ -54,8 +42,19 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
   }, [dispatch, collection]);
 
   const saveCollection = useCallback(async () => {
-    if (!originalCollectionRef.current || !editableCollectionRef.current)
+    if (!originalCollectionRef.current || !editableCollectionRef.current) {
       return;
+    }
+    if (
+      !editableCollectionRef.current.name.trim() ||
+      editableCollectionRef.current.cards.some(
+        (card) => !card.word.trim() || !card.translation.trim()
+      )
+    ) {
+      setModalText("Все поля должны быть заполнены!");
+      setModaleMode("warn");
+      return;
+    }
     const dto = createUpdateDto(
       originalCollectionRef.current,
       editableCollectionRef.current,
@@ -67,7 +66,7 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
         navigate("/collections");
       } catch (error) {
         setModalText(getErrorMessage(error));
-        setModalOpen(true);
+        setModaleMode("warn");
       }
     }
   }, [navigate, updateCollection, collectionId]);
@@ -87,52 +86,32 @@ export const EditCollection = memo(({ collectionId }: IEditCollectionProps) => {
       setModalText(
         "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!"
       );
-      setModalOpen(true);
+      setModaleMode("confirm");
     } else {
       navigate("/collections");
     }
   }, [navigate]);
 
-  const confirmAction = (value: boolean) => {
-    if (value) {
-      navigate("/collections");
-    } else {
-      setModalOpen(false);
-    }
-  };
-
-  return (
-    <>
-      {isLoading && <Loader />}
-      {isModalOpen && (
-        <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
-      )}
-      <Header
-        leftIconTitle="вернуться на главную"
-        rightIconTitle="сохранить"
-        rightIconAction={saveCollection}
-        leftIconAction={back}
-        leftIcon={backArrow}
-        rightIcon={save}
-        title={"Редактирование"}
-      />
-      {!editableCollection ? (
-        error ? (
-          <div className="text-3xl font-jost text-fuchsia-800 flex flex-col h-[50vh] justify-center text-center">
-            <span>Ошибка!</span> Коллекция не найдена!
-            <span className="text-red-500 text-lg">
-              Error: {getErrorMessage(error)}
-            </span>
-          </div>
-        ) : (
-          <Loader />
-        )
-      ) : (
-        <EditableCollection
-          name={editableCollection.name}
-          collection={editableCollection.cards}
-        />
-      )}
-    </>
+  const confirmAction = useCallback(
+    (value: boolean) => {
+      if (value) {
+        navigate("/collections");
+      } else {
+        setModaleMode(null);
+        setModalText("");
+      }
+    },
+    [navigate]
   );
-});
+
+  return {
+    error,
+    isLoading,
+    modalText,
+    modaleMode,
+    editableCollection,
+    saveCollection,
+    back,
+    confirmAction,
+  };
+};

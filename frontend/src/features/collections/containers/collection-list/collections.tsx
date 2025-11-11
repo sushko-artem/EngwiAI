@@ -4,7 +4,7 @@ import {
   useGetCollectionsQuery,
 } from "@features/collections";
 import { Loader } from "@shared/ui/loader";
-import { ModalConfirm } from "@widgets/modal-confirm";
+import { ModalConfirm, type ModalModeType } from "@widgets/modal-confirm";
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -12,12 +12,10 @@ export const CollectionList = () => {
   const { data: collections, isLoading } = useGetCollectionsQuery();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [id, setId] = useState<string | null>(null);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [modalText, setModalText] = useState("");
+  const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
 
-  const onDelete = useCallback((id: string, name: string) => {
-    setModalText(`Удалить коллекцию "${name}"?`);
-    setModalOpen(true);
+  const onDelete = useCallback((id: string) => {
+    setModaleMode("confirm");
     setId(id);
   }, []);
 
@@ -41,22 +39,26 @@ export const CollectionList = () => {
 
   const confirmAction = async (value: boolean) => {
     if (value) {
-      setModalOpen(false);
+      setModaleMode(null);
       try {
         await deleteCollection(id as string).unwrap();
       } catch (error) {
         console.error(error);
       }
     } else {
-      setModalOpen(false);
+      setModaleMode(null);
       setId(null);
     }
   };
 
   return (
     <>
-      {isModalOpen && (
-        <ModalConfirm modalText={modalText} confirmAction={confirmAction} />
+      {modaleMode && (
+        <ModalConfirm mode={modaleMode} confirmAction={confirmAction}>
+          {`Удалить коллекцию "${
+            collections?.find((collection) => collection.id === id)?.name
+          }"?`}
+        </ModalConfirm>
       )}
       <div className="flex flex-col items-center gap-5 text-center font-comic text-xl text-fuchsia-800 mt-10 my-auto">
         {collections!.map((item) => (
