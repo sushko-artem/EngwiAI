@@ -1,47 +1,30 @@
 import { memo } from "react";
-import { ModalConfirm } from "@widgets/index";
-import {
-  EditableCollection,
-  type EditableCardType,
-} from "@widgets/editableCollection";
+import { EditableCollection } from "@widgets/editableCollection";
 import { Loader } from "@shared/ui/loader";
-import { NotFoundCollection } from "@features/collections";
+import {
+  NotFoundCollection,
+  type EditableCollectionType,
+} from "@features/collections";
 
 interface IEditCollectionContainerProps {
   isLoading: boolean;
-  modaleMode: "warn" | "confirm" | null;
-  modaleText: string;
-  confirmAction(value: boolean): void;
-  collection: { name: string; cards: EditableCardType[] };
+  collection: EditableCollectionType;
   error: unknown;
 }
 
 export const EditCollectionContainer = memo(
-  ({
-    isLoading,
-    modaleMode,
-    modaleText,
-    confirmAction,
-    collection,
-    error,
-  }: IEditCollectionContainerProps) => {
-    if (!collection) {
+  ({ isLoading, collection, error }: IEditCollectionContainerProps) => {
+    if (!collection && !error) {
       return <Loader />;
     }
-    const { name, cards } = collection;
     return (
       <>
         {isLoading && <Loader />}
-        {modaleMode && (
-          <ModalConfirm mode={modaleMode} confirmAction={confirmAction}>
-            {modaleText}
-          </ModalConfirm>
-        )}
-        {error ? (
-          <NotFoundCollection error={error} />
-        ) : (
-          <EditableCollection name={name} collection={cards} />
-        )}
+        {error && <NotFoundCollection error={error} />}
+        <EditableCollection
+          name={collection.name}
+          collection={collection.cards}
+        />
       </>
     );
   }

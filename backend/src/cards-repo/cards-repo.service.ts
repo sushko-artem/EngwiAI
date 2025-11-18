@@ -34,9 +34,9 @@ export class CardsRepoService {
   }
 
   async getCollection(collectionId: string) {
-    const collection = await this.cacheManager.get(collectionId);
+    let collection = await this.cacheManager.get(collectionId);
     if (!collection) {
-      const collection = await this.prisma.collection.findUnique({
+      collection = await this.prisma.collection.findUnique({
         where: {
           id: collectionId,
         },

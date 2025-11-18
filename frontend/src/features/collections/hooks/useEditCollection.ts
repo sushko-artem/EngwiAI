@@ -9,22 +9,25 @@ import {
   selectEditableCollection,
   useGetCollectionQuery,
   useUpdateCollectionMutation,
+  useGetCollectionsQuery,
 } from "@features/collections";
 import { getErrorMessage } from "@shared/api";
 import type { ModalModeType } from "@widgets/modal-confirm";
 
 export const useEditCollection = (collectionId: string) => {
+  const { data: collections } = useGetCollectionsQuery();
   const { data: collection, error } = useGetCollectionQuery(collectionId);
   const [updateCollection, { isLoading }] = useUpdateCollectionMutation();
   const editableCollection = useAppSelector(selectEditableCollection);
   const deletedCards = useAppSelector(selectDeletedCards);
   const dispatch = useAppDispatch();
   const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
-  const [modalText, setModalText] = useState("");
+  const [modaleText, setModaleText] = useState("");
   const navigate = useNavigate();
   const originalCollectionRef = useRef(collection);
   const editableCollectionRef = useRef(editableCollection);
   const deletedCardsRef = useRef(deletedCards);
+  const existedNamesRef = useRef<string[]>([]);
 
   useEffect(() => {
     editableCollectionRef.current = editableCollection;
@@ -41,6 +44,14 @@ export const useEditCollection = (collectionId: string) => {
     };
   }, [dispatch, collection]);
 
+  useEffect(() => {
+    if (collections) {
+      existedNamesRef.current = collections
+        .map((collection) => collection.name)
+        .filter((name) => name !== originalCollectionRef.current?.name);
+    }
+  }, [collections]);
+
   const saveCollection = useCallback(async () => {
     if (!originalCollectionRef.current || !editableCollectionRef.current) {
       return;
@@ -51,7 +62,16 @@ export const useEditCollection = (collectionId: string) => {
         (card) => !card.word.trim() || !card.translation.trim()
       )
     ) {
-      setModalText("Все поля должны быть заполнены!");
+      setModaleText("Все поля должны быть заполнены!");
+      setModaleMode("warn");
+      return;
+    }
+    if (
+      existedNamesRef.current.includes(
+        editableCollectionRef.current.name.trim()
+      )
+    ) {
+      setModaleText("Коллекция с таким именем уже существует");
       setModaleMode("warn");
       return;
     }
@@ -65,7 +85,7 @@ export const useEditCollection = (collectionId: string) => {
         await updateCollection({ id: collectionId, dto }).unwrap();
         navigate("/collections");
       } catch (error) {
-        setModalText(getErrorMessage(error));
+        setModaleText(getErrorMessage(error));
         setModaleMode("warn");
       }
     }
@@ -73,8 +93,8 @@ export const useEditCollection = (collectionId: string) => {
 
   const back = useCallback(() => {
     const isNameUpdated =
-      editableCollectionRef.current?.name !==
-      originalCollectionRef.current?.name;
+      editableCollectionRef.current?.name.trim() !==
+      originalCollectionRef.current?.name.trim();
     const isCardsUpdated =
       editableCollectionRef.current?.cards.some(
         (card) => card.isUpdated || card.isNew
@@ -83,7 +103,7 @@ export const useEditCollection = (collectionId: string) => {
         originalCollectionRef.current?.cards.length;
     const isUpdated = isNameUpdated || isCardsUpdated;
     if (isUpdated) {
-      setModalText(
+      setModaleText(
         "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!"
       );
       setModaleMode("confirm");
@@ -98,7 +118,7 @@ export const useEditCollection = (collectionId: string) => {
         navigate("/collections");
       } else {
         setModaleMode(null);
-        setModalText("");
+        setModaleText("");
       }
     },
     [navigate]
@@ -107,7 +127,7 @@ export const useEditCollection = (collectionId: string) => {
   return {
     error,
     isLoading,
-    modalText,
+    modaleText,
     modaleMode,
     editableCollection,
     saveCollection,

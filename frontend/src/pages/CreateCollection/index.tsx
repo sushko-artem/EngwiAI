@@ -5,6 +5,7 @@ import {
 import { Layout } from "@widgets/layout";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
+import { ModalConfirm } from "@widgets/modal-confirm";
 
 export const CreateCollectionPage = () => {
   const {
@@ -29,12 +30,14 @@ export const CreateCollectionPage = () => {
       }}
     >
       <CreateCollectionContainer
-        confirmAction={confirmAction}
         collection={collection!}
-        modaleMode={modaleMode}
-        modaleText={modaleText}
         isLoading={isLoading}
       />
+      {modaleMode && (
+        <ModalConfirm confirmAction={confirmAction} mode={modaleMode}>
+          {modaleText}
+        </ModalConfirm>
+      )}
     </Layout>
   );
 };

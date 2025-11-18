@@ -6,17 +6,21 @@ import {
   selectEditableCollection,
   initDefaultCollection,
   useCreateCollectionMutation,
+  useGetCollectionsQuery,
 } from "@features/collections";
 import type { ModalModeType } from "@widgets/modal-confirm";
+import { getErrorMessage } from "@shared/api";
 
 export const useCreateCollection = () => {
   const collection = useAppSelector(selectEditableCollection);
+  const { data: collections } = useGetCollectionsQuery();
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
   const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
   const [modaleText, setModaleText] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const collectionRef = useRef(collection);
+  const existedNamesRef = useRef<string[]>([]);
 
   useEffect(() => {
     collectionRef.current = collection;
@@ -29,7 +33,23 @@ export const useCreateCollection = () => {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    if (collections) {
+      existedNamesRef.current = collections.map(
+        (collection) => collection.name
+      );
+    }
+  }, [collections]);
+
   const saveCollection = useCallback(async () => {
+    if (
+      collectionRef.current?.name &&
+      existedNamesRef.current.includes(collectionRef.current.name.trim())
+    ) {
+      setModaleText("Коллекция с таким именем уже существует");
+      setModaleMode("warn");
+      return;
+    }
     if (
       !collectionRef.current?.name.trim() ||
       collectionRef.current?.cards.some(
@@ -51,7 +71,8 @@ export const useCreateCollection = () => {
         }).unwrap();
         navigate("/collections");
       } catch (error) {
-        console.error("Collection create error:", error);
+        setModaleText(getErrorMessage(error));
+        setModaleMode("warn");
       }
     }
   }, [navigate, createCollection]);

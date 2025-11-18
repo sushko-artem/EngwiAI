@@ -17,6 +17,7 @@ export {
   deleteCard,
   selectEditableCollection,
   selectDeletedCards,
+  type EditableCollectionType,
 } from "./model/collections.slice";
 export {
   collectionsApi,

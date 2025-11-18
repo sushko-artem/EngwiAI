@@ -3,11 +3,9 @@ import { useTransition, animated } from "@react-spring/web";
 import { EditableCard } from "@entities/editableCard";
 import { addCard, updateCollectionName } from "@features/collections";
 import { useAppDispatch } from "@redux/hooks";
+import type { ICard } from "@shared/api";
 
-export type EditableCardType = {
-  id: string;
-  word: string;
-  translation: string;
+export type EditableCardType = ICard & {
   isNew?: boolean;
   isUpdated?: boolean;
 };

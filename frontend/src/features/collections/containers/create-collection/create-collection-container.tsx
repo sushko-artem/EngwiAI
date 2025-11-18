@@ -1,40 +1,25 @@
+import type { EditableCollectionType } from "@features/collections";
 import { Loader } from "@shared/ui/loader";
-import {
-  EditableCollection,
-  type EditableCardType,
-} from "@widgets/editableCollection";
-import { ModalConfirm, type ModalModeType } from "@widgets/modal-confirm";
+import { EditableCollection } from "@widgets/editableCollection";
 import { memo } from "react";
 
 type CreateCollectionPropType = {
   isLoading: boolean;
-  modaleMode: ModalModeType;
-  modaleText: string;
-  collection: { name: string; cards: EditableCardType[] };
-  confirmAction(value: boolean): void;
+  collection: EditableCollectionType;
 };
 
 export const CreateCollectionContainer = memo(
-  ({
-    isLoading,
-    modaleMode,
-    modaleText,
-    collection,
-    confirmAction,
-  }: CreateCollectionPropType) => {
+  ({ isLoading, collection }: CreateCollectionPropType) => {
     if (!collection) {
       return <Loader />;
     }
-    const { name, cards } = collection;
     return (
       <>
         {isLoading && <Loader />}
-        {modaleMode && (
-          <ModalConfirm confirmAction={confirmAction} mode={modaleMode}>
-            {modaleText}
-          </ModalConfirm>
-        )}
-        <EditableCollection collection={cards} name={name} />
+        <EditableCollection
+          collection={collection.cards}
+          name={collection.name}
+        />
       </>
     );
   }

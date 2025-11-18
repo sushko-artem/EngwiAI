@@ -6,13 +6,14 @@ import {
 import { Layout } from "@widgets/layout";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
+import { ModalConfirm } from "@widgets/modal-confirm";
 
 export const EditCollectionPage = () => {
   const { collectionId = "" } = useParams<{ collectionId?: string }>();
   const {
     error,
     isLoading,
-    modalText,
+    modaleText,
     modaleMode,
     editableCollection,
     saveCollection,
@@ -33,12 +34,14 @@ export const EditCollectionPage = () => {
     >
       <EditCollectionContainer
         isLoading={isLoading}
-        modaleMode={modaleMode}
-        modaleText={modalText}
         error={error}
         collection={editableCollection!}
-        confirmAction={confirmAction}
       />
+      {modaleMode && (
+        <ModalConfirm mode={modaleMode} confirmAction={confirmAction}>
+          {modaleText}
+        </ModalConfirm>
+      )}
     </Layout>
   );
 };

@@ -5,19 +5,20 @@ import {
 } from "@features/collections";
 import { useNavigate } from "react-router-dom";
 import type { ModalModeType } from "@widgets/modal-confirm";
+import type { ICard } from "@shared/api";
 
-type Card = {
-  word: string;
-  translation: string;
-};
+type Card = Omit<ICard, "id">;
 
 export const useFlashCards = (collectionId: string) => {
-  const { data: collection, isLoading } = useGetCollectionQuery(collectionId);
+  const {
+    data: collection,
+    isLoading,
+    error,
+  } = useGetCollectionQuery(collectionId);
   const [deleteCollection] = useDeleteCollectionMutation();
   const [unmemTerms, setUnmemTerms] = useState<Card[]>([]);
   const [isReversed, setIsReversed] = useState(false);
   const [index, setIndex] = useState(0);
-  const [key, setKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +45,7 @@ export const useFlashCards = (collectionId: string) => {
     setIsMenuOpen(false);
   }, []);
 
-  const handleClick = useCallback(
+  const handleChosenStatus = useCallback(
     (status: boolean) => {
       if (!collection || !currentCard) return;
       if (!status) {
@@ -54,7 +55,6 @@ export const useFlashCards = (collectionId: string) => {
         setIsModalOpen(true);
         return;
       }
-      setKey((key) => key + 1);
       setIndex((index) => index + 1);
     },
     [collection, currentCard, index]
@@ -82,18 +82,20 @@ export const useFlashCards = (collectionId: string) => {
   );
 
   return {
+    error,
     collection,
     isLoading,
     unmemTerms,
     isReversed,
     isMenuOpen,
     isModalOpen,
-    key,
     modaleMode,
     progress,
+    currentCard,
+    index,
     back,
     options,
-    handleClick,
+    handleChosenStatus,
     handleDelete,
     handleSwitchChange,
     closeMenu,

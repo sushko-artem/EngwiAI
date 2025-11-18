@@ -3,13 +3,13 @@ import type { RootState } from "@redux/store";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
 
-type CollectionType = {
+export type EditableCollectionType = {
   name: string;
   cards: EditableCardType[];
 };
 
 interface ICollectionState {
-  editableCollection: CollectionType | null;
+  editableCollection: EditableCollectionType | null;
   deletedCards: Array<string>;
   mode: "create" | "edit" | null;
 }
@@ -34,7 +34,10 @@ const collectionsSlice = createSlice({
       };
       state.mode = "create";
     },
-    setExistedCollection: (state, action: PayloadAction<CollectionType>) => {
+    setExistedCollection: (
+      state,
+      action: PayloadAction<EditableCollectionType>
+    ) => {
       state.editableCollection = {
         name: action.payload.name,
         cards: action.payload.cards,
