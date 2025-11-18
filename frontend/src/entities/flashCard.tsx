@@ -1,12 +1,10 @@
 import { memo, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
+import type { ICard } from "@shared/api";
 
 type CardPropsType = {
   isReversed: boolean;
-  card: {
-    word: string;
-    translation: string;
-  };
+  card: Omit<ICard, "id">;
 };
 
 export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
@@ -16,7 +14,6 @@ export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
     transform: `perspective(600px) rotateX(${flipped ? 180 : 0}deg)`,
     config: { mass: 5, tension: 500, friction: 80 },
   });
-
   return (
     <div className="flex justify-center items-center">
       <div

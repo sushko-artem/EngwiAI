@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-type HeaderPropType = {
+export type HeaderPropType = {
   title: string;
   rightIcon?: string;
   rightIconTitle?: string;
@@ -21,7 +21,7 @@ export const Header = memo(
     title,
   }: HeaderPropType) => {
     return (
-      <section className="sticky top-0 z-10 backdrop-blur-[30px]">
+      <section className="sticky top-0 z-5 backdrop-blur-[30px]">
         <header className="flex justify-between py-4">
           <button
             className="w-[30px] md:w-[50px] cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]"

@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { CollectionList } from "@features/collections";
-import { Header } from "widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
+import { Layout } from "@widgets/layout";
 
 export const CollectionPage = () => {
   const navigate = useNavigate();
@@ -10,14 +10,15 @@ export const CollectionPage = () => {
     navigate("/dashboard");
   }, [navigate]);
   return (
-    <>
-      <Header
-        title="Мои модули"
-        leftIcon={backArrow}
-        leftIconTitle="вернуться на главную"
-        leftIconAction={back}
-      />
+    <Layout
+      headerProps={{
+        title: "Мои модули",
+        leftIcon: backArrow,
+        leftIconTitle: "Вернуться на главную",
+        leftIconAction: back,
+      }}
+    >
       <CollectionList />
-    </>
+    </Layout>
   );
 };
