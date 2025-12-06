@@ -1,4 +1,4 @@
-import { Role, User } from '@prisma/client';
+import { Role, User } from '@generated/prisma/client';
 import { Exclude } from 'class-transformer';
 
 export class UserEntity implements User {

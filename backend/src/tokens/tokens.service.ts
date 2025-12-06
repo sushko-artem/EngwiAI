@@ -4,7 +4,7 @@ import { PrismaService } from '@prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { IjwtPayload } from '../shared/interfaces/jwtPayloadInterface';
 import ms from 'ms';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@generated/prisma/client';
 
 @Injectable()
 export class TokensService {
