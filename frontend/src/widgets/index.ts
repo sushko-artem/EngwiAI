@@ -4,3 +4,7 @@ export { type IActionButtonProps } from "./dashboardActions/types/action-interfa
 export { Header, type HeaderPropType } from "./header";
 export { ModalConfirm } from "./modal-confirm";
 export { Layout } from "./layout";
+export {
+  EditableCollection,
+  type EditableCardType,
+} from "./editableCollection";

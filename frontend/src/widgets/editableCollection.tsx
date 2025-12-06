@@ -1,6 +1,7 @@
 import { memo, useRef } from "react";
 import { useTransition, animated } from "@react-spring/web";
-import { EditableCard } from "@entities/editableCard";
+// import { EditableCard } from "@entities/editableCard";
+import { EditableCard } from "@entities/editable-card/EditableCard";
 import { addCard, updateCollectionName } from "@features/collections";
 import { useAppDispatch } from "@redux/hooks";
 import type { ICard } from "@shared/api";
@@ -29,7 +30,7 @@ export const EditableCollection = memo(
       enter: {
         opacity: 1,
         transform: "translateY(0px) scale(1)",
-        maxHeight: 200,
+        maxHeight: 400,
       },
       leave: {
         opacity: 0,

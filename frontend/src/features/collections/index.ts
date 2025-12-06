@@ -29,4 +29,5 @@ export {
 } from "./api/collections-api";
 export { useCreateCollection } from "./hooks/useCreateCollection";
 export { useEditCollection } from "./hooks/useEditCollection";
+export { useFlashCards } from "./hooks/useFlashCards";
 export { NotFoundCollection } from "./ui/not-found-error";

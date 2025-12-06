@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { useAppDispatch } from "@redux/hooks";
 import {
   clearCollection,
-  selectEditableCollection,
   initDefaultCollection,
   useCreateCollectionMutation,
   useGetCollectionsQuery,
+  type EditableCollectionType,
 } from "@features/collections";
 import type { ModalModeType } from "@widgets/modal-confirm";
 import { getErrorMessage } from "@shared/api";
 
-export const useCreateCollection = () => {
-  const collection = useAppSelector(selectEditableCollection);
+export const useCreateCollection = (
+  collection: EditableCollectionType | null
+) => {
   const { data: collections } = useGetCollectionsQuery();
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
   const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
@@ -42,6 +43,7 @@ export const useCreateCollection = () => {
   }, [collections]);
 
   const saveCollection = useCallback(async () => {
+    console.log(collectionRef.current);
     if (
       collectionRef.current?.name &&
       existedNamesRef.current.includes(collectionRef.current.name.trim())

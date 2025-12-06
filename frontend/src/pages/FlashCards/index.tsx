@@ -3,8 +3,8 @@ import {
   FlashCardsContainer,
   MenuOptions,
   ModalFlash,
+  useFlashCards,
 } from "@features/collections";
-import { useFlashCards } from "@features/collections/hooks/useFlashCards";
 import { Layout } from "@widgets/layout";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";

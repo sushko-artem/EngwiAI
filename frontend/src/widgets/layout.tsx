@@ -7,6 +7,7 @@ interface ILayoutProps {
 }
 
 export const Layout = memo(({ children, headerProps }: ILayoutProps) => {
+  console.log("LAYOUT");
   return (
     <>
       <Header {...headerProps} />

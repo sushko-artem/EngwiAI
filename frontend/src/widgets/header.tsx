@@ -20,6 +20,7 @@ export const Header = memo(
     rightIcon,
     title,
   }: HeaderPropType) => {
+    console.log("HEADER");
     return (
       <section className="sticky top-0 z-5 backdrop-blur-[30px]">
         <header className="flex justify-between py-4">
