@@ -1,7 +1,6 @@
-import { EditableCollection } from "@widgets/editableCollection";
+import { EditableCollection } from "@widgets/editable-collection/editableCollection";
 import { Loader } from "@shared/ui/loader";
 import { NotFoundCollection, useEditCollection } from "@features/collections";
-// import { Layout } from "@widgets/layout";
 import { ModalConfirm } from "@widgets/modal-confirm";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";

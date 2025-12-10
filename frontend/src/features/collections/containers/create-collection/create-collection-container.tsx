@@ -1,14 +1,14 @@
+import { useMemo } from "react";
+import { useAppSelector } from "@redux/hooks";
 import {
   selectEditableCollection,
   useCreateCollection,
 } from "@features/collections";
 import { Loader } from "@shared/ui/loader";
-import { EditableCollection } from "@widgets/editableCollection";
+import { EditableCollection } from "@widgets/editable-collection/editableCollection";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
 import { ModalConfirm } from "@widgets/modal-confirm";
-import { useMemo } from "react";
-import { useAppSelector } from "@redux/hooks";
 import { Header } from "@widgets/header";
 
 export const CreateCollectionContainer = () => {

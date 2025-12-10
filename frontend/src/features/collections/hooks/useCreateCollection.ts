@@ -43,7 +43,6 @@ export const useCreateCollection = (
   }, [collections]);
 
   const saveCollection = useCallback(async () => {
-    console.log(collectionRef.current);
     if (
       collectionRef.current?.name &&
       existedNamesRef.current.includes(collectionRef.current.name.trim())
@@ -109,7 +108,6 @@ export const useCreateCollection = (
     isLoading,
     modaleMode,
     modaleText,
-    collection,
     saveCollection,
     back,
     confirmAction,
