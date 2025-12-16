@@ -4,10 +4,12 @@ import { useAppDispatch } from "@redux/hooks";
 import {
   clearCollection,
   initDefaultCollection,
+  type EditableCollectionType,
+} from "@features/collections/model";
+import {
   useCreateCollectionMutation,
   useGetCollectionsQuery,
-  type EditableCollectionType,
-} from "@features/collections";
+} from "@features/collections/api";
 import type { ModalModeType } from "@widgets/modal-confirm";
 import { getErrorMessage } from "@shared/api";
 
@@ -70,7 +72,7 @@ export const useCreateCollection = (
           name: collectionRef.current.name.trim(),
           cards,
         }).unwrap();
-        navigate("/collections");
+        navigate("/collections", { replace: true, state: { refetch: true } });
       } catch (error) {
         setModaleText(getErrorMessage(error));
         setModaleMode("warn");

@@ -8,7 +8,6 @@ export { GoogleAuth } from "./ui/google-auth-button";
 export { InputField } from "./ui/input-field";
 export { AuthLink } from "./ui/link";
 export {
-  authApi,
   useGetMeQuery,
   useRegisterMutation,
   useLoginMutation,

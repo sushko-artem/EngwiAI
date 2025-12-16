@@ -1,14 +1,11 @@
 import { useParams } from "react-router-dom";
-import {
-  FlashCardsContainer,
-  MenuOptions,
-  ModalFlash,
-  useFlashCards,
-} from "@features/collections";
+import { FlashCardsContainer } from "@features/collections";
 import { Layout } from "@widgets/layout";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import { ModalConfirm } from "@widgets/modal-confirm";
+import { useFlashCards } from "@features/collections/hooks";
+import { MenuOptions, ModalFlash } from "@features/collections/ui";
 
 export const FlashCardsPage = () => {
   const { collectionId = "" } = useParams<{ collectionId?: string }>();

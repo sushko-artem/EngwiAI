@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
-} from "@features/collections";
+} from "@features/collections/api";
 import { useNavigate } from "react-router-dom";
 import type { ModalModeType } from "@widgets/modal-confirm";
 import type { ICard } from "@shared/api";

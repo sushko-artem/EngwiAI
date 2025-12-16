@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { collectionReducer } from "@features/collections";
+import { collectionReducer } from "@features/collections/model";
 import { api } from "@shared/api";
 
 export const store = configureStore({

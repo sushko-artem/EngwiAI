@@ -4,35 +4,34 @@ import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   clearCollection,
   setExistedCollection,
-  createUpdateDto,
   selectDeletedCards,
   selectEditableCollection,
+} from "@features/collections/model";
+import {
   useGetCollectionQuery,
   useUpdateCollectionMutation,
   useGetCollectionsQuery,
-} from "@features/collections";
+} from "@features/collections/api";
 import { getErrorMessage } from "@shared/api";
 import type { ModalModeType } from "@widgets/modal-confirm";
+import { createUpdateDto } from "@features/collections/helpers";
 
 export const useEditCollection = (collectionId: string) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const editableCollection = useAppSelector(selectEditableCollection);
+  const deletedCards = useAppSelector(selectDeletedCards);
   const { data: collections } = useGetCollectionsQuery();
   const { data: collection, error } = useGetCollectionQuery(collectionId);
   const [updateCollection, { isLoading }] = useUpdateCollectionMutation();
-  const editableCollection = useAppSelector(selectEditableCollection);
-  const deletedCards = useAppSelector(selectDeletedCards);
-  const dispatch = useAppDispatch();
   const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
   const [modaleText, setModaleText] = useState("");
-  const navigate = useNavigate();
   const originalCollectionRef = useRef(collection);
   const editableCollectionRef = useRef(editableCollection);
   const deletedCardsRef = useRef(deletedCards);
   const existedNamesRef = useRef<string[]>([]);
-
-  useEffect(() => {
-    editableCollectionRef.current = editableCollection;
-    deletedCardsRef.current = deletedCards;
-  }, [editableCollection, deletedCards]);
+  editableCollectionRef.current = editableCollection;
+  deletedCardsRef.current = deletedCards;
 
   useEffect(() => {
     if (collection) {

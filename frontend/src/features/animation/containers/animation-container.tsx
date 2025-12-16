@@ -1,6 +1,6 @@
 import { useSpring, animated } from "@react-spring/web";
 import logo from "@assets/images/logo_project.webp";
-import { useAnimation } from "..";
+import { useAnimation } from "@features/animation/hooks";
 
 export const StartAnimationContainer = () => {
   const { isAnimated, completeAnimation } = useAnimation();
