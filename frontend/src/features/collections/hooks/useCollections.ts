@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useDeleteCollectionMutation,
   useGetCollectionsQuery,
 } from "@features/collections/api";
-import type { ModalModeType } from "@widgets/modal-confirm";
+import { useModal } from "@widgets/modal";
 
 export const useCollections = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { confirm } = useModal();
   const refetchFlag = location.state?.refetch;
   const {
     data: collections,
@@ -18,8 +19,8 @@ export const useCollections = () => {
   } = useGetCollectionsQuery();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [isRefetching, setIsRefetching] = useState(false);
-  const [id, setId] = useState<string | null>(null);
-  const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
+  const collectionsRef = useRef(collections);
+  collectionsRef.current = collections;
 
   useEffect(() => {
     if (refetchFlag) {
@@ -31,26 +32,23 @@ export const useCollections = () => {
     }
   }, [refetchFlag, refetch, navigate, location.pathname]);
 
-  const onDelete = useCallback((id: string) => {
-    setModaleMode("confirm");
-    setId(id);
-  }, []);
-
-  const confirmAction = useCallback(
-    async (value: boolean) => {
-      if (value) {
+  const onDelete = useCallback(
+    async (id: string) => {
+      const isDelete = await confirm(
+        `Удалить коллекцию ${
+          collectionsRef.current?.find((collection) => collection.id === id)
+            ?.name
+        }?`
+      );
+      if (isDelete) {
         try {
-          setModaleMode(null);
-          await deleteCollection(id!).unwrap();
+          await deleteCollection(id).unwrap();
         } catch (error) {
           console.error(error);
         }
-      } else {
-        setModaleMode(null);
-        setId(null);
       }
     },
-    [deleteCollection, id]
+    [deleteCollection, confirm]
   );
 
   const back = useCallback(() => {
@@ -61,11 +59,8 @@ export const useCollections = () => {
     collections,
     isLoading,
     error,
-    modaleMode,
     isRefetching,
     onDelete,
-    confirmAction,
     back,
-    id,
   };
 };

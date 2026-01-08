@@ -1,83 +1,88 @@
-import { memo } from "react";
-import cross from "@assets/images/cross.webp";
-import confirm from "@assets/images/confirm.png";
-import { Progress } from "@shared/ui/progress";
 import { Loader } from "@shared/ui/loader";
-import { FlashCard, NoCollectionError } from "@features/collections/ui";
-import type { ICard, ICollectionCardsResponse } from "@shared/api";
+import backArrow from "@assets/images/arrow-left.svg";
+import option from "@assets/images/options.png";
+import {
+  ChosenStatusButtonContainer,
+  FlashCardsCollectionView,
+  MenuOptions,
+  ModalFlash,
+  NoCollectionError,
+  ProgressBar,
+} from "@features/collections/ui";
+import { Header } from "@widgets/header";
+import { useMemo } from "react";
+import { useFlashCards } from "@features/collections/hooks";
 
-interface IFlashCardsContainerProps {
-  isLoading: boolean;
-  isReversed: boolean;
-  currentCard: Omit<ICard, "id">;
-  progress: number | null;
-  index: number;
-  collection: ICollectionCardsResponse | undefined;
-  error: unknown;
-  handleChosenStatus(value: boolean): void;
-}
-
-export const FlashCardsContainer = memo(
-  ({
+export const FlashCardsContainer = ({
+  collectionId,
+  reset,
+}: {
+  collectionId: string;
+  reset(): void;
+}) => {
+  const {
+    options,
+    back,
     collection,
-    isLoading,
-    isReversed,
-    currentCard,
-    progress,
     index,
-    error,
+    isReversed,
     handleChosenStatus,
-  }: IFlashCardsContainerProps) => {
-    if (!collection && !isLoading) {
-      return <NoCollectionError error={error} />;
-    }
-    return (
-      <>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <section>
-            <h1 className="text-center text-fuchsia-800 font-comic text-xl md:text-2xl mt-8">
-              {collection?.name}
-            </h1>
-            <div className="flex flex-col align-middle justify-center mt-10">
-              <FlashCard
-                key={index}
-                card={currentCard}
-                isReversed={isReversed}
-              />
-            </div>
-            <div className="mt-3 m-auto max-w-[350px] md:max-w-[500px] text-center text-sm font-comic">
-              <Progress className="bg-transparent" value={progress} />
-              <span>
-                {index + 1}/{collection?.cards.length}
-              </span>
-            </div>
-            <div className="flex mt-4 align-middle justify-around md:justify-evenly">
-              <div
-                onClick={() => handleChosenStatus(false)}
-                className="flex border-2 rounded-lg border-red-400 bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all"
-              >
-                <div className="my-auto w-[50px]">
-                  <img src={cross} width={100} alt="не знаю" />
-                </div>
-                <span className="my-auto p-2 font-roboto font-bold">
-                  Изучено
-                </span>
-              </div>
-              <div
-                onClick={() => handleChosenStatus(true)}
-                className="flex border-2 rounded-lg border-green-400 bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all"
-              >
-                <div className="my-auto w-[60px] pl-2">
-                  <img src={confirm} width={100} alt="знаю" />
-                </div>
-                <span className="my-auto p-2 font-roboto font-bold">Знаю!</span>
-              </div>
-            </div>
-          </section>
-        )}
-      </>
-    );
-  }
-);
+    error,
+    isLoading,
+    ...props
+  } = useFlashCards(collectionId);
+
+  const headerProps = useMemo(
+    () => ({
+      leftIconTitle: "вернуться к списку коллекций",
+      rightIconTitle: "настройки",
+      rightIconAction: options,
+      leftIconAction: back,
+      leftIcon: backArrow,
+      rightIcon: !error ? option : undefined,
+      title: "Флэш - карты",
+    }),
+    [options, back, error]
+  );
+
+  return (
+    <>
+      <Header {...headerProps} />
+      {isLoading && <Loader />}
+      {!collection && !isLoading && <NoCollectionError error={error} />}
+      {collection && (
+        <main>
+          <FlashCardsCollectionView
+            collection={collection}
+            index={index}
+            isReversed={isReversed}
+          />
+          <ProgressBar value={collection.cards.length} index={index} />
+          <ChosenStatusButtonContainer
+            handleChosenStatus={handleChosenStatus}
+          />
+        </main>
+      )}
+      {collection && props.isModalOpen && (
+        <ModalFlash
+          collectionId={collection.id}
+          moduleName={collection.name}
+          moduleLength={collection.cards.length}
+          unknownTerms={props.unmemTerms.length}
+          back={back}
+          reset={reset}
+        />
+      )}
+      {collection && props.isMenuOpen && (
+        <MenuOptions
+          onSwitchChange={props.handleSwitchChange}
+          isMenuOpen={props.isMenuOpen}
+          onClose={props.closeMenu}
+          isReversed={isReversed}
+          collectionId={collection.id}
+          onDelete={props.handleDelete}
+        />
+      )}
+    </>
+  );
+};

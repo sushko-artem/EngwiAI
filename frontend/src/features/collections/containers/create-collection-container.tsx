@@ -6,19 +6,11 @@ import { Loader } from "@shared/ui/loader";
 import { EditableCollection } from "@features/collections/ui";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
-import { ModalConfirm } from "@widgets/modal-confirm";
 import { Header } from "@widgets/header";
 
 export const CreateCollectionContainer = () => {
   const collection = useAppSelector(selectEditableCollection);
-  const {
-    isLoading,
-    modaleMode,
-    modaleText,
-    saveCollection,
-    back,
-    confirmAction,
-  } = useCreateCollection(collection);
+  const { isLoading, saveCollection, back } = useCreateCollection(collection);
 
   const headerProps = useMemo(
     () => ({
@@ -45,11 +37,6 @@ export const CreateCollectionContainer = () => {
         collection={collection.cards}
         name={collection.name}
       />
-      {modaleMode && (
-        <ModalConfirm confirmAction={confirmAction} mode={modaleMode}>
-          {modaleText}
-        </ModalConfirm>
-      )}
     </>
   );
 };

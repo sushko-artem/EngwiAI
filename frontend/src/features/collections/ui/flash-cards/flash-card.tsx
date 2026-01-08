@@ -1,13 +1,13 @@
-import { memo, useState } from "react";
+import { useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import type { ICard } from "@shared/api";
 
 type CardPropsType = {
   isReversed: boolean;
-  card: Omit<ICard, "id">;
+  card: ICard;
 };
 
-export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
+export const FlashCard = ({ card, isReversed }: CardPropsType) => {
   const [flipped, setFlipped] = useState(false);
   const { transform, opacity } = useSpring({
     opacity: flipped ? 1 : 0,
@@ -42,4 +42,4 @@ export const FlashCard = memo(({ card, isReversed }: CardPropsType) => {
       </div>
     </div>
   );
-});
+};

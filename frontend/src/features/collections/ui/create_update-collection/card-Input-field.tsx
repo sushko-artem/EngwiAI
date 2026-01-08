@@ -21,6 +21,7 @@ export const CardInputField = memo(
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "rgba(233,220,230,0.2) transparent",
+            scrollbarGutter: "stable",
           }}
           minRows={1}
           maxRows={4}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@redux/hooks";
 import {
@@ -10,16 +10,16 @@ import {
   useCreateCollectionMutation,
   useGetCollectionsQuery,
 } from "@features/collections/api";
-import type { ModalModeType } from "@widgets/modal-confirm";
 import { getErrorMessage } from "@shared/api";
+import { useModal } from "@widgets/modal";
+import { validateCollection } from "../helpers";
 
 export const useCreateCollection = (
   collection: EditableCollectionType | null
 ) => {
   const { data: collections } = useGetCollectionsQuery();
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
-  const [modaleMode, setModaleMode] = useState<ModalModeType>(null);
-  const [modaleText, setModaleText] = useState("");
+  const { warning, confirm } = useModal();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const collectionRef = useRef(collection);
@@ -45,73 +45,50 @@ export const useCreateCollection = (
   }, [collections]);
 
   const saveCollection = useCallback(async () => {
-    if (
-      collectionRef.current?.name &&
-      existedNamesRef.current.includes(collectionRef.current.name.trim())
-    ) {
-      setModaleText("Коллекция с таким именем уже существует");
-      setModaleMode("warn");
+    const validate = validateCollection(
+      collectionRef.current,
+      existedNamesRef.current
+    );
+    if (!validate.isValid) {
+      if (validate.errorMessage) {
+        warning(validate.errorMessage);
+      }
       return;
     }
-    if (
-      !collectionRef.current?.name.trim() ||
-      collectionRef.current?.cards.some(
-        (card) => !card.word.trim() || !card.translation.trim()
-      )
-    ) {
-      setModaleText("Все поля должны быть заполнены!");
-      setModaleMode("warn");
-    } else {
-      try {
-        const cards = collectionRef.current.cards.map((card) => ({
-          id: card.id,
-          word: card.word.trim(),
-          translation: card.translation.trim(),
-        }));
-        await createCollection({
-          name: collectionRef.current.name.trim(),
-          cards,
-        }).unwrap();
-        navigate("/collections", { replace: true, state: { refetch: true } });
-      } catch (error) {
-        setModaleText(getErrorMessage(error));
-        setModaleMode("warn");
-      }
-    }
-  }, [navigate, createCollection]);
 
-  const back = useCallback(() => {
+    try {
+      const cards = collectionRef.current!.cards.map((card) => ({
+        id: card.id,
+        word: card.word.trim(),
+        translation: card.translation.trim(),
+      }));
+      const name = collectionRef.current!.name.trim();
+      await createCollection({ name, cards }).unwrap();
+      navigate("/collections", { replace: true, state: { refetch: true } });
+    } catch (error) {
+      warning(getErrorMessage(error));
+    }
+  }, [navigate, createCollection, warning]);
+
+  const back = useCallback(async () => {
     if (
       collectionRef.current?.name.trim() ||
       collectionRef.current?.cards.find(
         (card) => card.word.trim() || card.translation.trim()
       )
     ) {
-      setModaleText("Все несохраненные данные будут потеряны!");
-      setModaleMode("confirm");
+      const shouldLeaveThePage = await confirm(
+        "Все несохраненные данные будут потеряны!"
+      );
+      if (shouldLeaveThePage) navigate("/dashboard");
     } else {
       navigate("/dashboard");
     }
-  }, [navigate]);
-
-  const confirmAction = useCallback(
-    (value: boolean) => {
-      if (value) {
-        navigate("/dashboard");
-      } else {
-        setModaleMode(null);
-        setModaleText("");
-      }
-    },
-    [navigate]
-  );
+  }, [navigate, confirm]);
 
   return {
     isLoading,
-    modaleMode,
-    modaleText,
     saveCollection,
     back,
-    confirmAction,
   };
 };

@@ -1,11 +1,8 @@
-import type {
-  ICollectionCardsResponse,
-  IUpdateCollectionDto,
-} from "@shared/api";
+import type { IUpdateCollectionDto } from "@shared/api";
 import type { EditableCollectionType } from "@features/collections/model";
 
 export const createUpdateDto = (
-  originalCollection: ICollectionCardsResponse,
+  originalCollectionName: string,
   editedCollection: EditableCollectionType,
   deletedCards: string[]
 ) => {
@@ -27,7 +24,7 @@ export const createUpdateDto = (
       translation: card.translation.trim(),
     }));
 
-  if (editedCollection.name.trim() !== originalCollection.name) {
+  if (originalCollectionName !== editedCollection.name.trim()) {
     dto.newName = editedCollection.name.trim();
   }
 

@@ -4,7 +4,6 @@ import {
 } from "@features/collections/ui";
 import { Loader } from "@shared/ui/loader";
 import { useEditCollection } from "@features/collections/hooks";
-import { ModalConfirm } from "@widgets/modal-confirm";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
 import { useMemo } from "react";
@@ -15,16 +14,8 @@ export const EditCollectionContainer = ({
 }: {
   collectionId: string;
 }) => {
-  const {
-    error,
-    isLoading,
-    modaleText,
-    modaleMode,
-    editableCollection,
-    saveCollection,
-    back,
-    confirmAction,
-  } = useEditCollection(collectionId);
+  const { error, isLoading, editableCollection, saveCollection, back } =
+    useEditCollection(collectionId);
 
   const headerProps = useMemo(
     () => ({
@@ -54,11 +45,6 @@ export const EditCollectionContainer = ({
           name={editableCollection!.name}
           collection={editableCollection!.cards}
         />
-      )}
-      {modaleMode && (
-        <ModalConfirm mode={modaleMode} confirmAction={confirmAction}>
-          {modaleText}
-        </ModalConfirm>
       )}
     </>
   );

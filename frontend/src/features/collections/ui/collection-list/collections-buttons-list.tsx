@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { ICollectionResponse } from "@shared/api";
-import { SelectCollectionButton } from ".";
+import { SelectCollectionButton } from "..";
 import { memo, useCallback } from "react";
 
 type CollectionsButtonsListPropType = {
