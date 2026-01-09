@@ -1,4 +1,4 @@
-import type { EditableCardType } from "@widgets/editableCollection";
+import type { EditableCardType } from "@features/collections/ui";
 import type { RootState } from "@redux/store";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";

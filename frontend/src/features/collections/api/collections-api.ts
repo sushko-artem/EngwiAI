@@ -7,7 +7,7 @@ import {
   type IUpdateCollectionDto,
 } from "@shared/api";
 
-export const collectionsApi = api.injectEndpoints({
+const collectionsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getCollections: builder.query<ICollectionResponse[], void>({
       query: () => COLLECTION_ENDPOINTS.LIST,

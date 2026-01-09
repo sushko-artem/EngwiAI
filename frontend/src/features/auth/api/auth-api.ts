@@ -7,7 +7,7 @@ import {
   type IUser,
 } from "@shared/api";
 
-export const authApi = api.injectEndpoints({
+const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getMe: builder.query<IUser, void>({
       query: () => AUTH_ENDPOINTS.ME,

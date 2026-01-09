@@ -4,7 +4,7 @@ import { SignUpPage } from "pages/SignUp";
 import { CreateCollectionPage } from "pages/CreateCollection";
 import { FlashCardsPage } from "pages/FlashCards";
 import { DashboardPage } from "pages/Dashboard";
-import { CollectionPage } from "pages/Collections";
+import { CollectionsListPage } from "pages/Collections";
 import { ProtectedRoute } from "@shared/protected-route";
 import { EditCollectionPage } from "pages/EditCollection";
 
@@ -49,7 +49,7 @@ const routes = [
     path: "/collections",
     element: (
       <ProtectedRoute>
-        <CollectionPage />
+        <CollectionsListPage />
       </ProtectedRoute>
     ),
   },

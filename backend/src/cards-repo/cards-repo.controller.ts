@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { CardsRepoService } from './cards-repo.service';
-import { User } from '@prisma/client';
+import { User } from '@generated/prisma/client';
 import { CreateCollectionDto, UpdateCollectionDto } from './DTO';
 import { GetCurrentUser } from '@common/decorators';
 
