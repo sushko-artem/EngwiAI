@@ -1,5 +1,5 @@
-export { SignUpForm } from "./containers/SignUpForm";
-export { SignInForm } from "./containers/SignInForm";
+export { SignUpContainer } from "./containers/sign-up-container";
+export { SignInContainer } from "./containers/sign-in-container";
 export { AuthSchema } from "./lib/auth-schema";
 export { RegisterSchema } from "./lib/register-schema";
 export { AuthFormLayout } from "./ui/auth-form-layout";

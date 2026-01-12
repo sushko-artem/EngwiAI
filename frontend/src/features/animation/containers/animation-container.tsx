@@ -36,7 +36,7 @@ export const StartAnimationContainer = () => {
 
   return (
     <div
-      data-testId="logoContainer"
+      data-testid="logoContainer"
       className="flex justify-center items-center min-h-[100vh]"
     >
       <div className="lg:w-[300px] md:w-[230px] w-[180px]">
