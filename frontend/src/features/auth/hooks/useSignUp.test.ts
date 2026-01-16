@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it, vi } from "vitest";
-import { renderHook } from "@testing-library/react";
 import { useSignUp } from "./useSignUp";
-import { useRegisterMutation } from "@features/auth";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
 import { act } from "react";
+import { setupAuthHook } from "test/utils";
 
 vi.mock("formik");
 vi.mock("react-router-dom");
@@ -13,16 +9,11 @@ vi.mock("@features/auth");
 
 describe("useSignUp", () => {
   it("should init with empty form", () => {
-    vi.mocked(useRegisterMutation).mockReturnValue([
-      vi.fn(),
-      { reset: vi.fn(), isLoading: false },
-    ]);
-
-    vi.mocked(useFormik).mockReturnValue({
-      values: { name: "", email: "", password: "", confirmPassword: "" },
-    } as unknown as ReturnType<typeof useFormik>);
-
-    const { result } = renderHook(() => useSignUp());
+    const { result } = setupAuthHook(useSignUp, {
+      formik: {
+        values: { name: "", email: "", password: "", confirmPassword: "" },
+      },
+    });
 
     expect(result.current.isLoading).toBe(false);
     expect(result.current.formik.values.name).toBe("");
@@ -32,28 +23,18 @@ describe("useSignUp", () => {
   });
 
   it("should redirect to sign-in when register successful", async () => {
-    const mockRegister = vi.fn().mockReturnValue({
+    const {
+      mockAction: mockRegister,
+      mockNavigate,
+      capturedOnSubmit,
+    } = setupAuthHook(useSignUp, {
+      formik: {
+        values: { name: "", email: "", password: "", confirmPassword: "" },
+      },
+    });
+    mockRegister.mockReturnValue({
       unwrap: vi.fn().mockResolvedValue({}),
     });
-
-    vi.mocked(useRegisterMutation).mockReturnValue([
-      mockRegister,
-      { isLoading: false, reset: vi.fn() },
-    ]);
-
-    const mockNavigate = vi.fn();
-    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
-
-    let capturedOnSubmit: any;
-
-    vi.mocked(useFormik).mockImplementation((config) => {
-      capturedOnSubmit = config.onSubmit;
-      return {
-        values: { name: "", email: "", password: "", confirmPassword: "" },
-      } as any;
-    });
-
-    renderHook(() => useSignUp());
 
     await act(async () => {
       await capturedOnSubmit({
@@ -73,7 +54,17 @@ describe("useSignUp", () => {
   });
 
   it("should set email error on 409 error", async () => {
-    const mockRegister = vi.fn().mockReturnValue({
+    const mockSetErrors = vi.fn();
+    const { mockAction: mockRegister, capturedOnSubmit } = setupAuthHook(
+      useSignUp,
+      {
+        formik: {
+          values: { name: "", email: "", password: "", confirmPassword: "" },
+          setErrors: mockSetErrors,
+        },
+      }
+    );
+    mockRegister.mockReturnValue({
       unwrap: vi.fn().mockRejectedValue({
         status: 409,
         data: {
@@ -82,24 +73,6 @@ describe("useSignUp", () => {
         },
       }),
     });
-
-    vi.mocked(useRegisterMutation).mockReturnValue([
-      mockRegister,
-      { isLoading: false, reset: vi.fn() },
-    ]);
-
-    const mockSetErrors = vi.fn();
-    let capturedOnSubmit: any;
-
-    vi.mocked(useFormik).mockImplementation((config) => {
-      capturedOnSubmit = config.onSubmit;
-      return {
-        values: { name: "", email: "", password: "", confirmPassword: "" },
-        setErrors: mockSetErrors,
-      } as any;
-    });
-
-    renderHook(() => useSignUp());
 
     await act(async () => {
       await capturedOnSubmit({
@@ -115,27 +88,19 @@ describe("useSignUp", () => {
   });
 
   it("should set error on generic errors", async () => {
-    const mockRegister = vi.fn().mockReturnValue({
+    const mockSetStatus = vi.fn();
+    const { mockAction: mockRegister, capturedOnSubmit } = setupAuthHook(
+      useSignUp,
+      {
+        formik: {
+          values: { name: "", email: "", password: "", confirmPassword: "" },
+          setStatus: mockSetStatus,
+        },
+      }
+    );
+    mockRegister.mockReturnValue({
       unwrap: vi.fn().mockRejectedValue(new Error("Network error")),
     });
-
-    vi.mocked(useRegisterMutation).mockReturnValue([
-      mockRegister,
-      { isLoading: false, reset: vi.fn() },
-    ]);
-
-    const mockSetStatus = vi.fn();
-    let capturedOnSubmit: any;
-
-    vi.mocked(useFormik).mockImplementation((config) => {
-      capturedOnSubmit = config.onSubmit;
-      return {
-        values: { name: "", email: "", password: "", confirmPassword: "" },
-        setStatus: mockSetStatus,
-      } as any;
-    });
-
-    renderHook(() => useSignUp());
 
     await act(async () => {
       await capturedOnSubmit({
