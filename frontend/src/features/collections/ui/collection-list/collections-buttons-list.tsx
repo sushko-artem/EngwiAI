@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import type { ICollectionResponse } from "@shared/api";
-import { SelectCollectionButton } from "..";
 import { memo, useCallback } from "react";
+import { SelectCollectionButton } from "./select-collection-button";
 
 type CollectionsButtonsListPropType = {
   collections: ICollectionResponse[];
@@ -16,14 +16,14 @@ export const CollectionsButtonsList = memo(
       (id: string) => {
         navigate(`/flash-cards/${id}`);
       },
-      [navigate]
+      [navigate],
     );
 
     const handleDelete = useCallback(
       (id: string) => {
         onDelete(id);
       },
-      [onDelete]
+      [onDelete],
     );
 
     return (
@@ -39,5 +39,5 @@ export const CollectionsButtonsList = memo(
         ))}
       </div>
     );
-  }
+  },
 );
