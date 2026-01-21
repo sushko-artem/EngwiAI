@@ -33,7 +33,7 @@ vi.mock("@features/collections/api", () => ({
     error: null,
     refetch: mockRefetch,
   })),
-  useDeleteCollectionMutation: vi.fn(() => [mockDelete, { isLoading: false }]),
+  useDeleteCollectionMutation: vi.fn(() => [mockDelete]),
 }));
 
 describe("useCollections", () => {
