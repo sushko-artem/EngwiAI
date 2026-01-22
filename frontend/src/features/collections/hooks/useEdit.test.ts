@@ -1,21 +1,19 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useAppDispatch } from "@redux/hooks";
+import { describe, expect, it, vi } from "vitest";
 import { addCard, updateCollectionName } from "@features/collections/model";
 import { renderHook } from "@testing-library/react";
 import { useEdit } from "./useEdit";
 
-vi.mock("@redux/hooks");
+const mockDispatch = vi.hoisted(() => vi.fn());
+
+vi.mock("@redux/hooks", () => ({
+  useAppDispatch: () => mockDispatch,
+}));
 vi.mock("@features/collections/model");
 
 describe("useEdit", () => {
-  const mockDispatch = vi.fn();
   const div = document.createElement("div");
   div.scrollIntoView = vi.fn();
   const mockScrollRef = { current: div };
-
-  beforeEach(() => {
-    vi.mocked(useAppDispatch).mockReturnValue(mockDispatch);
-  });
 
   it("should dispatch updateCollectionName", () => {
     const { result } = renderHook(() => useEdit(mockScrollRef));

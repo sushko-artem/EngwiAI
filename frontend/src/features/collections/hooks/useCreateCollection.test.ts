@@ -4,9 +4,8 @@ import {
   initDefaultCollection,
   type EditableCollectionType,
 } from "@features/collections/model";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { useCreateCollection } from "./useCreateCollection";
-import { act } from "react";
 
 const defaultCollection: EditableCollectionType = {
   name: "",
@@ -37,33 +36,33 @@ const getCollectionsQueryResult = {
   ],
 };
 
-const mockNavigate = vi.fn();
-const mockDispatch = vi.fn();
-const mockConfirm = vi.fn();
-const mockWarning = vi.fn();
-const mockCreateCollection = vi.fn();
+const mockNavigate = vi.hoisted(() => vi.fn());
+const mockDispatch = vi.hoisted(() => vi.fn());
+const mockConfirm = vi.hoisted(() => vi.fn());
+const mockWarning = vi.hoisted(() => vi.fn());
+const mockCreateCollection = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({
-  useNavigate: vi.fn(() => mockNavigate),
+  useNavigate: () => mockNavigate,
 }));
 
 vi.mock("@widgets/modal", () => ({
-  useModal: vi.fn(() => ({
+  useModal: () => ({
     warning: mockWarning,
     confirm: mockConfirm,
-  })),
+  }),
 }));
 
 vi.mock("@redux/hooks", () => ({
-  useAppDispatch: vi.fn(() => mockDispatch),
+  useAppDispatch: () => mockDispatch,
 }));
 
 vi.mock("@features/collections/api", () => ({
-  useGetCollectionsQuery: vi.fn(() => getCollectionsQueryResult),
-  useCreateCollectionMutation: vi.fn(() => [
+  useGetCollectionsQuery: () => getCollectionsQueryResult,
+  useCreateCollectionMutation: () => [
     mockCreateCollection,
     { isLoading: false },
-  ]),
+  ],
 }));
 
 describe("useCreateCollection", () => {
@@ -104,7 +103,7 @@ describe("useCreateCollection", () => {
     });
   });
 
-  it("should not save invalid collection (empty name)", async () => {
+  it("should prevent saving invalid collection (empty name)", async () => {
     const invalidCollection = {
       name: "",
       cards: [
@@ -123,7 +122,7 @@ describe("useCreateCollection", () => {
     expect(mockCreateCollection).not.toHaveBeenCalled();
   });
 
-  it("should not save invalid collection (existing name)", async () => {
+  it("should prevent saving invalid collection (existing name)", async () => {
     const invalidCollection = {
       name: "firstCollection",
       cards: [
@@ -140,6 +139,24 @@ describe("useCreateCollection", () => {
 
     expect(mockWarning).toHaveBeenCalledWith(
       "Коллекция с таким именем уже существует!",
+    );
+    expect(mockCreateCollection).not.toHaveBeenCalled();
+  });
+
+  it("should prevent saving invalid collection (empty cards)", async () => {
+    const invalidCollection = {
+      name: "emptyCollection",
+      cards: [],
+    };
+
+    const { result } = renderHook(() => useCreateCollection(invalidCollection));
+
+    await act(async () => {
+      await result.current.saveCollection();
+    });
+
+    expect(mockWarning).toHaveBeenCalledWith(
+      "Коллекция пустая! Добавьте карточку!",
     );
     expect(mockCreateCollection).not.toHaveBeenCalled();
   });
