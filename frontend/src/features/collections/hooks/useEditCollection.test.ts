@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import {
   clearCollection,
   setExistedCollection,
@@ -139,5 +139,123 @@ describe("useEditCollection", () => {
 
     expect(mockWarning).toHaveBeenCalledWith("Все поля должны быть заполнены!");
     expect(mockUpdateCollection).not.toHaveBeenCalled();
+  });
+
+  it("should update collection and navigate to '/collections'", async () => {
+    mockGetCollectionQuery.mockReturnValue({
+      data: testCollection,
+      error: null,
+    });
+
+    mockUpdateCollection.mockReturnValue({
+      unwrap: vi.fn().mockResolvedValue({}),
+    });
+
+    const mockUpdatedCollection = {
+      name: "Updated Collection",
+      cards: [
+        { id: "1", word: "Hello", translation: "привет", isUpdated: true },
+        { id: "3", word: "fish", translation: "рыба", isNew: true },
+      ],
+    };
+
+    mockSelector
+      .mockReturnValueOnce(mockUpdatedCollection)
+      .mockReturnValueOnce(["2"]);
+
+    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+
+    await act(async () => {
+      await result.current.saveCollection();
+    });
+
+    expect(mockUpdateCollection).toHaveBeenCalledWith({
+      id: "test-id-1234",
+      dto: {
+        newName: "Updated Collection",
+        updatedCards: [
+          { id: "1", word: "Hello", translation: "привет", isUpdated: true },
+        ],
+        newCards: [{ id: "3", word: "fish", translation: "рыба", isNew: true }],
+        deletedCards: ["2"],
+      },
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/collections", {
+      replace: true,
+      state: { refetch: true },
+    });
+  });
+
+  it("should show worning modal with generic errors when updating rejected", async () => {
+    const mockEditedCollection = {
+      name: "Test Collection",
+      cards: [
+        { id: "1", word: "hello", translation: "привет", isUpdated: true },
+        { id: "2", word: "world", translation: "мир" },
+      ],
+    };
+
+    mockUpdateCollection.mockReturnValue({
+      unwrap: vi.fn().mockRejectedValue(new Error("Network error!")),
+    });
+
+    mockSelector
+      .mockReturnValueOnce(mockEditedCollection)
+      .mockReturnValueOnce([]);
+
+    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+
+    await act(async () => {
+      await result.current.saveCollection();
+    });
+
+    expect(mockWarning).toHaveBeenCalledWith("Network error!");
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("should navigate to '/collections' when back and no changes", async () => {
+    mockSelector.mockReturnValueOnce(testCollection).mockReturnValueOnce([]);
+
+    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+
+    await act(async () => {
+      await result.current.back();
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
+  });
+
+  it("should show modal with confirm message when back and unsaved changes", async () => {
+    mockGetCollectionQuery.mockReturnValue({
+      data: testCollection,
+      error: null,
+    });
+
+    const mockUpdatedCollection = {
+      name: "Test Collection",
+      cards: [
+        { id: "1", word: "Hello", translation: "привет", isUpdated: true },
+        { id: "3", word: "fish", translation: "рыба", isNew: true },
+      ],
+    };
+
+    mockSelector
+      .mockReturnValueOnce(mockUpdatedCollection)
+      .mockReturnValueOnce(["2"]);
+
+    mockConfirm.mockResolvedValue(true);
+
+    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+
+    await act(async () => {
+      await result.current.back();
+    });
+
+    expect(mockConfirm).toHaveBeenCalledWith(
+      "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!",
+    );
+
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 });

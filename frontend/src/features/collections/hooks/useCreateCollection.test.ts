@@ -4,7 +4,7 @@ import {
   initDefaultCollection,
   type EditableCollectionType,
 } from "@features/collections/model";
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { useCreateCollection } from "./useCreateCollection";
 
 const defaultCollection: EditableCollectionType = {
@@ -180,23 +180,22 @@ describe("useCreateCollection", () => {
 
     const { result } = renderHook(() => useCreateCollection(testCollection));
 
-    act(() => {
-      result.current.back();
+    await act(async () => {
+      await result.current.back();
     });
 
     expect(mockConfirm).toHaveBeenCalledWith(
       "Все несохраненные данные будут потеряны!",
     );
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
-    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 
-  it("should navigate to '/dashboard' when no changes", () => {
+  it("should navigate to '/dashboard' when no changes", async () => {
     const { result } = renderHook(() => useCreateCollection(defaultCollection));
 
-    act(() => {
-      result.current.back();
+    await act(async () => {
+      await result.current.back();
     });
 
     expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
