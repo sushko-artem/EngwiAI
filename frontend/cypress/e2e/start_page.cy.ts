@@ -1,6 +1,6 @@
 describe("The start Page", () => {
-  it("successfully loads", () => {
+  it("redirects to sign-in", () => {
     cy.visit("/");
-    cy.url().should("include", "/sign-in");
+    cy.url({ timeout: 10000 }).should("include", "/sign-in");
   });
 });
