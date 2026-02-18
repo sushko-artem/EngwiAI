@@ -23,7 +23,7 @@ export const DashboardContainer = () => {
       leftIconAction: () => {},
       rightIconAction: handleLogOut,
     }),
-    [handleLogOut]
+    [handleLogOut],
   );
 
   return (

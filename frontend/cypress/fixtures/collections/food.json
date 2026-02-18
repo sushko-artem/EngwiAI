@@ -1,0 +1,21 @@
+{
+  "name": "Еда",
+  "cards": [
+    {
+      "word": "Bread",
+      "translation": "Хлеб"
+    },
+    {
+      "word": "Meat",
+      "translation": "Мясо"
+    },
+    {
+      "word": "Icecream",
+      "translation": "Мороженое"
+    },
+    {
+      "word": "Vegetables",
+      "translation": "Овощи"
+    }
+  ]
+}
