@@ -46,7 +46,9 @@ export const SignUpFormContainer = ({
         onChange={handleChange}
       />
       {touched.email && errors.email ? (
-        <div className="text-red-500 text-xs">{errors.email}</div>
+        <div data-testid="email-error" className="text-red-500 text-xs">
+          {errors.email}
+        </div>
       ) : null}
       <InputField
         type="password"

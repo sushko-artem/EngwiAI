@@ -90,8 +90,10 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   "loginNewUserWithSession",
   (overrides: UserOptionsOverridesType = {}) => {
-    return cy.createUser(overrides).then((userData) => {
-      const sessionId = `user-${userData.user.email}`;
+    const uniqueEmail = `test-${Date.now()}@mail.com`;
+    const userOverrides = { email: uniqueEmail, ...overrides };
+    return cy.createUser(userOverrides).then((userData) => {
+      const sessionId = ["user", userData.user.email, Date.now()];
       return cy
         .session(sessionId, () =>
           cy.loginUser({

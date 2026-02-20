@@ -62,6 +62,8 @@ services:
     image: cypress/included:cypress-15.10.0-node-24.13.1-chrome-144.0.7559.132-1-ff-147.0.3-edge-144.0.3719.115-1
     container_name: cypress
     network_mode: host
+    entrypoint:
+      ["cypress", "run", "--spec", "${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}"]
     depends_on:
       - nginx_test
       - frontend_test
