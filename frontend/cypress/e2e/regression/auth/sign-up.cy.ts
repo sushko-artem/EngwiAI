@@ -10,6 +10,13 @@ describe("Sign-up Page - regression", () => {
     cy.contains("ВХОД").should("be.visible");
   });
 
+  it("should show validation errors when submitting empty form", () => {
+    cy.visit("/sign-up");
+    cy.get("button[type=submit]").click();
+    cy.contains("Обязательно для заполнения").should("be.visible");
+    cy.get("button[type=submit]").should("be.disabled");
+  });
+
   it("should show error for existing email", () => {
     const existingEmail = `test-${Date.now()}@mail.com`;
     cy.visit("/sign-up");

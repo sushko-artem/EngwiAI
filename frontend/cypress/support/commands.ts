@@ -24,7 +24,7 @@ declare global {
       loginUser(
         credentials: ILoginUserDto,
       ): Chainable<Response<{ message: "Login successful" }>>;
-      loginNewUser(
+      createAndLoginUser(
         overrides?: UserOptionsOverridesType,
       ): Chainable<{ user: IUser; password: string }>;
       loginNewUserWithSession(
@@ -74,9 +74,11 @@ Cypress.Commands.add("loginUser", (credentials: ILoginUserDto) =>
 );
 
 Cypress.Commands.add(
-  "loginNewUser",
+  "createAndLoginUser",
   (overrides: UserOptionsOverridesType = {}) => {
-    return cy.createUser(overrides).then((userData) => {
+    const uniqueEmail = `test-${Date.now()}@mail.com`;
+    const userOverrides = { email: uniqueEmail, ...overrides };
+    return cy.createUser(userOverrides).then((userData) => {
       return cy
         .loginUser({
           email: userData.user.email,
@@ -129,9 +131,9 @@ Cypress.Commands.add(
   "createUserWithCollection",
   (
     collectionName: CollectionNameType,
-    overrides: UserOptionsOverridesType = {},
+    userOverrides: UserOptionsOverridesType = {},
   ) => {
-    return cy.createUser(overrides).then(({ user, password }) => {
+    return cy.createUser(userOverrides).then(({ user, password }) => {
       return cy.createCollection(collectionName).then((collection) => ({
         user,
         password,
