@@ -27,5 +27,4 @@ describe("Sign-up Page - regression", () => {
     cy.get("button[type=submit]").should("be.disabled");
     cy.url().should("include", "/sign-up");
   });
-  it.skip("should show validation errors", () => {});
 });

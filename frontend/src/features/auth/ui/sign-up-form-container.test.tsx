@@ -22,7 +22,7 @@ describe("SignUpFormContainer", () => {
     expect(screen.getByPlaceholderText("Введите пароль")).toBeInTheDocument();
     expect(screen.getByLabelText("Подтвердите пароль")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Зарегистрироваться" })
+      screen.getByRole("button", { name: "Зарегистрироваться" }),
     ).toBeInTheDocument();
   });
 
@@ -68,7 +68,7 @@ describe("SignUpFormContainer", () => {
     render(<SignUpFormContainer formik={mockFormik} />);
 
     expect(
-      screen.getByRole("button", { name: "Зарегистрироваться" })
+      screen.getByRole("button", { name: "Зарегистрироваться" }),
     ).toBeDisabled();
   });
 
@@ -81,7 +81,7 @@ describe("SignUpFormContainer", () => {
     render(<SignUpFormContainer formik={mockFormik} />);
 
     expect(
-      screen.getByRole("button", { name: "Зарегистрироваться" })
+      screen.getByRole("button", { name: "Зарегистрироваться" }),
     ).toBeDisabled();
   });
 });
