@@ -75,6 +75,7 @@ export const MenuOptions = ({
   return (
     <>
       <animated.div
+        data-testid="menu-overlay"
         style={overlaySpring}
         className="fixed inset-0 bg-black z-40"
         onClick={onClose}

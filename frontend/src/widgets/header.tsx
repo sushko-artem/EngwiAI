@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { cn } from "@shared/lib/utils";
 
 export type HeaderPropType = {
   title: string;
@@ -33,8 +34,13 @@ export const Header = memo(
             {title}
           </h1>
           <button
+            data-testid="rightIconAction"
             onClick={rightIconAction ? rightIconAction : undefined}
-            className="w-[30px] md:w-[50px] cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]"
+            className={cn(
+              "w-[30px] md:w-[50px] ",
+              rightIcon &&
+                "cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]",
+            )}
           >
             {rightIcon && (
               <img
@@ -49,5 +55,5 @@ export const Header = memo(
         <hr className="border-gray-700" />
       </section>
     );
-  }
+  },
 );

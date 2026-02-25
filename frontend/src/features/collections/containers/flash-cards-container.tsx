@@ -15,10 +15,8 @@ import { useFlashCards } from "@features/collections/hooks";
 
 export const FlashCardsContainer = ({
   collectionId,
-  reset,
 }: {
   collectionId: string;
-  reset(): void;
 }) => {
   const {
     options,
@@ -27,6 +25,7 @@ export const FlashCardsContainer = ({
     index,
     isReversed,
     handleChosenStatus,
+    handleReset,
     error,
     isLoading,
     ...props
@@ -42,7 +41,7 @@ export const FlashCardsContainer = ({
       rightIcon: !error ? option : undefined,
       title: "Флэш - карты",
     }),
-    [options, back, error]
+    [options, back, error],
   );
 
   return (
@@ -70,7 +69,7 @@ export const FlashCardsContainer = ({
           moduleLength={collection.cards.length}
           unknownTerms={props.unmemTerms.length}
           back={back}
-          reset={reset}
+          reset={handleReset}
         />
       )}
       {collection && props.isMenuOpen && (

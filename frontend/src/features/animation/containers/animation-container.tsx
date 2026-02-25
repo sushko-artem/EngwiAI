@@ -35,7 +35,10 @@ export const StartAnimationContainer = () => {
   if (isAnimated) return null;
 
   return (
-    <div className="flex justify-center items-center min-h-[100vh]">
+    <div
+      data-testid="logoContainer"
+      className="flex justify-center items-center min-h-[100vh]"
+    >
       <div className="lg:w-[300px] md:w-[230px] w-[180px]">
         <animated.img style={springs} src={logo} alt="logo" />
       </div>

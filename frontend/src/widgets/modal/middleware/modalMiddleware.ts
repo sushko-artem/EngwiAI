@@ -6,7 +6,7 @@ import {
   cancelModalAction,
 } from "../actions";
 
-const modalPromises = new Map<
+export const modalPromises = new Map<
   string,
   {
     resolve: (result: boolean) => void;
@@ -14,7 +14,7 @@ const modalPromises = new Map<
   }
 >();
 
-const MODAL_TIMEOUT = 5 * 60 * 1000;
+export const MODAL_TIMEOUT = 5 * 60 * 1000;
 
 export const modalMiddleware: Middleware = (store) => (next) => (action) => {
   if (openModalWithPromise.match(action)) {

@@ -1,13 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useReducer } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
 } from "@features/collections/api";
 import { useNavigate } from "react-router-dom";
-import type { ICard } from "@shared/api";
 import { useModal } from "@widgets/modal";
-
-type Card = Omit<ICard, "id">;
+import { flashCardsReducer, initialState } from "./useFlashCardsReducer";
 
 export const useFlashCards = (collectionId: string) => {
   const {
@@ -15,32 +13,22 @@ export const useFlashCards = (collectionId: string) => {
     isLoading,
     error,
   } = useGetCollectionQuery(collectionId);
+  const [state, dispatch] = useReducer(flashCardsReducer, initialState);
   const { confirm } = useModal();
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
-  const [unmemTerms, setUnmemTerms] = useState<Card[]>([]);
-  const [isReversed, setIsReversed] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const collectionRef = useRef(collection);
-  const indexRef = useRef(index);
-  collectionRef.current = collection;
-  indexRef.current = index;
 
   const back = useCallback(() => {
     navigate("/collections");
   }, [navigate]);
 
   const options = useCallback(() => {
-    setIsMenuOpen((prev) => !prev);
+    dispatch({ type: "TOGGLE_MENU" });
   }, []);
 
   const handleDelete = useCallback(async () => {
-    setIsMenuOpen(false);
-    const isDelete = await confirm(
-      `Удалить коллекцию "${collectionRef.current?.name}"?`
-    );
+    dispatch({ type: "CLOSE_MENU" });
+    const isDelete = await confirm(`Удалить коллекцию "${collection?.name}"?`);
     if (isDelete) {
       try {
         navigate("/collections");
@@ -49,44 +37,50 @@ export const useFlashCards = (collectionId: string) => {
         console.error(error);
       }
     }
-  }, [confirm, navigate, deleteCollection, collectionId]);
+  }, [confirm, navigate, deleteCollection, collection, collectionId]);
 
   const closeMenu = useCallback(() => {
-    setIsMenuOpen(false);
+    dispatch({ type: "CLOSE_MENU" });
   }, []);
 
-  const handleChosenStatus = useCallback((status: boolean) => {
-    const currentCollection = collectionRef.current;
-    const currentIndex = indexRef.current;
-    if (!currentCollection) return;
-    if (!status) {
-      setUnmemTerms((card) => [...card, currentCollection.cards[currentIndex]]);
-    }
-    if (currentIndex >= currentCollection.cards.length - 1) {
-      setIsModalOpen(true);
-      return;
-    }
-    setIndex((index) => index + 1);
-  }, []);
+  const handleChosenStatus = useCallback(
+    (status: boolean) => {
+      if (!collection) return;
+      const flashCollection = collection.cards;
+      dispatch({
+        type: "HANDLE_CHOSEN_STATUS",
+        payload: {
+          collection: flashCollection,
+          status,
+        },
+      });
+    },
+    [collection],
+  );
 
   const handleSwitchChange = useCallback(() => {
-    setIsReversed((state) => !state);
+    dispatch({ type: "TOGGLE_REVERSED" });
+  }, []);
+
+  const handleReset = useCallback(() => {
+    dispatch({ type: "RESET_FOR_RETRY" });
   }, []);
 
   return {
     error,
     collection,
     isLoading,
-    unmemTerms,
-    isReversed,
-    isMenuOpen,
-    isModalOpen,
-    index,
+    unmemTerms: state.unmemTerms,
+    isReversed: state.isReversed,
+    isMenuOpen: state.isMenuOpen,
+    isModalOpen: state.isModalOpen,
+    index: state.index,
     back,
     options,
     handleChosenStatus,
     handleDelete,
     handleSwitchChange,
     closeMenu,
+    handleReset,
   };
 };

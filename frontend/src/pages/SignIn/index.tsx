@@ -1,3 +1,3 @@
-import { SignInForm } from "@features/auth";
+import { SignInContainer } from "@features/auth";
 
-export const SignInPage = () => <SignInForm />;
+export const SignInPage = () => <SignInContainer />;

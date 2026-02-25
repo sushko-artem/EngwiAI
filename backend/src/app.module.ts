@@ -7,15 +7,20 @@ import { TokensModule } from './tokens/tokens.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { CardsRepoModule } from './cards-repo/cards-repo.module';
+import { TestModule } from './test/test.module';
+
+const envFilePath =
+  process.env.NODE_ENV === 'production' ? undefined : process.env.NODE_ENV === 'test' ? '.env.test' : '.env.local';
 
 @Module({
   imports: [
     UserModule,
     PrismaModule,
     AuthModule,
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env.local'] }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath }),
     TokensModule,
     CardsRepoModule,
+    TestModule,
   ],
   providers: [
     {

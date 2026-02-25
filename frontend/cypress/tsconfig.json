@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["es6", "dom"],
+    "sourceMap": true,
+    "types": ["cypress", "node"],
+    "baseUrl": "../",
+    "moduleResolution": "node",
+    "paths": {
+      "@shared/*": ["src/shared/*"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["../node_modules"]
+}

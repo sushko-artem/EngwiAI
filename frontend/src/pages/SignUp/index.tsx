@@ -1,3 +1,3 @@
-import { SignUpForm } from "@features/auth";
+import { SignUpContainer } from "@features/auth";
 
-export const SignUpPage = () => <SignUpForm />;
+export const SignUpPage = () => <SignUpContainer />;

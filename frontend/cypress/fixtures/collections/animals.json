@@ -1,0 +1,21 @@
+{
+  "name": "Животные",
+  "cards": [
+    {
+      "word": "Cat",
+      "translation": "Кот"
+    },
+    {
+      "word": "Dog",
+      "translation": "Собака"
+    },
+    {
+      "word": "Crocodile",
+      "translation": "Крокодил"
+    },
+    {
+      "word": "Monkey",
+      "translation": "Обезьяна"
+    }
+  ]
+}
