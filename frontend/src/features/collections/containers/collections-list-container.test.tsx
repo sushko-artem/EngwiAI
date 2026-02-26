@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { useCollections } from "../hooks";
+import { useCollections } from "@features/collections/hooks";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { CollectionsListContainer } from "./collections-list-container";
 import { MemoryRouter } from "react-router-dom";
