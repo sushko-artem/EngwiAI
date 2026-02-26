@@ -25,6 +25,7 @@ export const Header = memo(
       <section className="sticky top-0 z-5 backdrop-blur-[30px]">
         <header className="flex justify-between py-4">
           <button
+            data-testid="leftIconAction"
             className="w-[30px] md:w-[50px] cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]"
             onClick={leftIconAction}
           >
