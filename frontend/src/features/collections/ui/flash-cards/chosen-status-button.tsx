@@ -17,10 +17,11 @@ export const ChosenStatusButton = ({
 }: ChosenStatusButtonPropType) => {
   return (
     <div
+      data-testid="chosen-status-button"
       onClick={() => onClick(status)}
       className={cn(
         "flex border-2 rounded-lg bg-[rgba(255,241,228,0.5)] active:bg-[rgba(255,241,228,0.2)] hover:shadow-[3px_5px_6px_rgba(0,0,0,0.3)] hover:scale-[1.01] cursor-pointer transition-all",
-        ClassName
+        ClassName,
       )}
     >
       <div className="my-auto w-[50px]">{children}</div>
