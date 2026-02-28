@@ -1,5 +1,6 @@
 describe("Dashboard - critical", () => {
   beforeEach(() => {
+    cy.resetDatabase();
     cy.createAndLoginUser();
     cy.visit("/dashboard");
   });
