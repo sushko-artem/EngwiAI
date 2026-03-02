@@ -13,6 +13,7 @@ export const CollectionName = memo(
           Имя коллекции:
         </h1>
         <input
+          data-testid="collection-name-input"
           value={name}
           onChange={(e) => onChange(e.target.value)}
           autoComplete="off"
@@ -22,5 +23,5 @@ export const CollectionName = memo(
         />
       </div>
     );
-  }
+  },
 );

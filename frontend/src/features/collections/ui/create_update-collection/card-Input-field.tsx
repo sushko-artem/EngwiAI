@@ -14,6 +14,7 @@ export const CardInputField = memo(
       <>
         <span className="text-fuchsia-800 font-bold">{label}</span>
         <TextareaAutosize
+          data-testid={name}
           name={name}
           value={text}
           onChange={(e) => onChange(e.target.value, name)}
@@ -30,5 +31,5 @@ export const CardInputField = memo(
         />
       </>
     );
-  }
+  },
 );
