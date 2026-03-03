@@ -25,7 +25,7 @@ describe("CreateCollection - regression", () => {
     cy.url().should("include", "/create-collection");
   });
 
-  it("should prevent navigation to /collections if collection has changes", () => {
+  it("should prevent navigation to /dashboard if collection has changes", () => {
     cy.get("[data-testid='collection-name-input']").type("Фрукты");
     cy.get("[data-testid='leftIconAction']").click();
     cy.contains("Все несохраненные данные будут потеряны!").should(
