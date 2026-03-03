@@ -18,21 +18,26 @@ describe("Collections - regression", () => {
   });
 
   it("should delete collection after confirmation", () => {
-    cy.contains("Животные")
-      .parent()
-      .find("[data-testid='deleteCross']")
-      .click();
+    cy.get("[data-testid='deleteCross']").eq(0).click();
     cy.contains("Удалить коллекцию Животные?").should("be.visible");
-    cy.get("[data-testid='modal-actions']").find("div:first").click();
-    cy.contains("Животные").should("not.exist");
-    cy.contains("Еда").should("be.visible");
+    cy.get("img[alt='confirm']").click();
+    cy.fixture("collections/animals").then((animals) => {
+      cy.contains(`${animals.name}`).should("not.exist");
+    });
+    cy.fixture("collections/food").then((food) => {
+      cy.contains(`${food.name}`).should("be.visible");
+    });
   });
 
   it("should cancel deletion", () => {
-    cy.contains("Еда").parent().find("[data-testid='deleteCross']").click();
+    cy.get("[data-testid='deleteCross']").eq(1).click();
     cy.contains("Удалить коллекцию Еда?").should("be.visible");
-    cy.get("[data-testid='modal-actions']").find("div:last").click();
-    cy.contains("Животные").should("be.visible");
-    cy.contains("Еда").should("be.visible");
+    cy.get("img[alt='close']").click();
+    cy.fixture("collections/animals").then((animals) => {
+      cy.contains(`${animals.name}`).should("be.visible");
+    });
+    cy.fixture("collections/food").then((food) => {
+      cy.contains(`${food.name}`).should("be.visible");
+    });
   });
 });

@@ -19,14 +19,22 @@ describe("Collections Page - critical", () => {
 
   it("should display list of user collections", () => {
     cy.contains("Мои модули").should("be.visible");
-    cy.contains("Животные").should("be.visible");
-    cy.contains("Еда").should("be.visible");
+    cy.fixture("collections/animals").then((animals) => {
+      cy.contains(`${animals.name}`).should("be.visible");
+    });
+    cy.fixture("collections/food").then((food) => {
+      cy.contains(`${food.name}`).should("be.visible");
+    });
   });
 
   it("should navigate to flash-cards collection content when clicked", () => {
-    cy.contains("Животные").click();
+    cy.fixture("collections/animals").then((animals) => {
+      cy.contains(`${animals.name}`).click();
+    });
     cy.url().should("include", `/flash-cards/${collectionsIds[0]}`);
-    cy.contains("Животные").should("be.visible");
+    cy.fixture("collections/animals").then((animals) => {
+      cy.contains(`${animals.name}`).should("be.visible");
+    });
     cy.contains("Флэш - карты").should("be.visible");
   });
 
