@@ -24,10 +24,10 @@ export const EditCollectionContainer = ({
       rightIconAction: saveCollection,
       leftIconAction: back,
       leftIcon: backArrow,
-      rightIcon: isLoading ? undefined : save,
+      rightIcon: isLoading || error ? undefined : save,
       title: isLoading ? "Сохранение..." : "Редактирование",
     }),
-    [isLoading, saveCollection, back]
+    [isLoading, error, saveCollection, back],
   );
 
   if (!editableCollection && !error) {
