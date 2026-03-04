@@ -6,6 +6,6 @@ describe("EditCollection - smoke", () => {
 
   it("should show error when editing collection not found", () => {
     cy.visit("/edit-collection/1234");
-    cy.contains("Ошибка! Коллекция не найдена!").should("be.visible");
+    cy.get("[data-testid='no-collection-error']").should("be.visible");
   });
 });

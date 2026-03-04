@@ -1,7 +1,10 @@
 import { getErrorMessage } from "@shared/api";
 
 export const NoCollectionError = ({ error }: { error: unknown }) => (
-  <div className="text-3xl font-jost text-fuchsia-800 flex flex-col h-[50vh] justify-center text-center">
+  <div
+    data-testid="no-collection-error"
+    className="text-3xl font-jost text-fuchsia-800 flex flex-col h-[50vh] justify-center text-center"
+  >
     <span>Ошибка! Коллекция не найдена!</span>
     <span className="text-red-500 text-lg">
       Error: {getErrorMessage(error)}
