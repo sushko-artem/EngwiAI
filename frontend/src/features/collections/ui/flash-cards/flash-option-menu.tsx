@@ -81,6 +81,7 @@ export const MenuOptions = ({
         onClick={onClose}
       />
       <animated.div
+        data-testid="menu-options"
         ref={menuRef}
         style={{
           opacity: menuSpring.opacity,
@@ -101,12 +102,20 @@ export const MenuOptions = ({
           </label>
         </div>
         <div className="flex text-center justify-center p-4 font-jost  border-1">
-          <button onClick={editCollection} className="cursor-pointer">
+          <button
+            data-testid="menu-options-edit"
+            onClick={editCollection}
+            className="cursor-pointer"
+          >
             Редактировать коллекцию
           </button>
         </div>
         <div className="flex text-center justify-center p-4 font-jost  border-1 border-t-0 rounded-b-md">
-          <button onClick={onDelete} className="cursor-pointer">
+          <button
+            data-testid="menu-options-delete"
+            onClick={onDelete}
+            className="cursor-pointer"
+          >
             Удалить коллекцию
           </button>
         </div>

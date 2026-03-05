@@ -25,7 +25,10 @@ export const ModalFlash = ({
     navigate(`/edit-collection/${collectionId}`);
   };
   return (
-    <div className="fixed inset-0 z-50 backdrop-blur-[10px] flex flex-col animate-blure transition-all">
+    <div
+      data-testid="flash-modal"
+      className="fixed inset-0 z-50 backdrop-blur-[10px] flex flex-col animate-blure transition-all"
+    >
       <section className="m-auto w-[60%] md:w-80 border-2 border-gray-300 rounded-lg p-4 bg-[rgba(255,255,235,1)] animate-appearing transition-all">
         <ModalSummary
           unknownTerms={unknownTerms}

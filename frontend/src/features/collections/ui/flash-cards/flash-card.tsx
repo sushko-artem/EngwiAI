@@ -17,6 +17,7 @@ export const FlashCard = ({ card, isReversed }: CardPropsType) => {
   return (
     <div className="flex justify-center items-center">
       <div
+        data-testid="flash-card"
         onClick={() => setFlipped((state) => !state)}
         className="relative w-[350px] h-[200px] md:w-[500px] md:h-[300px]"
       >
