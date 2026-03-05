@@ -35,7 +35,10 @@ export const ModalFlash = ({
           moduleLength={moduleLength}
           moduleName={moduleName}
         />
-        <div className="grid gap-2 m-auto mt-4 max-w-[80%]">
+        <div
+          data-testid="flash-modal-actions-container"
+          className="grid gap-2 m-auto mt-4 max-w-[80%]"
+        >
           <FlashModalAction content="Пройти модуль заново" onClick={reset} />
           <FlashModalAction
             content="Редактировать модуль"

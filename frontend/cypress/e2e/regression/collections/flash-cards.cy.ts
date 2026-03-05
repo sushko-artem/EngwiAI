@@ -1,10 +1,14 @@
 describe("FlashCards - regression", () => {
+  let collectionId: string;
   beforeEach(() => {
     cy.resetDatabase();
     cy.createAndLoginUser();
     cy.fixture("collections/animals").as("animals");
+    cy.fixture("collections/food").as("food");
+    cy.createCollection("food");
     cy.createCollection("animals").then((animals) => {
-      cy.visit(`/flash-cards/${animals.id}`);
+      collectionId = animals.id;
+      cy.visit(`/flash-cards/${collectionId}`);
     });
   });
 
@@ -44,6 +48,25 @@ describe("FlashCards - regression", () => {
     cy.get("[data-testid='menu-options']").should("be.visible");
     cy.get("[data-testid='menu-overlay']").click("center");
     cy.contains(this.animals.cards[0].translation).should("be.visible");
+  });
+
+  it("should delete collection when clicked delete button in option menu and confirmed action", function () {
+    cy.get("[data-testid='rightIconAction']").click();
+    cy.get("[data-testid='menu-options-delete']").click();
+    cy.get("[data-testid='modal-view']").should("be.visible");
+    cy.get("img[alt='confirm']").click();
+    cy.url().should("include", "/collections");
+    cy.contains(this.animals.name).should("not.exist");
+    cy.contains(this.food.name).should("be.visible");
+  });
+
+  it("should prevent deleting when clicked delete button in option menu and cancelled action", function () {
+    cy.get("[data-testid='rightIconAction']").click();
+    cy.get("[data-testid='menu-options-delete']").click();
+    cy.get("[data-testid='modal-view']").should("be.visible");
+    cy.get("img[alt='close']").click();
+    cy.url().should("include", `/flash-cards/${collectionId}`);
+    cy.contains(this.animals.name).should("be.visible");
   });
 
   it("should open flash-modal when all cards was shown", function () {
