@@ -32,10 +32,15 @@ export const ModalView = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 backdrop-blur-[5px] flex flex-col animate-blure transition-all">
+    <div
+      data-testid="modal-view"
+      className="fixed inset-0 z-50 backdrop-blur-[5px] flex flex-col animate-blure transition-all"
+    >
       <section className="relative m-auto w-[60%] md:w-80 border-2 border-gray-400 rounded-lg p-4 bg-[rgba(255,255,255,1)] animate-appearing transition-all">
         <h1 className="text-center font-roboto font-extrabold">{message}</h1>
-        <div className="mt-4 flex justify-around">{actionsVariant()}</div>
+        <div data-testid="modal-actions" className="mt-4 flex justify-around">
+          {actionsVariant()}
+        </div>
       </section>
     </div>
   );

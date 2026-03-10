@@ -17,7 +17,7 @@ async function bootstrap() {
     }),
   );
   app.use(cookieParser());
-  await app.listen(process.env.PORT ?? 4200);
+  await app.listen(process.env.PORT ?? 4200, '0.0.0.0');
 }
 bootstrap()
   .then(() => console.log(`Application started successfully on PORT:${process.env.PORT}`))

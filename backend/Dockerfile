@@ -12,6 +12,8 @@ COPY prisma.config.ts ./
 
 COPY prisma/schema.prisma ./prisma/
 
+RUN apk add --no-cache curl
+
 RUN npm install
 
 RUN npx prisma generate
