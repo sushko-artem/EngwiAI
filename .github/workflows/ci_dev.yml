@@ -7,46 +7,37 @@ on:
 #       - '**.md'
 #       - 'docs/**'
 jobs:
-  cache-or-init:
-    name: Cache or Install deps
+  smoke-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Cache fontend node_modules
-        uses: actions/cache@v3
-        id: cache-frontend
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Cache Docker layers
+        uses: actions/cache@v5
         with:
-          path: frontend/node_modules
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/package-lock.json') }}
+          path: /tmp/.buildx-cache
+          key: ${{  runner.os }}-buildx-${{ hashFiles('**/package-lock.json', '**/Dockerfile')}}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
-      - name: Cache backend node_modules
-        uses: actions/cache@v3
-        id: cache-backend
-        with:
-          path: backend/node_modules
-          key: ${{ runner.os }}-backend-${{  hashFiles('backend/package-lock.json')}}
-
-      - name: Install frontend deps
-        if: steps.cache-frontend.outputs.cache-hit != 'true'
-        working-directory: ./frontend
-        run: npm ci
-
-      - name: Install backend deps
-        if: steps.cache-backend.outputs.cache-hit != 'true'
-        working-directory: ./backend
-        run: npm ci
+      - name: Build Docker images with cache
+        run: docker compose -f compose.test.ci.yaml build
 
       - name: Run Smoke Tests
-        run: npm run test:e2e:smoke
+        run: npm run test:ci:smoke
 
       - name: Show container logs on failure
         if: failure()
         run: |
-          docker logs backend_test
-          docker logs frontend_test
-          docker logs nginx_test
+          docker logs backend_test || true
+          docker logs frontend_test || true
+          docker logs nginx_test || true
+          docker logs postgres_test || true
 
       - name: Clean Up
         if: always()
-        run: npm run test:e2e:down
+        run: npm run test:ci:down

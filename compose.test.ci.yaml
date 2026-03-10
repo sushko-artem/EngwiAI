@@ -11,8 +11,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - test-network
+    # networks:
+    #   - test-network
 
   backend_test:
     build:
@@ -20,8 +20,6 @@ services:
       target: development
     container_name: backend_test
     command: sh -c "npx prisma migrate deploy && npm run start:dev"
-    volumes:
-      - ./backend:/app
     depends_on:
       postgres_test:
         condition: service_healthy
@@ -35,22 +33,20 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_test:5432/${POSTGRES_DB}?schema=public"
     env_file:
       - ./backend/.env.test
-    networks:
-      - test-network
+    # networks:
+    #   - test-network
 
   frontend_test:
     build:
       context: ./frontend
       target: development
     container_name: frontend_test
-    volumes:
-      - ./frontend:/app
     env_file:
       - ./frontend/.env.test
     depends_on:
       - backend_test
-    networks:
-      - test-network
+    # networks:
+    #   - test-network
 
   nginx_test:
     image: nginx:alpine
@@ -69,26 +65,36 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
-    networks:
-      - test-network
+    # networks:
+    #   - test-network
 
   cypress:
     image: cypress/included:cypress-15.10.0-node-24.13.1-chrome-144.0.7559.132-1-ff-147.0.3-edge-144.0.3719.115-1
     container_name: cypress
+    network_mode: host
     entrypoint:
-      ["cypress", "run", "--spec", "${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}"]
+      [
+        "sh",
+        "-c",
+        "cd /e2e && npm ci && cypress run --spec ${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}",
+      ]
     depends_on:
       - nginx_test
       - frontend_test
       - backend_test
     environment:
-      CYPRESS_BASE_URL: http://nginx_test:80
+      CYPRESS_BASE_URL: http://localhost:8080
     volumes:
-      - ./frontend:/e2e
+      - ./frontend/package.json:/e2e/package.json
+      - ./frontend/package-lock.json:/e2e/package-lock.json
+      - ./frontend/cypress:/e2e/cypress
+      - ./frontend/cypress.config.ts:/e2e/cypress.config.ts
+      - ./frontend/src:/e2e/src
+      - ./frontend/cypress/tsconfig.json:/e2e/tsconfig.json
     working_dir: /e2e
-    networks:
-      - test-network
+    # networks:
+    #   - test-network
 
-networks:
-  test-network:
-    driver: bridge
+# networks:
+#   test-network:
+#     driver: bridge
