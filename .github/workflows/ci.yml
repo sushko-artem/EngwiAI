@@ -1,0 +1,123 @@
+name: Main CI Pipeline
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json')}}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install deps
+        run: cd frontend && npm ci
+
+      - name: Run Unit tests
+        run: npm run test:unit
+
+  build-images:
+    needs: unit-tests
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and cache backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          target: development
+          tags: backend_test:latest
+          load: true
+          cache-from: |
+            type=gha,scope=backend
+          cache-to: |
+            type=gha,mode=max,scope=backend
+
+      - name: Build and cache frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          target: development
+          tags: frontend_test:latest
+          load: true
+          cache-from: |
+            type=gha,scope=frontend
+          cache-to: |
+            type=gha,mode=max,scope=frontend
+
+      - name: Save images
+        run: |
+          mkdir -p /tmp/images
+          docker save backend_test:latest | gzip > /tmp/images/backend.tar.gz
+          docker save frontend_test:latest | gzip > /tmp/images/frontend.tar.gz
+
+      - name: Upload backend image
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-image
+          path: /tmp/images/backend.tar.gz
+          retention-days: 1
+
+      - name: Upload frontend image
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-image
+          path: /tmp/images/frontend.tar.gz
+          retention-days: 1
+
+  e2e-tests:
+    needs: build-images
+    strategy:
+      fail-fast: true
+      matrix:
+        suite: [smoke, critical, regression]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download frontend image
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-image
+          path: /tmp/images
+
+      - name: Download backend image
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-image
+          path: /tmp/images
+
+      - name: Load images
+        run: |
+          gunzip -c /tmp/images/backend.tar.gz | docker load
+          gunzip -c /tmp/images/frontend.tar.gz | docker load
+          docker images
+
+      - name: Run ${{matrix.suite}} tests
+        id: tests
+        run: CYPRESS_SPEC="cypress/e2e/${{matrix.suite}}/**/*.cy.ts" npm run test:ci:custom
+
+      - name: Show container logs on failure
+        if: failure()
+        run: |
+          docker logs backend_test || true
+          docker logs frontend_test || true
+          docker logs nginx_test || true
+          docker logs postgres_test || true
