@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "test:unit": "cd frontend && npm run test:run",
     "test:e2e:headless": "docker compose --env-file .env.test -f compose.test.yaml up --exit-code-from cypress",
     "test:e2e:critical": "CYPRESS_SPEC=\"cypress/e2e/critical/**/*.cy.ts\" docker compose --env-file .env.test -f compose.test.yaml up --exit-code-from cypress",
     "test:e2e:smoke": "CYPRESS_SPEC=\"cypress/e2e/smoke/**/*.cy.ts\" docker compose --env-file .env.test -f compose.test.yaml up --exit-code-from cypress",
@@ -8,6 +9,10 @@
     "test:e2e:build": "docker compose --env-file .env.test -f compose.test.yaml up --build --exit-code-from cypress",
     "test:e2e:local": "docker compose --env-file .env.test -f compose.test.yaml up -d frontend_test backend_test nginx_test postgres_test",
     "cy:open": "cd frontend && npx cypress open --config baseUrl=http://localhost:8080",
-    "test:e2e:down": "docker compose --env-file .env.test -f compose.test.yaml down"
+    "test:e2e:down": "docker compose --env-file .env.test -f compose.test.yaml down",
+    "test:ci:smoke": "CYPRESS_SPEC=\"cypress/e2e/smoke/**/*.cy.ts\" docker compose --env-file .env.test -f compose.test.ci.yaml up --exit-code-from cypress --abort-on-container-exit",
+    "test:ci:critical": "CYPRESS_SPEC=\"cypress/e2e/critical/**/*.cy.ts\" docker compose --env-file .env.test -f compose.test.ci.yaml up --exit-code-from cypress --abort-on-container-exit",
+    "test:ci:custom": "CYPRESS_SPEC= docker compose --env-file .env.test -f compose.test.ci.yaml up --exit-code-from cypress --abort-on-container-exit",
+    "test:ci:down": "docker compose --env-file .env.test -f compose.test.ci.yaml down"
   }
 }
