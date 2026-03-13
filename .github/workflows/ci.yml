@@ -31,11 +31,8 @@ jobs:
     if: success()
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build and cache backend
         uses: docker/build-push-action@v6
@@ -61,26 +58,6 @@ jobs:
           cache-to: |
             type=gha,mode=max,scope=frontend
 
-      - name: Save images
-        run: |
-          mkdir -p /tmp/images
-          docker save backend_test:latest | gzip > /tmp/images/backend.tar.gz
-          docker save frontend_test:latest | gzip > /tmp/images/frontend.tar.gz
-
-      - name: Upload backend image
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-image
-          path: /tmp/images/backend.tar.gz
-          retention-days: 1
-
-      - name: Upload frontend image
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-image
-          path: /tmp/images/frontend.tar.gz
-          retention-days: 1
-
   e2e-tests:
     needs: build-images
     strategy:
@@ -89,26 +66,24 @@ jobs:
         suite: [smoke, critical, regression]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v4
 
-      - name: Download frontend image
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-image
-          path: /tmp/images
-
-      - name: Download backend image
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-image
-          path: /tmp/images
-
-      - name: Load images
+      - name: Pull backend from cache
         run: |
-          gunzip -c /tmp/images/backend.tar.gz | docker load
-          gunzip -c /tmp/images/frontend.tar.gz | docker load
-          docker images
+          docker buildx build \
+            --cache-from=type=gha,scope=backend \
+            --output=type=docker \
+            --tag=backend_test:latest \
+            ./backend
+
+      - name: Pull frontend from cache
+        run: |
+          docker buildx build \
+          --cache-from=type=gha,scope=frontend \
+          --output=type=docker \
+          --tag=frontend_test:latest \
+          ./frontend
 
       - name: Run ${{matrix.suite}} tests
         id: tests
