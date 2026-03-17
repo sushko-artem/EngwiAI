@@ -19,12 +19,13 @@ const mockHandleChosenStatus = vi.hoisted(() => vi.fn());
 const mockHandleSwitchChange = vi.hoisted(() => vi.fn());
 const mockHandleDelete = vi.hoisted(() => vi.fn());
 const mockCloseMenu = vi.hoisted(() => vi.fn());
+const mockUpdateStatus = vi.hoisted(() => vi.fn());
 
 const createMockedProps = (overrides = {}) => ({
   error: null,
   collection: undefined,
   isLoading: false,
-  unmemTerms: [],
+  unmemTerms: 0,
   isReversed: false,
   isMenuOpen: false,
   isModalOpen: false,
@@ -36,6 +37,7 @@ const createMockedProps = (overrides = {}) => ({
   handleSwitchChange: mockHandleSwitchChange,
   handleDelete: mockHandleDelete,
   closeMenu: mockCloseMenu,
+  updateStatus: mockUpdateStatus,
   ...overrides,
 });
 

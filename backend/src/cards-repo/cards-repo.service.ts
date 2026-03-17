@@ -3,6 +3,7 @@ import { Cache } from 'cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { CreateCollectionDto, UpdateCollectionDto } from './DTO';
+// import { CardStatus } from '@generated/prisma/client';
 
 @Injectable()
 export class CardsRepoService {
@@ -46,6 +47,7 @@ export class CardsRepoService {
               id: true,
               word: true,
               translation: true,
+              status: true,
             },
           },
         },
@@ -93,6 +95,7 @@ export class CardsRepoService {
               data: {
                 word: card.word,
                 translation: card.translation,
+                status: card.status,
               },
             }),
           ),
@@ -132,4 +135,17 @@ export class CardsRepoService {
       },
     });
   }
+
+  // async updateCardStatus(active: string[], inactive: string[]) {
+  //   return await this.prisma.$transaction(async (prisma) => {
+  //     await prisma.card.updateMany({
+  //       where: { id: { in: active } },
+  //       data: { status: CardStatus.ACTIVE },
+  //     });
+  //     await prisma.card.updateMany({
+  //       where: { id: { in: inactive } },
+  //       data: { status: CardStatus.INACTIVE },
+  //     });
+  //   });
+  // }
 }

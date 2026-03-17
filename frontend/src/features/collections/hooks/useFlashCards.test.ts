@@ -16,6 +16,7 @@ const mockNavigate = vi.hoisted(() => vi.fn());
 const mockConfirm = vi.hoisted(() => vi.fn());
 const mockDeleteCollection = vi.hoisted(() => vi.fn());
 const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
+const mockUpdateCollection = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
@@ -30,6 +31,7 @@ vi.mock("@widgets/modal", () => ({
 vi.mock("@features/collections/api", () => ({
   useDeleteCollectionMutation: () => [mockDeleteCollection],
   useGetCollectionQuery: mockGetCollectionQuery,
+  useUpdateCollectionMutation: () => [mockUpdateCollection],
 }));
 
 describe("useFlashCards", () => {
@@ -72,19 +74,14 @@ describe("useFlashCards", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 
-  it("should add card to unmemTerms when status is false", () => {
+  it("should increase unmemTerms when status is false", () => {
     const { result } = renderHook(() => useFlashCards("test-id-123"));
 
     act(() => {
       result.current.handleChosenStatus(false);
     });
 
-    expect(result.current.unmemTerms).toHaveLength(1);
-    expect(result.current.unmemTerms[0]).toMatchObject({
-      id: "1",
-      word: "hello",
-      translation: "привет",
-    });
+    expect(result.current.unmemTerms).toBe(1);
   });
 
   it("should show next card when status is true", () => {
@@ -94,7 +91,7 @@ describe("useFlashCards", () => {
       result.current.handleChosenStatus(true);
     });
 
-    expect(result.current.unmemTerms).toHaveLength(0);
+    expect(result.current.unmemTerms).toBe(0);
     expect(result.current.index).toBe(1);
   });
 

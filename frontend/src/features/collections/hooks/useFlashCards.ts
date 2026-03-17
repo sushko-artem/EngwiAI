@@ -2,6 +2,7 @@ import { useCallback, useReducer } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
+  useUpdateCollectionMutation,
 } from "@features/collections/api";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "@widgets/modal";
@@ -17,10 +18,7 @@ export const useFlashCards = (collectionId: string) => {
   const { confirm } = useModal();
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
-
-  const back = useCallback(() => {
-    navigate("/collections");
-  }, [navigate]);
+  const [updateCollection] = useUpdateCollectionMutation();
 
   const options = useCallback(() => {
     dispatch({ type: "TOGGLE_MENU" });
@@ -66,6 +64,17 @@ export const useFlashCards = (collectionId: string) => {
     dispatch({ type: "RESET_FOR_RETRY" });
   }, []);
 
+  const back = useCallback(() => {
+    navigate("/collections");
+  }, [navigate]);
+
+  const updateStatus = useCallback(() => {
+    updateCollection({
+      id: collectionId,
+      dto: { updatedCards: state.actualStatus },
+    });
+  }, [updateCollection, collectionId, state.actualStatus]);
+
   return {
     error,
     collection,
@@ -82,5 +91,6 @@ export const useFlashCards = (collectionId: string) => {
     handleSwitchChange,
     closeMenu,
     handleReset,
+    updateStatus,
   };
 };

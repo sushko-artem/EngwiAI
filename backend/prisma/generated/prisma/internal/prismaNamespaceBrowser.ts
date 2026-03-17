@@ -99,6 +99,7 @@ export type CollectionScalarFieldEnum = (typeof CollectionScalarFieldEnum)[keyof
 
 export const CardScalarFieldEnum = {
   id: 'id',
+  status: 'status',
   word: 'word',
   translation: 'translation',
   collectionId: 'collectionId',

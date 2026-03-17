@@ -9,6 +9,7 @@ type ModalPropType = {
   unknownTerms: number;
   back(): void;
   reset(): void;
+  updateStatus(): void;
 };
 
 export const ModalFlash = ({
@@ -16,14 +17,21 @@ export const ModalFlash = ({
   moduleName,
   moduleLength,
   unknownTerms,
+  updateStatus,
   back,
   reset,
 }: ModalPropType) => {
   const navigate = useNavigate();
 
+  const goBackWithSavingStatus = () => {
+    back();
+    updateStatus();
+  };
+
   const editCollection = () => {
     navigate(`/edit-collection/${collectionId}`);
   };
+
   return (
     <div
       data-testid="flash-modal"
@@ -44,7 +52,10 @@ export const ModalFlash = ({
             content="Редактировать модуль"
             onClick={editCollection}
           />
-          <FlashModalAction content="Выбрать другой модуль" onClick={back} />
+          <FlashModalAction
+            content="Выбрать другой модуль"
+            onClick={goBackWithSavingStatus}
+          />
         </div>
       </section>
     </div>

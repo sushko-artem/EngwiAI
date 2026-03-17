@@ -67,7 +67,8 @@ export const FlashCardsContainer = ({
           collectionId={collection.id}
           moduleName={collection.name}
           moduleLength={collection.cards.length}
-          unknownTerms={props.unmemTerms.length}
+          unknownTerms={props.unmemTerms}
+          updateStatus={props.updateStatus}
           back={back}
           reset={handleReset}
         />

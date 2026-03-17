@@ -4,4 +4,5 @@ export const COLLECTION_ENDPOINTS = {
   LIST: "/collections/list",
   DELETE: "/collections/delete/",
   GET_ONE: "/collections/",
+  UPDATE_CARDS_STATUS: "/collections/cards/update_status",
 };

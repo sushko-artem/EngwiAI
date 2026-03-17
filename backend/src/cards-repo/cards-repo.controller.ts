@@ -3,6 +3,7 @@ import { CardsRepoService } from './cards-repo.service';
 import { User } from '@generated/prisma/client';
 import { CreateCollectionDto, UpdateCollectionDto } from './DTO';
 import { GetCurrentUser } from '@common/decorators';
+// import { UpdateCardsStatusDto } from './DTO/update-cards-status.dto';
 
 @Controller('collections')
 export class CardsRepoController {
@@ -32,4 +33,9 @@ export class CardsRepoController {
   async update(@Param('id', ParseUUIDPipe) collectionId: string, @Body() dto: UpdateCollectionDto) {
     return this.cardsRepoService.updateCollection(collectionId, dto);
   }
+
+  // @Post('/cards/update_status')
+  // async updateStatus(@Body() cards: UpdateCardsStatusDto) {
+  //   return this.cardsRepoService.updateCardStatus(cards.active, cards.inactive);
+  // }
 }

@@ -4,7 +4,7 @@ import type { EditableCollectionType } from "@features/collections/model";
 export const createUpdateDto = (
   originalCollectionName: string,
   editedCollection: EditableCollectionType,
-  deletedCards: string[]
+  deletedCards: string[],
 ) => {
   const dto: Partial<IUpdateCollectionDto> = {};
 
@@ -12,16 +12,16 @@ export const createUpdateDto = (
     .filter((card) => card.isUpdated)
     .map((card) => ({
       ...card,
-      word: card.word.trim(),
-      translation: card.translation.trim(),
+      word: card.word?.trim(),
+      translation: card.translation?.trim(),
     }));
 
   const newCards = editedCollection.cards
     .filter((card) => card.isNew)
     .map((card) => ({
       ...card,
-      word: card.word.trim(),
-      translation: card.translation.trim(),
+      word: card.word?.trim(),
+      translation: card.translation?.trim(),
     }));
 
   if (originalCollectionName !== editedCollection.name.trim()) {

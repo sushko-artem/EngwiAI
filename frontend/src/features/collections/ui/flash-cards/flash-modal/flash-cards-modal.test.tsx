@@ -17,6 +17,7 @@ describe("ModalFlash", () => {
     unknownTerms: 2,
     back: vi.fn(),
     reset: vi.fn(),
+    updateStatus: vi.fn(),
   };
 
   const user = userEvent.setup();
