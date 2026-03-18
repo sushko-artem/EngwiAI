@@ -7,6 +7,7 @@ type ModalPropType = {
   moduleName: string;
   moduleLength: number;
   unknownTerms: number;
+  isVirtual: boolean;
   back(): void;
   reset(): void;
   updateStatus(): void;
@@ -17,6 +18,7 @@ export const ModalFlash = ({
   moduleName,
   moduleLength,
   unknownTerms,
+  isVirtual,
   updateStatus,
   back,
   reset,
@@ -48,10 +50,12 @@ export const ModalFlash = ({
           className="grid gap-2 m-auto mt-4 max-w-[80%]"
         >
           <FlashModalAction content="Пройти модуль заново" onClick={reset} />
-          <FlashModalAction
-            content="Редактировать модуль"
-            onClick={editCollection}
-          />
+          {!isVirtual && (
+            <FlashModalAction
+              content="Редактировать модуль"
+              onClick={editCollection}
+            />
+          )}
           <FlashModalAction
             content="Выбрать другой модуль"
             onClick={goBackWithSavingStatus}

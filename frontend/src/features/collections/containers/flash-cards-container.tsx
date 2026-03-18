@@ -69,6 +69,7 @@ export const FlashCardsContainer = ({
           moduleLength={collection.cards.length}
           unknownTerms={props.unmemTerms}
           updateStatus={props.updateStatus}
+          isVirtual={props.isVirtual}
           back={back}
           reset={handleReset}
         />
@@ -79,6 +80,7 @@ export const FlashCardsContainer = ({
           isMenuOpen={props.isMenuOpen}
           onClose={props.closeMenu}
           isReversed={isReversed}
+          isVirtual={props.isVirtual}
           collectionId={collection.id}
           onDelete={props.handleDelete}
         />

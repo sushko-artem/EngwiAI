@@ -29,6 +29,7 @@ const createMockedProps = (overrides = {}) => ({
   isReversed: false,
   isMenuOpen: false,
   isModalOpen: false,
+  isVirtual: false,
   index: 0,
   back: mockBack,
   options: mockOptions,

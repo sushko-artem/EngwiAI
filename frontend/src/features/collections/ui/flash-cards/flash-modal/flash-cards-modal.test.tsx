@@ -15,6 +15,7 @@ describe("ModalFlash", () => {
     moduleName: "test",
     moduleLength: 5,
     unknownTerms: 2,
+    isVirtual: false,
     back: vi.fn(),
     reset: vi.fn(),
     updateStatus: vi.fn(),

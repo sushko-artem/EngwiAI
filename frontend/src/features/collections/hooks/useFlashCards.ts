@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
@@ -7,6 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useModal } from "@widgets/modal";
 import { flashCardsReducer, initialState } from "./useFlashCardsReducer";
+import { isVirtualCollection } from "../helpers";
 
 export const useFlashCards = (collectionId: string) => {
   const {
@@ -19,6 +20,11 @@ export const useFlashCards = (collectionId: string) => {
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
+
+  const isVirtual = useMemo(
+    () => isVirtualCollection(collectionId),
+    [collectionId],
+  );
 
   const options = useCallback(() => {
     dispatch({ type: "TOGGLE_MENU" });
@@ -69,9 +75,10 @@ export const useFlashCards = (collectionId: string) => {
   }, [navigate]);
 
   const updateStatus = useCallback(() => {
+    const updatedCards = state.actualStatus;
     updateCollection({
       id: collectionId,
-      dto: { updatedCards: state.actualStatus },
+      dto: { updatedCards },
     });
   }, [updateCollection, collectionId, state.actualStatus]);
 
@@ -83,6 +90,7 @@ export const useFlashCards = (collectionId: string) => {
     isReversed: state.isReversed,
     isMenuOpen: state.isMenuOpen,
     isModalOpen: state.isModalOpen,
+    isVirtual,
     index: state.index,
     back,
     options,

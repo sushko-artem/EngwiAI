@@ -14,6 +14,7 @@ describe("MenuOptions", () => {
     collectionId: "id-123",
     isMenuOpen: true,
     isReversed: false,
+    isVirtual: false,
     onClose: vi.fn(),
     onSwitchChange: vi.fn(),
     onDelete: vi.fn(),
