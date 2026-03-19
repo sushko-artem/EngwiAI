@@ -7,6 +7,7 @@ import { DashboardPage } from "pages/Dashboard";
 import { CollectionsListPage } from "pages/Collections";
 import { ProtectedRoute } from "@shared/protected-route";
 import { EditCollectionPage } from "pages/EditCollection";
+import { IntervalLearningPage } from "pages/IntervalLearning";
 
 const routes = [
   {
@@ -58,6 +59,14 @@ const routes = [
     element: (
       <ProtectedRoute>
         <DashboardPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/interval-learning",
+    element: (
+      <ProtectedRoute>
+        <IntervalLearningPage />
       </ProtectedRoute>
     ),
   },
