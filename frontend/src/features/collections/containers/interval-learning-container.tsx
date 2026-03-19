@@ -1,11 +1,16 @@
 import { useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
-import { useIntervalLearning } from "../hooks";
-import { IntervalDescription } from "../ui";
+import { useIntervalLearning } from "@features/collections/hooks";
+import {
+  IntervalDescription,
+  NotASingleCollection,
+} from "@features/collections/ui";
+import { Loader } from "@shared/ui/loader";
 
 export const IntervalLearningContainer = () => {
-  const { back, activeLength, inactiveLength } = useIntervalLearning();
+  const { back, activeLength, inactiveLength, isLoading } =
+    useIntervalLearning();
   const headerProps = useMemo(
     () => ({
       title: "Интервальное повторение",
@@ -16,12 +21,16 @@ export const IntervalLearningContainer = () => {
     [back],
   );
 
-  console.log(activeLength, inactiveLength);
+  const renderContent = () => {
+    if (isLoading) return <Loader />;
+    if (!activeLength && !inactiveLength) return <NotASingleCollection />;
+    return <IntervalDescription />;
+  };
 
   return (
     <>
       <Header {...headerProps} />
-      <IntervalDescription />
+      {renderContent()}
     </>
   );
 };

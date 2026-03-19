@@ -1,12 +1,37 @@
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGetCollectionQuery } from "@features/collections/api";
 import { VIRTUAL_COLLECTIONS } from "@features/collections/helpers/virtual-collection-ident-helper";
 
 export const useIntervalLearning = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const activeQuery = useGetCollectionQuery(VIRTUAL_COLLECTIONS.ACTIVE);
-  const inactiveQuery = useGetCollectionQuery(VIRTUAL_COLLECTIONS.INACTIVE);
+  const {
+    data: activeCollection,
+    isLoading: activeLoading,
+    refetch: activeRefetch,
+  } = useGetCollectionQuery(VIRTUAL_COLLECTIONS.ACTIVE);
+  const {
+    data: inactiveCollection,
+    isLoading: inactiveLoading,
+    refetch: inactiveRefetch,
+  } = useGetCollectionQuery(VIRTUAL_COLLECTIONS.INACTIVE);
+
+  const isLoading = activeLoading || inactiveLoading;
+
+  const collectionsLength = {
+    active: activeCollection?.cards.length || 0,
+    inactive: inactiveCollection?.cards.length || 0,
+  };
+
+  const refetchQuery = useCallback(() => {
+    activeRefetch();
+    inactiveRefetch();
+  }, [activeRefetch, inactiveRefetch]);
+
+  useEffect(() => {
+    refetchQuery();
+  }, [refetchQuery, location.pathname]);
 
   const back = useCallback(() => {
     navigate("/dashboard");
@@ -14,9 +39,8 @@ export const useIntervalLearning = () => {
 
   return {
     back,
-    isLoading: activeQuery.isLoading || inactiveQuery.isLoading,
-    error: activeQuery.error || inactiveQuery.error,
-    inactiveLength: inactiveQuery.data?.cards.length || 0,
-    activeLength: activeQuery.data?.cards.length || 0,
+    isLoading,
+    inactiveLength: collectionsLength.inactive,
+    activeLength: collectionsLength.active,
   };
 };
