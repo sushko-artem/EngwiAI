@@ -3,7 +3,7 @@ export const VIRTUAL_COLLECTIONS = {
   INACTIVE: "inactive",
 } as const;
 
-type VirtualCollectionIdType =
+export type VirtualCollectionIdType =
   (typeof VIRTUAL_COLLECTIONS)[keyof typeof VIRTUAL_COLLECTIONS];
 
 export const isVirtualCollection = (
