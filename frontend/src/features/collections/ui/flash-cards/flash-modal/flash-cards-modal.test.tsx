@@ -57,4 +57,12 @@ describe("ModalFlash", () => {
 
     expect(defaultProps.back).toHaveBeenCalled();
   });
+
+  it("should render correct summary actions fields when collection is virtual", () => {
+    defaultProps.isVirtual = true;
+    render(<ModalFlash {...defaultProps} />);
+
+    expect(screen.queryByText("Редактировать модуль")).not.toBeInTheDocument();
+    expect(screen.getByText("Пройти модуль заново")).toBeInTheDocument();
+  });
 });

@@ -55,4 +55,14 @@ describe("MenuOptions", () => {
 
     expect(defaultProps.onSwitchChange).toHaveBeenCalled();
   });
+
+  it("should show only switch action when collection is virtual", () => {
+    defaultProps.isVirtual = true;
+    render(<MenuOptions {...defaultProps} />);
+    expect(screen.queryByText("Удалить коллекцию")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Редактировать коллекцию"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("switch")).toBeInTheDocument();
+  });
 });
