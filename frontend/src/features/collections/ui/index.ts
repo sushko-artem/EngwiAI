@@ -20,3 +20,4 @@ export {
   type EditableCardType,
 } from "./create_update-collection/editable-collection";
 export { FlashCard } from "./flash-cards/flash-card";
+export { IntervalDescription } from "./interval-learning/interval-description";

@@ -1,4 +1,4 @@
-const VIRTUAL_COLLECTIONS = {
+export const VIRTUAL_COLLECTIONS = {
   ACTIVE: "active",
   INACTIVE: "inactive",
 } as const;
