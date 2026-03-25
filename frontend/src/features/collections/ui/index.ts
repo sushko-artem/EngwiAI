@@ -21,3 +21,4 @@ export {
 } from "./create_update-collection/editable-collection";
 export { FlashCard } from "./flash-cards/flash-card";
 export { IntervalDescription } from "./interval-learning/interval-description";
+export { IntervalActionsBlock } from "./interval-learning/interval-actions-block";

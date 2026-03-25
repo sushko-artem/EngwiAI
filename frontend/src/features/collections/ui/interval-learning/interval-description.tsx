@@ -1,12 +1,16 @@
 export const IntervalDescription = () => (
-  <div className="text-center mt-8 mb-4  font-jost text-fuchsia-800 md:text-2xl">
-    <div>
-      Карточки всех модулей распределены на две категории: <br />
-      <div className="mt-4">
-        <span className="text-green-600 font-bold"> "ЗНАЮ!"</span>
-        <span className="text-gray-700"> | </span>
-        <span className="text-red-600 font-bold">"НЕ ЗНАЮ!"</span>
-      </div>
-    </div>
-  </div>
+  <section className="max-w-[80%] text-center mt-2 mb-2 font-roboto text-fuchsia-800 text-xs md:text-sm md:max-w-[40%] m-auto">
+    <div>*Карточки всех модулей распределены на&nbsp;две&nbsp;категории.</div>
+    <p>
+      В <span className="text-green-600"> зеленом</span> блоке находятся
+      карточки, которые, в процессе работы с флэш-картами, были Вами определены
+      в&nbsp;категорию&nbsp;
+      <span className="text-green-600 font-bold">"Знаю!"</span> <br /> В{" "}
+      <span className="text-red-600">красном</span> блоке -
+      в&nbsp;категорию&nbsp;
+      <span className="text-red-600 font-bold">"Изучено"</span> <br />
+      После прохождения "Контрольного тестирования", статус карточек будет
+      изменен, согласно Вашему&nbsp;выбору.
+    </p>
+  </section>
 );
