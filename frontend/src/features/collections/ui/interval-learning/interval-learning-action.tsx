@@ -1,5 +1,4 @@
 import type { VirtualCollectionIdType } from "@features/collections/helpers/virtual-collection-ident-helper";
-import { cn } from "@shared/lib/utils";
 import { useModal } from "@widgets/modal";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +13,7 @@ export const IntervalLearningAction = ({
 }: IntervalLearningActionPropType) => {
   const navigate = useNavigate();
   const { warning } = useModal();
+  const isActive = type === "active";
   const handleClick = () => {
     if (!collectionLength) {
       warning("В блоке нет ни одной флэш-карты!");
@@ -21,22 +21,21 @@ export const IntervalLearningAction = ({
     }
     navigate(`/flash-cards/${type}`);
   };
-  const color = type === "active" ? "green-600" : "red-600";
   return (
     <div
-      className={cn(
-        `flex flex-col text-center border-3 rounded-[5px] border-${color} p-2`,
-      )}
+      className={`flex flex-col text-center border-3 rounded-[5px] p-2 ${isActive ? "border-green-600" : "border-red-600"}`}
     >
       <div>
-        <span className={cn(`font-bold text-[50px] text-${color}`)}>
+        <span
+          className={`font-bold text-[50px] lg:text-[100px] ${isActive ? "text-green-600" : "text-red-600"}`}
+        >
           {collectionLength}
         </span>
       </div>
       <div>
         <button
           onClick={handleClick}
-          className={`border-2 border-${color} p-1 rounded-[3px] cursor-pointer font-roboto font-bold text-sm text-amber-100 bg-${color}`}
+          className={`border-2 p-1 rounded-[3px] cursor-pointer font-roboto font-bold text-sm lg:text-2xl text-amber-100 hover:scale-[1.1] transition-all ${isActive ? "border-green-600 bg-green-600" : "border-red-600 bg-red-600"}`}
         >
           Начать
         </button>

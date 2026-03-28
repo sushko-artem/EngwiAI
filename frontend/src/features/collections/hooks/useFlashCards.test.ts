@@ -48,6 +48,48 @@ describe("useFlashCards", () => {
     expect(mockGetCollectionQuery).toHaveBeenCalledWith("test-id-123");
   });
 
+  it("should set isVirtual=true if collectionId is 'active' or 'inactive' ", () => {
+    const { result } = renderHook(() => useFlashCards("inactive"));
+    expect(result.current.isVirtual).toBe(true);
+  });
+
+  it("should shuffle cards order", () => {
+    const mockCollection = {
+      id: "test-123",
+      name: "Test Collection",
+      cards: [
+        { id: "1", word: "Word 1", translation: "Translation 1" },
+        { id: "2", word: "Word 2", translation: "Translation 2" },
+        { id: "3", word: "Word 3", translation: "Translation 3" },
+        { id: "4", word: "Word 4", translation: "Translation 4" },
+        { id: "5", word: "Word 5", translation: "Translation 5" },
+        { id: "6", word: "Word 6", translation: "Translation 6" },
+        { id: "7", word: "Word 7", translation: "Translation 7" },
+        { id: "8", word: "Word 8", translation: "Translation 8" },
+        { id: "9", word: "Word 9", translation: "Translation 9" },
+        { id: "10", word: "Word 10", translation: "Translation 10" },
+        { id: "11", word: "Word 11", translation: "Translation 11" },
+        { id: "12", word: "Word 12", translation: "Translation 12" },
+        { id: "13", word: "Word 13", translation: "Translation 13" },
+      ],
+    };
+    mockGetCollectionQuery.mockReturnValue({
+      data: mockCollection,
+      isLoading: false,
+      error: null,
+    });
+    const { result } = renderHook(() => useFlashCards("test-123"));
+
+    const originalOrder = mockCollection.cards.map((card) => card.id);
+    const shuffledOrder = result.current.collection?.cards.map(
+      (card) => card.id,
+    ) as string[];
+
+    expect(originalOrder).not.toEqual(shuffledOrder);
+    expect(originalOrder).toEqual(expect.arrayContaining(shuffledOrder));
+    expect(originalOrder.sort()).toEqual(shuffledOrder.sort());
+  });
+
   it("should return error when collection not found", () => {
     mockGetCollectionQuery.mockReturnValueOnce({
       data: undefined,

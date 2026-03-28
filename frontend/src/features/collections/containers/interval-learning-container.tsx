@@ -8,9 +8,10 @@ import {
   NotASingleCollection,
 } from "@features/collections/ui";
 import { Loader } from "@shared/ui/loader";
+import { cn } from "@shared/lib/utils";
 
 export const IntervalLearningContainer = () => {
-  const { back, activeLength, inactiveLength, isLoading } =
+  const { back, activeLength, inactiveLength, isLoading, isRefetching } =
     useIntervalLearning();
   const headerProps = useMemo(
     () => ({
@@ -27,9 +28,11 @@ export const IntervalLearningContainer = () => {
     if (!activeLength && !inactiveLength) return <NotASingleCollection />;
     return (
       <>
-        <IntervalActionsBlock
-          moduleLength={{ active: activeLength, inactive: inactiveLength }}
-        />
+        <div className={cn(isRefetching && "opacity-10 transition-opacity")}>
+          <IntervalActionsBlock
+            moduleLength={{ active: activeLength, inactive: inactiveLength }}
+          />
+        </div>
         <IntervalDescription />
       </>
     );

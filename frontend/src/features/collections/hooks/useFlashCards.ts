@@ -21,6 +21,20 @@ export const useFlashCards = (collectionId: string) => {
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
 
+  const shuffledCollection = useMemo(() => {
+    if (collection) {
+      const shuffled = { ...collection, cards: [...collection.cards] };
+      for (let i = shuffled.cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled.cards[i], shuffled.cards[j]] = [
+          shuffled.cards[j],
+          shuffled.cards[i],
+        ];
+      }
+      return shuffled;
+    }
+  }, [collection]);
+
   const isVirtual = useMemo(
     () => isVirtualCollection(collectionId),
     [collectionId],
@@ -32,7 +46,9 @@ export const useFlashCards = (collectionId: string) => {
 
   const handleDelete = useCallback(async () => {
     dispatch({ type: "CLOSE_MENU" });
-    const isDelete = await confirm(`Удалить коллекцию "${collection?.name}"?`);
+    const isDelete = await confirm(
+      `Удалить коллекцию "${shuffledCollection?.name}"?`,
+    );
     if (isDelete) {
       try {
         navigate("/collections");
@@ -41,7 +57,7 @@ export const useFlashCards = (collectionId: string) => {
         console.error(error);
       }
     }
-  }, [confirm, navigate, deleteCollection, collection, collectionId]);
+  }, [confirm, navigate, deleteCollection, shuffledCollection, collectionId]);
 
   const closeMenu = useCallback(() => {
     dispatch({ type: "CLOSE_MENU" });
@@ -49,17 +65,16 @@ export const useFlashCards = (collectionId: string) => {
 
   const handleChosenStatus = useCallback(
     (status: boolean) => {
-      if (!collection) return;
-      const flashCollection = collection.cards;
+      if (!shuffledCollection?.cards) return;
       dispatch({
         type: "HANDLE_CHOSEN_STATUS",
         payload: {
-          collection: flashCollection,
+          collection: shuffledCollection.cards,
           status,
         },
       });
     },
-    [collection],
+    [shuffledCollection],
   );
 
   const handleSwitchChange = useCallback(() => {
@@ -84,7 +99,7 @@ export const useFlashCards = (collectionId: string) => {
 
   return {
     error,
-    collection,
+    collection: shuffledCollection,
     isLoading,
     unmemTerms: state.unmemTerms,
     isReversed: state.isReversed,

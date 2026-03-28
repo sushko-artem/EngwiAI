@@ -29,5 +29,5 @@ export const EditableCollection = memo(
         <div ref={scrollRef} className="h-0 mt-8" />
       </div>
     );
-  }
+  },
 );

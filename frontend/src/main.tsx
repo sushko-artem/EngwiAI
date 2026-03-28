@@ -9,5 +9,5 @@ createRoot(document.getElementById("root")!).render(
       <div className="fixed inset-0 -z-10 backdrop-blur-[6px]"></div>
       <App />
     </div>
-  </StrictMode>
+  </StrictMode>,
 );

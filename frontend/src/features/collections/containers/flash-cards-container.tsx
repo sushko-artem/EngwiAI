@@ -47,7 +47,7 @@ export const FlashCardsContainer = ({
   return (
     <>
       <Header {...headerProps} />
-      {isLoading && <Loader />}
+      {isLoading && !collection && <Loader />}
       {!collection && !isLoading && <NoCollectionError error={error} />}
       {collection && (
         <main>
