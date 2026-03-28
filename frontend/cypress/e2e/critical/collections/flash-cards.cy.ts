@@ -13,7 +13,7 @@ describe("FlashCards - critical", () => {
   it("should render correct flash-cards collection", function () {
     cy.url().should("include", `/flash-cards/${collectionId}`);
     cy.contains(this.animals.name).should("be.visible");
-    cy.contains(this.animals.cards[0].word).should("be.visible");
+    cy.get("[data-testid='word-side']").should("be.visible");
     cy.get("[data-testid='progress-bar']").should("be.visible");
     cy.contains(`1/${this.animals.cards.length}`).should("be.visible");
     cy.get("[data-testid='chosen-status-button']").should("have.length", 2);

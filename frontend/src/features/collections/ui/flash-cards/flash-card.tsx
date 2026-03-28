@@ -22,6 +22,7 @@ export const FlashCard = ({ card, isReversed }: CardPropsType) => {
         className="relative w-[350px] h-[200px] md:w-[500px] md:h-[300px]"
       >
         <animated.div
+          data-testid="word-side"
           className="card-container font-roboto text-lg md:text-2xl"
           style={{
             opacity: opacity.to((o) => 1 - o),
@@ -31,6 +32,7 @@ export const FlashCard = ({ card, isReversed }: CardPropsType) => {
           {isReversed ? card.translation : card.word}
         </animated.div>
         <animated.div
+          data-testid="translation-side"
           className="card-container font-roboto text-lg md:text-2xl"
           style={{
             opacity,
