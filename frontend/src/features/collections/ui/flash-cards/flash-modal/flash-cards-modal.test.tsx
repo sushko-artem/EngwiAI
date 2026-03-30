@@ -15,8 +15,10 @@ describe("ModalFlash", () => {
     moduleName: "test",
     moduleLength: 5,
     unknownTerms: 2,
+    isVirtual: false,
     back: vi.fn(),
     reset: vi.fn(),
+    updateStatus: vi.fn(),
   };
 
   const user = userEvent.setup();
@@ -54,5 +56,13 @@ describe("ModalFlash", () => {
     await user.click(screen.getByText("Выбрать другой модуль"));
 
     expect(defaultProps.back).toHaveBeenCalled();
+  });
+
+  it("should render correct summary actions fields when collection is virtual", () => {
+    defaultProps.isVirtual = true;
+    render(<ModalFlash {...defaultProps} />);
+
+    expect(screen.queryByText("Редактировать модуль")).not.toBeInTheDocument();
+    expect(screen.getByText("Пройти модуль заново")).toBeInTheDocument();
   });
 });

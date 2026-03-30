@@ -16,6 +16,8 @@ services:
     build:
       context: ./backend
       target: development
+      args:
+        DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public"
     container_name: backend_test
     command: sh -c "npx prisma migrate deploy && npm run start:dev"
     volumes:

@@ -13,7 +13,7 @@ export const EditableCard = memo(({ id, word, translation }: ICard) => {
     (value: string, field: "word" | "translation") => {
       dispatch(updateCard({ id, value, field }));
     },
-    [dispatch, id]
+    [dispatch, id],
   );
 
   const handleDelete = useCallback(() => {
@@ -26,13 +26,13 @@ export const EditableCard = memo(({ id, word, translation }: ICard) => {
       <CardContent className="p-2">
         <CardInputField
           name="word"
-          text={word}
+          text={word as string}
           onChange={handleChange}
           label="Термин"
         />
         <CardInputField
           name="translation"
-          text={translation}
+          text={translation as string}
           onChange={handleChange}
           label="Перевод"
         />

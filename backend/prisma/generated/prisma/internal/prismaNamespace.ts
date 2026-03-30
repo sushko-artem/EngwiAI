@@ -768,6 +768,7 @@ export type CollectionScalarFieldEnum = (typeof CollectionScalarFieldEnum)[keyof
 
 export const CardScalarFieldEnum = {
   id: 'id',
+  status: 'status',
   word: 'word',
   translation: 'translation',
   collectionId: 'collectionId',
@@ -857,6 +858,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CardStatus'
+ */
+export type EnumCardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CardStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CardStatus[]'
+ */
+export type ListEnumCardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CardStatus[]'>
     
 
 

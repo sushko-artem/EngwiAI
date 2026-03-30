@@ -26,6 +26,7 @@ export type AggregateCard = {
 
 export type CardMinAggregateOutputType = {
   id: string | null
+  status: $Enums.CardStatus | null
   word: string | null
   translation: string | null
   collectionId: string | null
@@ -35,6 +36,7 @@ export type CardMinAggregateOutputType = {
 
 export type CardMaxAggregateOutputType = {
   id: string | null
+  status: $Enums.CardStatus | null
   word: string | null
   translation: string | null
   collectionId: string | null
@@ -44,6 +46,7 @@ export type CardMaxAggregateOutputType = {
 
 export type CardCountAggregateOutputType = {
   id: number
+  status: number
   word: number
   translation: number
   collectionId: number
@@ -55,6 +58,7 @@ export type CardCountAggregateOutputType = {
 
 export type CardMinAggregateInputType = {
   id?: true
+  status?: true
   word?: true
   translation?: true
   collectionId?: true
@@ -64,6 +68,7 @@ export type CardMinAggregateInputType = {
 
 export type CardMaxAggregateInputType = {
   id?: true
+  status?: true
   word?: true
   translation?: true
   collectionId?: true
@@ -73,6 +78,7 @@ export type CardMaxAggregateInputType = {
 
 export type CardCountAggregateInputType = {
   id?: true
+  status?: true
   word?: true
   translation?: true
   collectionId?: true
@@ -155,6 +161,7 @@ export type CardGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type CardGroupByOutputType = {
   id: string
+  status: $Enums.CardStatus
   word: string
   translation: string
   collectionId: string
@@ -185,6 +192,7 @@ export type CardWhereInput = {
   OR?: Prisma.CardWhereInput[]
   NOT?: Prisma.CardWhereInput | Prisma.CardWhereInput[]
   id?: Prisma.StringFilter<"Card"> | string
+  status?: Prisma.EnumCardStatusFilter<"Card"> | $Enums.CardStatus
   word?: Prisma.StringFilter<"Card"> | string
   translation?: Prisma.StringFilter<"Card"> | string
   collectionId?: Prisma.StringFilter<"Card"> | string
@@ -195,6 +203,7 @@ export type CardWhereInput = {
 
 export type CardOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   word?: Prisma.SortOrder
   translation?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
@@ -208,6 +217,7 @@ export type CardWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CardWhereInput | Prisma.CardWhereInput[]
   OR?: Prisma.CardWhereInput[]
   NOT?: Prisma.CardWhereInput | Prisma.CardWhereInput[]
+  status?: Prisma.EnumCardStatusFilter<"Card"> | $Enums.CardStatus
   word?: Prisma.StringFilter<"Card"> | string
   translation?: Prisma.StringFilter<"Card"> | string
   collectionId?: Prisma.StringFilter<"Card"> | string
@@ -218,6 +228,7 @@ export type CardWhereUniqueInput = Prisma.AtLeast<{
 
 export type CardOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   word?: Prisma.SortOrder
   translation?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
@@ -233,6 +244,7 @@ export type CardScalarWhereWithAggregatesInput = {
   OR?: Prisma.CardScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CardScalarWhereWithAggregatesInput | Prisma.CardScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Card"> | string
+  status?: Prisma.EnumCardStatusWithAggregatesFilter<"Card"> | $Enums.CardStatus
   word?: Prisma.StringWithAggregatesFilter<"Card"> | string
   translation?: Prisma.StringWithAggregatesFilter<"Card"> | string
   collectionId?: Prisma.StringWithAggregatesFilter<"Card"> | string
@@ -242,6 +254,7 @@ export type CardScalarWhereWithAggregatesInput = {
 
 export type CardCreateInput = {
   id?: string
+  status?: $Enums.CardStatus
   word: string
   translation: string
   createdAt?: Date | string
@@ -251,6 +264,7 @@ export type CardCreateInput = {
 
 export type CardUncheckedCreateInput = {
   id?: string
+  status?: $Enums.CardStatus
   word: string
   translation: string
   collectionId: string
@@ -260,6 +274,7 @@ export type CardUncheckedCreateInput = {
 
 export type CardUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -269,6 +284,7 @@ export type CardUpdateInput = {
 
 export type CardUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -278,6 +294,7 @@ export type CardUncheckedUpdateInput = {
 
 export type CardCreateManyInput = {
   id?: string
+  status?: $Enums.CardStatus
   word: string
   translation: string
   collectionId: string
@@ -287,6 +304,7 @@ export type CardCreateManyInput = {
 
 export type CardUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -295,6 +313,7 @@ export type CardUpdateManyMutationInput = {
 
 export type CardUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -314,6 +333,7 @@ export type CardOrderByRelationAggregateInput = {
 
 export type CardCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   word?: Prisma.SortOrder
   translation?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
@@ -323,6 +343,7 @@ export type CardCountOrderByAggregateInput = {
 
 export type CardMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   word?: Prisma.SortOrder
   translation?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
@@ -332,6 +353,7 @@ export type CardMaxOrderByAggregateInput = {
 
 export type CardMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   word?: Prisma.SortOrder
   translation?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
@@ -381,8 +403,13 @@ export type CardUncheckedUpdateManyWithoutCollectionNestedInput = {
   deleteMany?: Prisma.CardScalarWhereInput | Prisma.CardScalarWhereInput[]
 }
 
+export type EnumCardStatusFieldUpdateOperationsInput = {
+  set?: $Enums.CardStatus
+}
+
 export type CardCreateWithoutCollectionInput = {
   id?: string
+  status?: $Enums.CardStatus
   word: string
   translation: string
   createdAt?: Date | string
@@ -391,6 +418,7 @@ export type CardCreateWithoutCollectionInput = {
 
 export type CardUncheckedCreateWithoutCollectionInput = {
   id?: string
+  status?: $Enums.CardStatus
   word: string
   translation: string
   createdAt?: Date | string
@@ -428,6 +456,7 @@ export type CardScalarWhereInput = {
   OR?: Prisma.CardScalarWhereInput[]
   NOT?: Prisma.CardScalarWhereInput | Prisma.CardScalarWhereInput[]
   id?: Prisma.StringFilter<"Card"> | string
+  status?: Prisma.EnumCardStatusFilter<"Card"> | $Enums.CardStatus
   word?: Prisma.StringFilter<"Card"> | string
   translation?: Prisma.StringFilter<"Card"> | string
   collectionId?: Prisma.StringFilter<"Card"> | string
@@ -437,6 +466,7 @@ export type CardScalarWhereInput = {
 
 export type CardCreateManyCollectionInput = {
   id?: string
+  status?: $Enums.CardStatus
   word: string
   translation: string
   createdAt?: Date | string
@@ -445,6 +475,7 @@ export type CardCreateManyCollectionInput = {
 
 export type CardUpdateWithoutCollectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -453,6 +484,7 @@ export type CardUpdateWithoutCollectionInput = {
 
 export type CardUncheckedUpdateWithoutCollectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -461,6 +493,7 @@ export type CardUncheckedUpdateWithoutCollectionInput = {
 
 export type CardUncheckedUpdateManyWithoutCollectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCardStatusFieldUpdateOperationsInput | $Enums.CardStatus
   word?: Prisma.StringFieldUpdateOperationsInput | string
   translation?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,6 +504,7 @@ export type CardUncheckedUpdateManyWithoutCollectionInput = {
 
 export type CardSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  status?: boolean
   word?: boolean
   translation?: boolean
   collectionId?: boolean
@@ -481,6 +515,7 @@ export type CardSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type CardSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  status?: boolean
   word?: boolean
   translation?: boolean
   collectionId?: boolean
@@ -491,6 +526,7 @@ export type CardSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type CardSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  status?: boolean
   word?: boolean
   translation?: boolean
   collectionId?: boolean
@@ -501,6 +537,7 @@ export type CardSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type CardSelectScalar = {
   id?: boolean
+  status?: boolean
   word?: boolean
   translation?: boolean
   collectionId?: boolean
@@ -508,7 +545,7 @@ export type CardSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "translation" | "collectionId" | "createdAt" | "updatedAt", ExtArgs["result"]["card"]>
+export type CardOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "status" | "word" | "translation" | "collectionId" | "createdAt" | "updatedAt", ExtArgs["result"]["card"]>
 export type CardInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
 }
@@ -526,6 +563,7 @@ export type $CardPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    status: $Enums.CardStatus
     word: string
     translation: string
     collectionId: string
@@ -956,6 +994,7 @@ export interface Prisma__CardClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface CardFieldRefs {
   readonly id: Prisma.FieldRef<"Card", 'String'>
+  readonly status: Prisma.FieldRef<"Card", 'CardStatus'>
   readonly word: Prisma.FieldRef<"Card", 'String'>
   readonly translation: Prisma.FieldRef<"Card", 'String'>
   readonly collectionId: Prisma.FieldRef<"Card", 'String'>

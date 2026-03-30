@@ -61,8 +61,8 @@ const collectionsApi = api.injectEndpoints({
             undefined,
             (draft) => {
               return draft.filter((collection) => collection.id !== id);
-            }
-          )
+            },
+          ),
         );
         try {
           await queryFulfilled;

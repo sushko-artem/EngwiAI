@@ -14,6 +14,7 @@ describe("MenuOptions", () => {
     collectionId: "id-123",
     isMenuOpen: true,
     isReversed: false,
+    isVirtual: false,
     onClose: vi.fn(),
     onSwitchChange: vi.fn(),
     onDelete: vi.fn(),
@@ -53,5 +54,15 @@ describe("MenuOptions", () => {
     await user.click(screen.getByRole("switch"));
 
     expect(defaultProps.onSwitchChange).toHaveBeenCalled();
+  });
+
+  it("should show only switch action when collection is virtual", () => {
+    defaultProps.isVirtual = true;
+    render(<MenuOptions {...defaultProps} />);
+    expect(screen.queryByText("Удалить коллекцию")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Редактировать коллекцию"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("switch")).toBeInTheDocument();
   });
 });

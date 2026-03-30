@@ -1,7 +1,8 @@
 export interface ICard {
   id: string;
-  word: string;
-  translation: string;
+  status?: "ACTIVE" | "INACTIVE";
+  word?: string;
+  translation?: string;
 }
 
 export interface ICollectionDto {
@@ -12,7 +13,7 @@ export interface ICollectionDto {
 export interface IUpdateCollectionDto {
   newName?: string;
   updatedCards?: ICard[];
-  newCards?: Array<{ word: string; translation: string }>;
+  newCards?: Omit<ICard, "id">[];
   deletedCards?: string[];
 }
 

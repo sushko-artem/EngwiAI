@@ -24,7 +24,7 @@ export const ChosenStatusButton = ({
         ClassName,
       )}
     >
-      <div className="my-auto w-[50px]">{children}</div>
+      <div className="p-2 my-auto w-[50px]">{children}</div>
       <span className="my-auto p-2 font-roboto font-bold">{content}</span>
     </div>
   );

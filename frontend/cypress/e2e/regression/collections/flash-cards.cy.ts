@@ -13,15 +13,19 @@ describe("FlashCards - regression", () => {
   });
 
   it("should reverse card when clicking on it", function () {
-    cy.contains(this.animals.cards[0].word).should("be.visible");
+    cy.get("[data-testid='word-side']").should("be.visible");
     cy.get("[data-testid='flash-card']").click();
-    cy.contains(this.animals.cards[0].word).should("not.be.visible");
-    cy.contains(this.animals.cards[0].translation).should("be.visible");
+    cy.get("[data-testid='word-side']").should("not.be.visible");
+    cy.get("[data-testid='translation-side']").should("be.visible");
   });
 
   it("should update both card and progress when navigating to next card", function () {
-    cy.get("[data-testid='chosen-status-button']").eq(0).click();
-    cy.contains(this.animals.cards[1].word).should("be.visible");
+    cy.get("[data-testid='word-side']").invoke("text").as("firstWord");
+
+    cy.get("@firstWord").then((firstWord) => {
+      cy.get("[data-testid='chosen-status-button']").first().click();
+      cy.get("[data-testid='word-side']").should("not.have.text", firstWord);
+    });
     cy.contains(`2/${this.animals.cards.length}`).should("be.visible");
   });
 
@@ -47,7 +51,12 @@ describe("FlashCards - regression", () => {
     cy.get("button[role='switch']").click();
     cy.get("[data-testid='menu-options']").should("be.visible");
     cy.get("[data-testid='menu-overlay']").click("center");
-    cy.contains(this.animals.cards[0].translation).should("be.visible");
+
+    const translations = this.animals.cards.map((c) => c.translation);
+    cy.get("[data-testid='word-side']").should(($el) => {
+      const text = $el.text();
+      expect(translations).to.include(text);
+    });
   });
 
   it("should delete collection when clicked delete button in option menu and confirmed action", function () {
@@ -82,7 +91,7 @@ describe("FlashCards - regression", () => {
       cy.get("[data-testid='chosen-status-button']").eq(1).click();
     }
     cy.contains("Прогресс: 100%").should("be.visible");
-    cy.contains("Знаю: 4").should("be.visible");
+    cy.contains(`Знаю: ${this.animals.cards.length}`).should("be.visible");
     cy.contains("Изучил: 0").should("be.visible");
   });
 });

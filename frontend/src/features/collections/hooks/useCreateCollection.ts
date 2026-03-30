@@ -15,7 +15,7 @@ import { useModal } from "@widgets/modal";
 import { validateCollection } from "../helpers";
 
 export const useCreateCollection = (
-  collection: EditableCollectionType | null
+  collection: EditableCollectionType | null,
 ) => {
   const { data: collections } = useGetCollectionsQuery();
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
@@ -39,7 +39,7 @@ export const useCreateCollection = (
   useEffect(() => {
     if (collections) {
       existedNamesRef.current = collections.map(
-        (collection) => collection.name
+        (collection) => collection.name,
       );
     }
   }, [collections]);
@@ -47,7 +47,7 @@ export const useCreateCollection = (
   const saveCollection = useCallback(async () => {
     const validate = validateCollection(
       collectionRef.current,
-      existedNamesRef.current
+      existedNamesRef.current,
     );
     if (!validate.isValid) {
       if (validate.errorMessage) {
@@ -59,8 +59,8 @@ export const useCreateCollection = (
     try {
       const cards = collectionRef.current!.cards.map((card) => ({
         id: card.id,
-        word: card.word.trim(),
-        translation: card.translation.trim(),
+        word: card.word?.trim(),
+        translation: card.translation?.trim(),
       }));
       const name = collectionRef.current!.name.trim();
       await createCollection({ name, cards }).unwrap();
@@ -74,11 +74,11 @@ export const useCreateCollection = (
     if (
       collectionRef.current?.name.trim() ||
       collectionRef.current?.cards.find(
-        (card) => card.word.trim() || card.translation.trim()
+        (card) => card.word?.trim() || card.translation?.trim(),
       )
     ) {
       const shouldLeaveThePage = await confirm(
-        "Все несохраненные данные будут потеряны!"
+        "Все несохраненные данные будут потеряны!",
       );
       if (shouldLeaveThePage) navigate("/dashboard");
     } else {

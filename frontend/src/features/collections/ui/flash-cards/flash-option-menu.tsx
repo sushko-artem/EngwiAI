@@ -7,6 +7,7 @@ type MenuOptionsPropsType = {
   collectionId: string;
   isMenuOpen: boolean;
   isReversed: boolean;
+  isVirtual: boolean;
   onClose: () => void;
   onSwitchChange: () => void;
   onDelete: () => void;
@@ -15,6 +16,7 @@ type MenuOptionsPropsType = {
 export const MenuOptions = ({
   collectionId,
   isMenuOpen,
+  isVirtual,
   onClose,
   onDelete,
   onSwitchChange,
@@ -101,24 +103,28 @@ export const MenuOptions = ({
             Перевернуть карточки
           </label>
         </div>
-        <div className="flex text-center justify-center p-4 font-jost  border-1">
-          <button
-            data-testid="menu-options-edit"
-            onClick={editCollection}
-            className="cursor-pointer"
-          >
-            Редактировать коллекцию
-          </button>
-        </div>
-        <div className="flex text-center justify-center p-4 font-jost  border-1 border-t-0 rounded-b-md">
-          <button
-            data-testid="menu-options-delete"
-            onClick={onDelete}
-            className="cursor-pointer"
-          >
-            Удалить коллекцию
-          </button>
-        </div>
+        {!isVirtual && (
+          <>
+            <div className="flex text-center justify-center p-4 font-jost  border-1">
+              <button
+                data-testid="menu-options-edit"
+                onClick={editCollection}
+                className="cursor-pointer"
+              >
+                Редактировать коллекцию
+              </button>
+            </div>
+            <div className="flex text-center justify-center p-4 font-jost  border-1 border-t-0 rounded-b-md">
+              <button
+                data-testid="menu-options-delete"
+                onClick={onDelete}
+                className="cursor-pointer"
+              >
+                Удалить коллекцию
+              </button>
+            </div>
+          </>
+        )}
       </animated.div>
     </>
   );

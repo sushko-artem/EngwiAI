@@ -1,12 +1,19 @@
-import { IsString } from 'class-validator';
+import { CardStatus } from '@generated/prisma/enums';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CardUpdateDto {
   @IsString()
   id: string;
 
   @IsString()
-  word: string;
+  @IsOptional()
+  status?: CardStatus;
 
   @IsString()
-  translation: string;
+  @IsOptional()
+  word?: string;
+
+  @IsString()
+  @IsOptional()
+  translation?: string;
 }

@@ -7,7 +7,7 @@ type ValidationResult = {
 
 export const validateCollection = (
   collection: EditableCollectionType | null,
-  existingNames: string[]
+  existingNames: string[],
 ): ValidationResult => {
   if (!collection) {
     return { isValid: false };
@@ -23,7 +23,7 @@ export const validateCollection = (
   if (
     !collection.name.trim() ||
     collection.cards.some(
-      (card) => !card.word.trim() || !card.translation.trim()
+      (card) => !card.word?.trim() || !card.translation?.trim(),
     )
   ) {
     return {

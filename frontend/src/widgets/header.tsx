@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { cn } from "@shared/lib/utils";
 
 export type HeaderPropType = {
@@ -21,8 +21,31 @@ export const Header = memo(
     rightIcon,
     title,
   }: HeaderPropType) => {
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
+
+    useEffect(() => {
+      const handleScroll = () => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY.current && currentScrollY > 20) {
+          setIsVisible(false);
+        } else if (currentScrollY < lastScrollY.current) {
+          setIsVisible(true);
+        }
+
+        lastScrollY.current = currentScrollY;
+      };
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      return () => window.removeEventListener("scroll", handleScroll);
+    });
+
     return (
-      <section className="sticky top-0 z-5 backdrop-blur-[30px]">
+      <section
+        className={cn(
+          "sticky top-0 z-5 backdrop-blur-[30px] transition-all duration-300 ease-in-out",
+          !isVisible && "-translate-y-full",
+        )}
+      >
         <header className="flex justify-between py-4">
           <button
             data-testid="leftIconAction"
