@@ -38,7 +38,7 @@ model Collection {
 
 model Card {
   id           String     @id @default(uuid())
-  status       CardStatus @default(ACTIVE)
+  status       CardStatus @default(INACTIVE)
   word         String     @db.VarChar(255)
   translation  String     @db.VarChar(255)
   collectionId String     @map("collection_id")
