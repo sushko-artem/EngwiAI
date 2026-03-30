@@ -16,6 +16,22 @@
     {
       "word": "Monkey",
       "translation": "Обезьяна"
+    },
+    {
+      "word": "Elephant",
+      "translation": "Слон"
+    },
+    {
+      "word": "Bird",
+      "translation": "Птица"
+    },
+    {
+      "word": "Donkey",
+      "translation": "Осел"
+    },
+    {
+      "word": "Bear",
+      "translation": "Медведь"
     }
   ]
 }
