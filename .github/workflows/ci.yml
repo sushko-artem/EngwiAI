@@ -78,6 +78,7 @@ jobs:
             --cache-from=type=gha,scope=backend \
             --output=type=docker \
             --tag=backend_test:latest \
+            --build-arg DATABASE_URL=${{ secrets.TEST_DATABASE_URL }} \
             ./backend
 
       - name: Pull frontend from cache
