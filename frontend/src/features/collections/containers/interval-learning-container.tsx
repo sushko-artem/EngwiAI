@@ -3,7 +3,7 @@ import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { useIntervalLearning } from "@features/collections/hooks";
 import {
-  IntervalActionsBlock,
+  IntervalActionsBox,
   IntervalDescription,
   NotASingleCollection,
 } from "@features/collections/ui";
@@ -32,7 +32,7 @@ export const IntervalLearningContainer = () => {
           data-testid="interval-opacity"
           className={cn(isRefetching && "opacity-10 transition-opacity")}
         >
-          <IntervalActionsBlock
+          <IntervalActionsBox
             moduleLength={{ active: activeLength, inactive: inactiveLength }}
           />
         </div>
