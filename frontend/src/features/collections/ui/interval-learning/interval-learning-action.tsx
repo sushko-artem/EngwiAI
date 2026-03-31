@@ -1,4 +1,7 @@
-import type { VirtualCollectionIdType } from "@features/collections/helpers/virtual-collection-ident-helper";
+import {
+  type VirtualCollectionIdType,
+  VIRTUAL_COLLECTIONS,
+} from "@features/collections/helpers/virtual-collection-ident-helper";
 import { useModal } from "@widgets/modal";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +16,7 @@ export const IntervalLearningAction = ({
 }: IntervalLearningActionPropType) => {
   const navigate = useNavigate();
   const { warning } = useModal();
-  const isActive = type === "active";
+  const isActive = type === VIRTUAL_COLLECTIONS.ACTIVE;
   const handleClick = () => {
     if (!collectionLength) {
       warning("В блоке нет ни одной флэш-карты!");
@@ -23,10 +26,12 @@ export const IntervalLearningAction = ({
   };
   return (
     <div
+      data-testid="interval-learning-box"
       className={`flex flex-col text-center border-3 rounded-[5px] p-2 ${isActive ? "border-green-600" : "border-red-600"}`}
     >
       <div>
         <span
+          data-testid="collection-length"
           className={`font-bold text-[50px] lg:text-[100px] ${isActive ? "text-green-600" : "text-red-600"}`}
         >
           {collectionLength}
