@@ -28,7 +28,10 @@ export const IntervalLearningContainer = () => {
     if (!activeLength && !inactiveLength) return <NotASingleCollection />;
     return (
       <>
-        <div className={cn(isRefetching && "opacity-10 transition-opacity")}>
+        <div
+          data-testid="interval-opacity"
+          className={cn(isRefetching && "opacity-10 transition-opacity")}
+        >
           <IntervalActionsBlock
             moduleLength={{ active: activeLength, inactive: inactiveLength }}
           />
