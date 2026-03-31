@@ -1,10 +1,9 @@
 import { useCallback, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetCollectionQuery } from "@features/collections/api";
 import { VIRTUAL_COLLECTIONS } from "@features/collections/helpers/virtual-collection-ident-helper";
 
 export const useIntervalLearning = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const {
     data: activeCollection,
@@ -34,7 +33,7 @@ export const useIntervalLearning = () => {
 
   useEffect(() => {
     refetchQuery();
-  }, [refetchQuery, location.pathname]);
+  }, [refetchQuery]);
 
   const back = useCallback(() => {
     navigate("/dashboard");
