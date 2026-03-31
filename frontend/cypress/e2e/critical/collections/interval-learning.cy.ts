@@ -18,4 +18,11 @@ describe("IntervalLearning - critical", () => {
       .eq(1)
       .should("have.text", `${this.animals.cards.length}`);
   });
+
+  it("should navigate to flash-cards page to work with inactive collection", () => {
+    cy.createCollection("animals");
+    cy.visit("/interval-learning");
+    cy.get("[data-testid='interval-action-button']").eq(1).click();
+    cy.url().should("include", "/flash-cards/inactive");
+  });
 });

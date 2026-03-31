@@ -39,6 +39,7 @@ export const IntervalLearningAction = ({
       </div>
       <div>
         <button
+          data-testid="interval-action-button"
           onClick={handleClick}
           className={`border-2 p-1 rounded-[3px] cursor-pointer font-roboto font-bold text-sm lg:text-2xl text-amber-100 hover:scale-[1.1] transition-all ${isActive ? "border-green-600 bg-green-600" : "border-red-600 bg-red-600"}`}
         >
