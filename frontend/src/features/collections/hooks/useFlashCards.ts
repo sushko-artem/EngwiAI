@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer, useRef } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
@@ -20,6 +20,8 @@ export const useFlashCards = (collectionId: string) => {
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
+  const index = useRef(state.index);
+  index.current = state.index;
 
   const shuffledCollection = useMemo(() => {
     if (collection) {
@@ -85,9 +87,29 @@ export const useFlashCards = (collectionId: string) => {
     dispatch({ type: "RESET_FOR_RETRY" });
   }, []);
 
-  const back = useCallback(() => {
-    navigate("/collections");
-  }, [navigate]);
+  const back = useCallback(async () => {
+    if (
+      index.current > 0 &&
+      index.current <= shuffledCollection!.cards.length - 1
+    ) {
+      const isBack = await confirm(
+        "Модуль не завершен! Статус карточек не сохранится!",
+      );
+      if (isBack && isVirtual) {
+        navigate("/dashboard");
+      } else if (isBack) {
+        navigate("/collections");
+      } else {
+        return;
+      }
+    } else {
+      if (isVirtual) {
+        navigate("/dashboard");
+      } else {
+        navigate("/collections");
+      }
+    }
+  }, [navigate, isVirtual, shuffledCollection, confirm]);
 
   const updateStatus = useCallback(() => {
     const updatedCards = state.actualStatus;

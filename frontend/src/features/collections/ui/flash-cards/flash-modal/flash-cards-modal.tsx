@@ -8,7 +8,6 @@ type ModalPropType = {
   moduleLength: number;
   unknownTerms: number;
   isVirtual: boolean;
-  back(): void;
   reset(): void;
   updateStatus(): void;
 };
@@ -20,13 +19,16 @@ export const ModalFlash = ({
   unknownTerms,
   isVirtual,
   updateStatus,
-  back,
   reset,
 }: ModalPropType) => {
   const navigate = useNavigate();
 
   const goBackWithSavingStatus = () => {
-    back();
+    if (isVirtual) {
+      navigate("/dashboard");
+    } else {
+      navigate("/collections");
+    }
     updateStatus();
   };
 
@@ -57,7 +59,7 @@ export const ModalFlash = ({
             />
           )}
           <FlashModalAction
-            content="Выбрать другой модуль"
+            content={isVirtual ? "Завершить" : "Выбрать другой модуль"}
             onClick={goBackWithSavingStatus}
           />
         </div>

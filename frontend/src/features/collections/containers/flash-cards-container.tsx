@@ -70,7 +70,6 @@ export const FlashCardsContainer = ({
           unknownTerms={props.unmemTerms}
           updateStatus={props.updateStatus}
           isVirtual={props.isVirtual}
-          back={back}
           reset={handleReset}
         />
       )}

@@ -54,7 +54,7 @@ export function flashCardsReducer(
           { id: collection[newState.index].id, status: "ACTIVE" },
         ];
       }
-      if (newState.index >= collection.length - 1) {
+      if (newState.index === collection.length - 1) {
         newState.isModalOpen = true;
       } else {
         newState.index += 1;
