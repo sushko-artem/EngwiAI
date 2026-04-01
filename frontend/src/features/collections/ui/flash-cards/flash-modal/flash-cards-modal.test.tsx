@@ -16,7 +16,6 @@ describe("ModalFlash", () => {
     moduleLength: 5,
     unknownTerms: 2,
     isVirtual: false,
-    back: vi.fn(),
     reset: vi.fn(),
     updateStatus: vi.fn(),
   };
@@ -42,7 +41,7 @@ describe("ModalFlash", () => {
     expect(defaultProps.reset).toHaveBeenCalled();
   });
 
-  it("should navigate to 'edit-collection' when clicking editCollection", async () => {
+  it("should navigate to '/edit-collection' when clicking editCollection", async () => {
     render(<ModalFlash {...defaultProps} />);
 
     await user.click(screen.getByText("Редактировать модуль"));
@@ -50,12 +49,12 @@ describe("ModalFlash", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/edit-collection/id-123");
   });
 
-  it("should call back when clicking back", async () => {
+  it("should navigate to '/collections' page and update cards status", async () => {
     render(<ModalFlash {...defaultProps} />);
 
     await user.click(screen.getByText("Выбрать другой модуль"));
-
-    expect(defaultProps.back).toHaveBeenCalled();
+    expect(defaultProps.updateStatus).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 
   it("should render correct summary actions fields when collection is virtual", () => {
@@ -64,5 +63,14 @@ describe("ModalFlash", () => {
 
     expect(screen.queryByText("Редактировать модуль")).not.toBeInTheDocument();
     expect(screen.getByText("Пройти модуль заново")).toBeInTheDocument();
+    expect(screen.getByText("Завершить")).toBeInTheDocument();
+  });
+
+  it("should navigate to '/dashboard' page and update cards status when complete module and collectioin is Virtual", async () => {
+    defaultProps.isVirtual = true;
+    render(<ModalFlash {...defaultProps} />);
+    await user.click(screen.getByText("Завершить"));
+    expect(defaultProps.updateStatus).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 });

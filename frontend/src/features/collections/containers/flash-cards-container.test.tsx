@@ -141,15 +141,6 @@ describe("FlashCardsContainer", () => {
     expect(mockCloseMenu).toHaveBeenCalled();
   });
 
-  it("should call back when modal is open and clicking on back option", () => {
-    vi.mocked(useFlashCards).mockReturnValue(
-      createMockedProps({ collection: mockCollection, isModalOpen: true }),
-    );
-    render(<FlashCardsContainer collectionId="testId-123" />);
-    fireEvent.click(screen.getByText("Выбрать другой модуль"));
-    expect(mockBack).toHaveBeenCalled();
-  });
-
   it("should call reset when modal is open and clicking on reset-module option", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection, isModalOpen: true }),
