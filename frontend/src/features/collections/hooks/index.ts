@@ -4,3 +4,4 @@ export { useFlashCards } from "./useFlashCards";
 export { useEdit } from "./useEdit";
 export { useCollections } from "./useCollections";
 export { useIntervalLearning } from "./useIntervalLearning";
+export { useSpellCheck } from "./useSpellCheck";

@@ -8,6 +8,7 @@ import { CollectionsListPage } from "pages/Collections";
 import { ProtectedRoute } from "@shared/protected-route";
 import { EditCollectionPage } from "pages/EditCollection";
 import { IntervalLearningPage } from "pages/IntervalLearning";
+import { SpellCheckingPage } from "pages/SpellChecking";
 
 const routes = [
   {
@@ -67,6 +68,14 @@ const routes = [
     element: (
       <ProtectedRoute>
         <IntervalLearningPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/spell-check",
+    element: (
+      <ProtectedRoute>
+        <SpellCheckingPage />
       </ProtectedRoute>
     ),
   },

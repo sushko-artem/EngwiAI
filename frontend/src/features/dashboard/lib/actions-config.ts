@@ -11,6 +11,10 @@ export const actions = [
     title: "Весь материал",
     url: "/interval-learning",
   },
+  {
+    title: "Орфография",
+    url: "/spell-check",
+  },
 ];
 
 export type ActionsType = typeof actions;

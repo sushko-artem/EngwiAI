@@ -3,3 +3,4 @@ export { CreateCollectionContainer } from "./containers/create-collection-contai
 export { EditCollectionContainer } from "./containers/edit-collection-container";
 export { FlashCardsContainer } from "./containers/flash-cards-container";
 export { IntervalLearningContainer } from "./containers/interval-learning-container";
+export { SpellCheckContainer } from "./containers/spell-check-container";
