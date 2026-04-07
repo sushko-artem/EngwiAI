@@ -6,7 +6,10 @@ import {
 } from "@features/collections/api";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "@widgets/modal";
-import { flashCardsReducer, initialState } from "./useFlashCardsReducer";
+import {
+  flashCardsReducer,
+  initialState,
+} from "./reducers/useFlashCardsReducer";
 import { isVirtualCollection } from "../helpers";
 
 export const useFlashCards = (collectionId: string) => {

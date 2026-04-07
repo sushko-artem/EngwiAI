@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { useSpellCheck } from "../hooks";
+import { SpellCheckDescription } from "../ui";
 
 export const SpellCheckContainer = () => {
   const { back } = useSpellCheck();
@@ -18,6 +19,7 @@ export const SpellCheckContainer = () => {
   return (
     <>
       <Header {...headerProps} />
+      <SpellCheckDescription />
     </>
   );
 };

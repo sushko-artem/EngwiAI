@@ -22,3 +22,4 @@ export {
 export { FlashCard } from "./flash-cards/flash-card";
 export { IntervalDescription } from "./interval-learning/interval-description";
 export { IntervalActionsBox } from "./interval-learning/interval-actions-box";
+export { SpellCheckDescription } from "./spell-checking/spell-check-description";
