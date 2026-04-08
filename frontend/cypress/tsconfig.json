@@ -4,11 +4,11 @@
     "lib": ["es6", "dom"],
     "sourceMap": true,
     "types": ["cypress", "node"],
-    "baseUrl": "../",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@features/*": ["src/features/*"]
+      "@shared/*": ["../src/shared/*"],
+      "@features/*": ["../src/features/*"]
     }
   },
   "include": ["**/*.ts"],

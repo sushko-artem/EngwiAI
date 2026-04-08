@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { act } from "@testing-library/react";
 import { useSignIn } from "./useSignIn";
-import { setupAuthHook } from "test/utils";
+import { setupAuthHook } from "@test/utils";
 
 vi.mock("formik");
 vi.mock("react-router-dom");
@@ -46,7 +46,7 @@ describe("useSignIn", () => {
       useSignIn,
       {
         formik: { setErrors: mockSetErrors },
-      }
+      },
     );
     mockLogin.mockReturnValue({
       unwrap: vi.fn().mockRejectedValue({
@@ -76,7 +76,7 @@ describe("useSignIn", () => {
       useSignIn,
       {
         formik: { setStatus: mockSetStatus },
-      }
+      },
     );
     mockLogin.mockReturnValue({
       unwrap: vi.fn().mockRejectedValue(new Error("Network error")),

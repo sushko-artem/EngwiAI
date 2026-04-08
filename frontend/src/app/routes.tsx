@@ -1,14 +1,14 @@
-import { AnimationPage } from "pages/StartAnimation";
-import { SignInPage } from "pages/SignIn";
-import { SignUpPage } from "pages/SignUp";
-import { CreateCollectionPage } from "pages/CreateCollection";
-import { FlashCardsPage } from "pages/FlashCards";
-import { DashboardPage } from "pages/Dashboard";
-import { CollectionsListPage } from "pages/Collections";
+import { AnimationPage } from "@pages/StartAnimation";
+import { SignInPage } from "@pages/SignIn";
+import { SignUpPage } from "@pages/SignUp";
+import { CreateCollectionPage } from "@pages/CreateCollection";
+import { FlashCardsPage } from "@pages/FlashCards";
+import { DashboardPage } from "@pages/Dashboard";
+import { CollectionsListPage } from "@pages/Collections";
 import { ProtectedRoute } from "@shared/protected-route";
-import { EditCollectionPage } from "pages/EditCollection";
-import { IntervalLearningPage } from "pages/IntervalLearning";
-import { SpellCheckingPage } from "pages/SpellChecking";
+import { EditCollectionPage } from "@pages/EditCollection";
+import { IntervalLearningPage } from "@pages/IntervalLearning";
+import { SpellCheckingPage } from "@pages/SpellChecking";
 
 const routes = [
   {
