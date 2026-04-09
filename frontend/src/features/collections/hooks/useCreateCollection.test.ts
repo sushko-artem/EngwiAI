@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  clearCollection,
   initDefaultCollection,
   type EditableCollectionType,
 } from "@features/collections/model";
@@ -70,12 +69,6 @@ describe("useCreateCollection", () => {
     renderHook(() => useCreateCollection(defaultCollection));
 
     expect(mockDispatch).toHaveBeenCalledWith(initDefaultCollection());
-  });
-
-  it("should dispatch clearCollection on unmount", () => {
-    const { unmount } = renderHook(() => useCreateCollection(null));
-    unmount();
-    expect(mockDispatch).toHaveBeenCalledWith(clearCollection());
   });
 
   it("should save collection when isValid", async () => {

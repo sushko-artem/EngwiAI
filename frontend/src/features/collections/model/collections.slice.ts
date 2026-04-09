@@ -55,6 +55,7 @@ const collectionsSlice = createSlice({
       state,
       action: PayloadAction<EditableCollectionType>,
     ) => {
+      if (state.editableCollection) return;
       state.editableCollection = {
         name: action.payload.name,
         cards: action.payload.cards,

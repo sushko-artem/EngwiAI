@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import {
-  clearCollection,
   setExistedCollection,
   type EditableCollectionType,
 } from "@features/collections/model";
@@ -77,14 +76,6 @@ describe("useEditCollection", () => {
     expect(mockDispatch).toHaveBeenCalledWith(
       setExistedCollection(testCollection),
     );
-  });
-
-  it("should clear Redux state on unmount", () => {
-    const { unmount } = renderHook(() => useEditCollection("test-id-1234"));
-
-    unmount();
-
-    expect(mockDispatch).toHaveBeenCalledWith(clearCollection());
   });
 
   it("should navigate to '/collections' without saving when no changes", async () => {

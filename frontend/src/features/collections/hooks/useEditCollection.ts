@@ -40,9 +40,6 @@ export const useEditCollection = (collectionId: string) => {
       originalCollectionNameRef.current = collection.name;
       dispatch(setExistedCollection(collection));
     }
-    return () => {
-      dispatch(clearCollection());
-    };
   }, [dispatch, collection]);
 
   useEffect(() => {
@@ -67,6 +64,7 @@ export const useEditCollection = (collectionId: string) => {
   const saveCollection = useCallback(async () => {
     if (!hasAnyChanges()) {
       navigate("/collections");
+      dispatch(clearCollection());
       return;
     }
     const validate = validateCollection(
@@ -88,22 +86,34 @@ export const useEditCollection = (collectionId: string) => {
       try {
         await updateCollection({ id: collectionId, dto }).unwrap();
         navigate("/collections", { replace: true, state: { refetch: true } });
+        dispatch(clearCollection());
       } catch (error) {
         warning(getErrorMessage(error));
       }
     }
-  }, [navigate, updateCollection, collectionId, warning, hasAnyChanges]);
+  }, [
+    navigate,
+    updateCollection,
+    collectionId,
+    warning,
+    hasAnyChanges,
+    dispatch,
+  ]);
 
   const back = useCallback(async () => {
     if (hasAnyChanges()) {
       const shouldLeaveThePage = await confirm(
         "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!",
       );
-      if (shouldLeaveThePage) navigate("/collections");
+      if (shouldLeaveThePage) {
+        navigate("/collections");
+        dispatch(clearCollection());
+      }
     } else {
       navigate("/collections");
+      dispatch(clearCollection());
     }
-  }, [navigate, confirm, hasAnyChanges]);
+  }, [navigate, confirm, hasAnyChanges, dispatch]);
 
   return {
     error,
