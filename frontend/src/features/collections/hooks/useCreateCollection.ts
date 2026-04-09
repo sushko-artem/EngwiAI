@@ -31,9 +31,6 @@ export const useCreateCollection = (
 
   useEffect(() => {
     dispatch(initDefaultCollection());
-    return () => {
-      dispatch(clearCollection());
-    };
   }, [dispatch]);
 
   useEffect(() => {
@@ -65,10 +62,11 @@ export const useCreateCollection = (
       const name = collectionRef.current!.name.trim();
       await createCollection({ name, cards }).unwrap();
       navigate("/collections", { replace: true, state: { refetch: true } });
+      dispatch(clearCollection());
     } catch (error) {
       warning(getErrorMessage(error));
     }
-  }, [navigate, createCollection, warning]);
+  }, [navigate, createCollection, warning, dispatch]);
 
   const back = useCallback(async () => {
     if (
@@ -80,11 +78,15 @@ export const useCreateCollection = (
       const shouldLeaveThePage = await confirm(
         "Все несохраненные данные будут потеряны!",
       );
-      if (shouldLeaveThePage) navigate("/dashboard");
+      if (shouldLeaveThePage) {
+        navigate("/dashboard");
+        dispatch(clearCollection());
+      }
     } else {
       navigate("/dashboard");
+      dispatch(clearCollection());
     }
-  }, [navigate, confirm]);
+  }, [navigate, confirm, dispatch]);
 
   return {
     isLoading,

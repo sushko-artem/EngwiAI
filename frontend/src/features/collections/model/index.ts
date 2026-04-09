@@ -11,3 +11,4 @@ export {
   selectDeletedCards,
   type EditableCollectionType,
 } from "./collections.slice";
+export { persistCollectionMiddleware } from "./middleware/persistCollectionMiddleware";

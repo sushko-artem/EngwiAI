@@ -59,7 +59,7 @@ export const useEditCollection = (collectionId: string) => {
       originalCollectionNameRef.current?.trim();
     const isCardsUpdated =
       editableCollectionRef.current?.cards.some(
-        (card) => card.isUpdated || card.isNew
+        (card) => card.isUpdated || card.isNew,
       ) || !!deletedCardsRef.current.length;
     return isNameUpdated || isCardsUpdated;
   }, []);
@@ -71,7 +71,7 @@ export const useEditCollection = (collectionId: string) => {
     }
     const validate = validateCollection(
       editableCollectionRef.current,
-      existedNamesRef.current
+      existedNamesRef.current,
     );
     if (!validate.isValid) {
       if (validate.errorMessage) {
@@ -82,7 +82,7 @@ export const useEditCollection = (collectionId: string) => {
     const dto = createUpdateDto(
       originalCollectionNameRef.current!,
       editableCollectionRef.current!,
-      deletedCardsRef.current
+      deletedCardsRef.current,
     );
     if (Object.keys(dto).length > 0) {
       try {
@@ -97,7 +97,7 @@ export const useEditCollection = (collectionId: string) => {
   const back = useCallback(async () => {
     if (hasAnyChanges()) {
       const shouldLeaveThePage = await confirm(
-        "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!"
+        "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!",
       );
       if (shouldLeaveThePage) navigate("/collections");
     } else {
