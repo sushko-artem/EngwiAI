@@ -95,9 +95,7 @@ export const useEditCollection = (collectionId: string) => {
       const shouldLeaveThePage = await confirm(
         "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!",
       );
-      if (shouldLeaveThePage) {
-        navigate("/collections");
-      }
+      if (shouldLeaveThePage) navigate("/collections");
     } else {
       navigate("/collections");
     }

@@ -80,9 +80,7 @@ export const useCreateCollection = (
       const shouldLeaveThePage = await confirm(
         "Все несохраненные данные будут потеряны!",
       );
-      if (shouldLeaveThePage) {
-        navigate("/dashboard");
-      }
+      if (shouldLeaveThePage) navigate("/dashboard");
     } else {
       navigate("/dashboard");
     }
