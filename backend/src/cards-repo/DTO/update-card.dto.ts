@@ -3,7 +3,7 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class CardUpdateDto {
   @IsString()
-  id: string;
+  id!: string;
 
   @IsString()
   @IsOptional()

@@ -2,21 +2,21 @@ import { Role, User } from '@generated/prisma/client';
 import { Exclude } from 'class-transformer';
 
 export class UserEntity implements User {
-  name: string;
+  name!: string;
 
-  id: string;
-  email: string;
-
-  @Exclude()
-  password: string;
-
-  roles: Role[];
+  id!: string;
+  email!: string;
 
   @Exclude()
-  createdAt: Date;
+  password!: string;
+
+  roles!: Role[];
 
   @Exclude()
-  updatedAt: Date;
+  createdAt!: Date;
+
+  @Exclude()
+  updatedAt!: Date;
 
   constructor(user: User) {
     Object.assign(this, user);
