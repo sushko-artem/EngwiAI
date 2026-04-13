@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@redux/hooks";
 import {
-  clearCollection,
   initDefaultCollection,
   type EditableCollectionType,
 } from "@features/collections/model";
@@ -41,6 +40,15 @@ export const useCreateCollection = (
     }
   }, [collections]);
 
+  const hasUnsavedChanges = useCallback(() => {
+    const hasAnyChanges =
+      !!collectionRef.current?.name.trim() ||
+      !!collectionRef.current?.cards.find(
+        (card) => card.word?.trim() || card.translation?.trim(),
+      );
+    return hasAnyChanges;
+  }, []);
+
   const saveCollection = useCallback(async () => {
     const validate = validateCollection(
       collectionRef.current,
@@ -62,31 +70,23 @@ export const useCreateCollection = (
       const name = collectionRef.current!.name.trim();
       await createCollection({ name, cards }).unwrap();
       navigate("/collections", { replace: true, state: { refetch: true } });
-      dispatch(clearCollection());
     } catch (error) {
       warning(getErrorMessage(error));
     }
-  }, [navigate, createCollection, warning, dispatch]);
+  }, [navigate, createCollection, warning]);
 
   const back = useCallback(async () => {
-    if (
-      collectionRef.current?.name.trim() ||
-      collectionRef.current?.cards.find(
-        (card) => card.word?.trim() || card.translation?.trim(),
-      )
-    ) {
+    if (hasUnsavedChanges()) {
       const shouldLeaveThePage = await confirm(
         "Все несохраненные данные будут потеряны!",
       );
       if (shouldLeaveThePage) {
         navigate("/dashboard");
-        dispatch(clearCollection());
       }
     } else {
       navigate("/dashboard");
-      dispatch(clearCollection());
     }
-  }, [navigate, confirm, dispatch]);
+  }, [navigate, confirm, hasUnsavedChanges]);
 
   return {
     isLoading,

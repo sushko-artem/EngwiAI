@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
-  clearCollection,
   setExistedCollection,
   selectDeletedCards,
   selectEditableCollection,
@@ -64,7 +63,6 @@ export const useEditCollection = (collectionId: string) => {
   const saveCollection = useCallback(async () => {
     if (!hasAnyChanges()) {
       navigate("/collections");
-      dispatch(clearCollection());
       return;
     }
     const validate = validateCollection(
@@ -86,19 +84,11 @@ export const useEditCollection = (collectionId: string) => {
       try {
         await updateCollection({ id: collectionId, dto }).unwrap();
         navigate("/collections", { replace: true, state: { refetch: true } });
-        dispatch(clearCollection());
       } catch (error) {
         warning(getErrorMessage(error));
       }
     }
-  }, [
-    navigate,
-    updateCollection,
-    collectionId,
-    warning,
-    hasAnyChanges,
-    dispatch,
-  ]);
+  }, [navigate, updateCollection, collectionId, warning, hasAnyChanges]);
 
   const back = useCallback(async () => {
     if (hasAnyChanges()) {
@@ -107,13 +97,11 @@ export const useEditCollection = (collectionId: string) => {
       );
       if (shouldLeaveThePage) {
         navigate("/collections");
-        dispatch(clearCollection());
       }
     } else {
       navigate("/collections");
-      dispatch(clearCollection());
     }
-  }, [navigate, confirm, hasAnyChanges, dispatch]);
+  }, [navigate, confirm, hasAnyChanges]);
 
   return {
     error,
