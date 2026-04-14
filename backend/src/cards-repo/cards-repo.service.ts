@@ -155,6 +155,12 @@ export class CardsRepoService {
           id: { in: ids },
         },
       },
+      select: {
+        id: true,
+        word: true,
+        translation: true,
+        status: true,
+      },
     });
     return cardsCollection;
   }

@@ -17,6 +17,7 @@ export const SpellCheckContainer = () => {
     chosenIds,
     toggleChoosenModule,
     getChosenModulesIds,
+    getCards,
   } = useSpellCheck();
   const headerProps = useMemo(
     () => ({
@@ -28,10 +29,11 @@ export const SpellCheckContainer = () => {
     [back],
   );
 
-  const getChosenModules = useCallback(() => {
+  const getChosenModules = useCallback(async () => {
     const modules = getChosenModulesIds();
-    console.log(modules);
-  }, [getChosenModulesIds]);
+    const cards = await getCards({ collectionIds: modules });
+    console.log(cards);
+  }, [getChosenModulesIds, getCards]);
 
   const renderContent = () => {
     if (isLoading) return <Loader />;

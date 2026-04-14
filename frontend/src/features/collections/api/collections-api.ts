@@ -1,6 +1,7 @@
 import {
   api,
   COLLECTION_ENDPOINTS,
+  type ICard,
   type ICollectionCardsResponse,
   type ICollectionDto,
   type ICollectionResponse,
@@ -45,6 +46,16 @@ const collectionsApi = api.injectEndpoints({
       query: (id) => `${COLLECTION_ENDPOINTS.GET_ONE}${id}`,
       providesTags: (_, __, id) => [{ type: "Collection", id }],
     }),
+    getCardsFromCollections: builder.mutation<
+      ICard[],
+      { collectionIds: string[] }
+    >({
+      query: ({ collectionIds }) => ({
+        url: `${COLLECTION_ENDPOINTS.GET_CARDS_FROM_COLLECTIONS}`,
+        method: "POST",
+        body: { collectionIds },
+      }),
+    }),
     deleteCollection: builder.mutation<{ id: string }, string>({
       query: (id) => ({
         url: `${COLLECTION_ENDPOINTS.DELETE}${id}`,
@@ -80,4 +91,5 @@ export const {
   useGetCollectionQuery,
   useUpdateCollectionMutation,
   useDeleteCollectionMutation,
+  useGetCardsFromCollectionsMutation,
 } = collectionsApi;
