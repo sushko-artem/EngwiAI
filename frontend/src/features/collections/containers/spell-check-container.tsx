@@ -8,8 +8,10 @@ import {
   SpellCheckDescription,
 } from "../ui";
 import { Loader } from "@shared/ui/loader";
+import { useNavigate } from "react-router-dom";
 
 export const SpellCheckContainer = () => {
+  const navigate = useNavigate();
   const {
     back,
     collections,
@@ -17,7 +19,7 @@ export const SpellCheckContainer = () => {
     chosenIds,
     toggleChoosenModule,
     getChosenModulesIds,
-    getCards,
+    warning,
   } = useSpellCheck();
   const headerProps = useMemo(
     () => ({
@@ -31,9 +33,12 @@ export const SpellCheckContainer = () => {
 
   const getChosenModules = useCallback(async () => {
     const modules = getChosenModulesIds();
-    const cards = await getCards({ collectionIds: modules });
-    console.log(cards);
-  }, [getChosenModulesIds, getCards]);
+    if (!modules.length) {
+      warning("Ни одного модуля не выбрано!");
+    } else {
+      navigate("/spell-check/test", { state: { modules } });
+    }
+  }, [getChosenModulesIds, warning, navigate]);
 
   const renderContent = () => {
     if (isLoading) return <Loader />;

@@ -10,6 +10,7 @@ import { EditCollectionPage } from "@pages/EditCollection";
 import { IntervalLearningPage } from "@pages/IntervalLearning";
 import { SpellCheckingPage } from "@pages/SpellChecking";
 import { AppLayout } from "./components/app-layout";
+import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 
 const routes = [
   {
@@ -80,6 +81,14 @@ const routes = [
         element: (
           <ProtectedRoute>
             <SpellCheckingPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/spell-check/test",
+        element: (
+          <ProtectedRoute>
+            <SpellCheckTestPage />
           </ProtectedRoute>
         ),
       },

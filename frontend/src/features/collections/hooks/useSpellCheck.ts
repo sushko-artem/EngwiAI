@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetCollectionsQuery } from "@features/collections/api";
-import { useGetCardsFromCollectionsMutation } from "../api/collections-api";
+import { useModal } from "@widgets/modal";
 
 export const useSpellCheck = () => {
   const navigate = useNavigate();
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
-  const [getCards] = useGetCardsFromCollectionsMutation();
+  const { warning } = useModal();
   const {
     data: collections,
     isLoading,
@@ -43,6 +43,6 @@ export const useSpellCheck = () => {
     toggleChoosenModule,
     getChosenModulesIds,
     chosenIds,
-    getCards,
+    warning,
   };
 };
