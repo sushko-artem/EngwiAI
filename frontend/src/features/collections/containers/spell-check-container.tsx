@@ -31,7 +31,7 @@ export const SpellCheckContainer = () => {
     [back],
   );
 
-  const getChosenModules = useCallback(async () => {
+  const startTest = useCallback(async () => {
     const modules = getChosenModulesIds();
     if (!modules.length) {
       warning("Ни одного модуля не выбрано!");
@@ -53,7 +53,7 @@ export const SpellCheckContainer = () => {
         />
         <div className="text-center">
           <button
-            onClick={getChosenModules}
+            onClick={startTest}
             className="border-zinc-500 rounded-[5px] cursor-pointer border-2 p-2 mt-4 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all"
           >
             Начать тест
