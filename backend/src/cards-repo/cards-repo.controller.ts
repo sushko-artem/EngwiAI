@@ -4,7 +4,6 @@ import { User } from '@generated/prisma/client';
 import { CreateCollectionDto, UpdateCollectionDto } from './DTO';
 import { GetCurrentUser } from '@common/decorators';
 import { CollectionIdPipe } from './pipes/collection-id.pipe';
-// import { UpdateCardsStatusDto } from './DTO/update-cards-status.dto';
 
 @Controller('collections')
 export class CardsRepoController {

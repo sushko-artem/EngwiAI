@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { UserService } from '@user/user.service';
 import { LoginUserDto, RegisterUserDto } from './DTO';
-import { TokensService } from 'src/tokens/tokens.service';
+import { TokensService } from '../tokens/tokens.service';
 import { compareSync } from 'bcrypt';
 import { IGoogleProfile } from './interfaces';
-import { IjwtPayload } from 'src/shared/interfaces';
+import { IjwtPayload } from '../shared/interfaces';
 
 @Injectable()
 export class AuthService {

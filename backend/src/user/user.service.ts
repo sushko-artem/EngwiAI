@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Role, User } from '@generated/prisma/client';
 import { PrismaService } from '@prisma/prisma.service';
 import { genSaltSync, hashSync } from 'bcrypt';
-import { IjwtPayload } from 'src/shared/interfaces';
+import { IjwtPayload } from '../shared/interfaces';
 import ms from 'ms';
 
 @Injectable()
