@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { CardsRepoService } from './cards-repo.service';
 import { User } from '@generated/prisma/client';
-import { CreateCollectionDto, UpdateCollectionDto } from './DTO';
+import { CollectionIdsDto, CreateCollectionDto, UpdateCollectionDto } from './DTO';
 import { GetCurrentUser } from '@common/decorators';
 import { CollectionIdPipe } from './pipes/collection-id.pipe';
 
@@ -17,6 +17,12 @@ export class CardsRepoController {
   @Get('list')
   async getCollectionsList(@GetCurrentUser() user: User) {
     return this.cardsRepoService.getCollectionsList(user.id);
+  }
+
+  @Post('cards/batch')
+  @HttpCode(200)
+  async getCardsFromCollection(@GetCurrentUser() user: User, @Body() dto: CollectionIdsDto) {
+    return this.cardsRepoService.getCardsFromCollections(user.id, dto.collectionIds);
   }
 
   @Get(':id')
