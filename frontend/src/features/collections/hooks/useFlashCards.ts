@@ -96,7 +96,7 @@ export const useFlashCards = (collectionId: string) => {
       index.current <= shuffledCollection!.cards.length - 1
     ) {
       const isBack = await confirm(
-        "Модуль не завершен! Статус карточек не сохранится!",
+        "Модуль не завершен! Результат не сохранится!",
       );
       if (isBack && isVirtual) {
         navigate("/dashboard");

@@ -26,7 +26,7 @@ export const useSpellCheckTest = () => {
       }
     }
     getCardsFromCollections();
-  }, [navigate, location, getCards]);
+  }, [navigate, location.state?.modules, getCards]);
 
   const back = useCallback(() => {
     navigate("/spell-check");

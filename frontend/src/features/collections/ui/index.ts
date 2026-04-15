@@ -25,3 +25,5 @@ export { IntervalActionsBox } from "./interval-learning/interval-actions-box";
 export { SpellCheckDescription } from "./spell-checking/spell-check-description";
 export { ChooseModuleList } from "./spell-checking/choose-module-list";
 export { ChooseModuleAction } from "./spell-checking/choose-module-action";
+export { SpellTestDescription } from "./spell-checking/spell-test/spell-test-description";
+export { SpellTestMainContent } from "./spell-checking/spell-test/spell-test-main-content";

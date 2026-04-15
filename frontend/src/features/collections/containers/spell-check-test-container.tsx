@@ -4,9 +4,10 @@ import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
 import { useSpellCheckTest } from "../hooks";
 import { Loader } from "@shared/ui/loader";
+import { SpellTestDescription, SpellTestMainContent } from "../ui";
 
 export const SpellCheckTestContainer = () => {
-  const { back, collection, isLoading } = useSpellCheckTest();
+  const { back, collection, isLoading, error } = useSpellCheckTest();
   const headerProps = useMemo(
     () => ({
       leftIconTitle: "вернуться к выбору модулей",
@@ -19,11 +20,24 @@ export const SpellCheckTestContainer = () => {
     }),
     [back],
   );
+
+  const renderContent = () => {
+    if (isLoading) return <Loader />;
+    if (!collection.length) return null;
+    if (error) return <div>Ошибка загрузки карточек. Попробуйте позже.</div>;
+
+    return (
+      <>
+        <SpellTestDescription />
+        <SpellTestMainContent collection={collection} index={0} />
+      </>
+    );
+  };
+
   return (
     <>
       <Header {...headerProps} />
-      {!collection.length && isLoading && <Loader />}
-      <div>{JSON.stringify(collection)}</div>
+      {renderContent()}
     </>
   );
 };
