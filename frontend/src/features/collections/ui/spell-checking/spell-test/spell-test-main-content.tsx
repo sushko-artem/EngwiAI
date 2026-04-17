@@ -7,7 +7,7 @@ type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
   visibleSide: "word" | "translation";
-  onAnswer(answer: string, actualData: string): void;
+  onAnswer(answer: string, originalValue: string): void;
 };
 
 export const SpellTestMainContent = ({
@@ -18,16 +18,16 @@ export const SpellTestMainContent = ({
 }: SpellTestMainContentPropType) => {
   const answerRef = useRef<HTMLTextAreaElement>(null);
 
-  const actualValue = visibleSide === "word" ? "translation" : "word";
+  const originalValue = visibleSide === "word" ? "translation" : "word";
 
   const handleAnswer = () => {
     const userAnswer = answerRef.current?.value || "";
-    onAnswer(userAnswer, collection[index][actualValue]!);
+    onAnswer(userAnswer, collection[index][originalValue]!);
   };
 
   return (
     <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
-      <div className="text-xl lg:text-2xl font-bold font-roboto text-red-600 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]">
+      <div className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]">
         {collection[index][visibleSide]}
       </div>
       <div className="mt-2">

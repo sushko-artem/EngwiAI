@@ -3,6 +3,7 @@ import { useGetCardsFromCollectionsMutation } from "../api/collections-api";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
+import { compareUserAnswer } from "../helpers";
 
 export const useSpellTest = () => {
   const [getCards, { isLoading, error }] = useGetCardsFromCollectionsMutation();
@@ -31,8 +32,9 @@ export const useSpellTest = () => {
   }, [navigate, location.state?.modules, getCards]);
 
   const handleAnswer = useCallback(
-    (userAnswer: string, actualValue: string) => {
-      console.log({ userAnswer, actualValue });
+    (userAnswer: string, originalValue: string) => {
+      const isRight = compareUserAnswer(userAnswer, originalValue);
+      console.log(isRight);
       if (state.index + 1 === collection.length) return;
       dispatch({ type: "INCREMENT_INDEX" });
     },
