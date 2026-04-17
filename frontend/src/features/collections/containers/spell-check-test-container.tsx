@@ -2,12 +2,13 @@ import { useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
-import { useSpellCheckTest } from "../hooks";
+import { useSpellTest } from "../hooks";
 import { Loader } from "@shared/ui/loader";
 import { SpellTestDescription, SpellTestMainContent } from "../ui";
 
 export const SpellCheckTestContainer = () => {
-  const { back, collection, isLoading, error } = useSpellCheckTest();
+  const { back, collection, isLoading, error, index, handleAnswer } =
+    useSpellTest();
   const headerProps = useMemo(
     () => ({
       leftIconTitle: "вернуться к выбору модулей",
@@ -29,7 +30,11 @@ export const SpellCheckTestContainer = () => {
     return (
       <>
         <SpellTestDescription />
-        <SpellTestMainContent collection={collection} index={0} />
+        <SpellTestMainContent
+          collection={collection}
+          index={index}
+          onAnswer={handleAnswer}
+        />
       </>
     );
   };

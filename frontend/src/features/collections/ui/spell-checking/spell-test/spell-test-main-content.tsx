@@ -1,16 +1,26 @@
 import type { ICard } from "@shared/api";
 import { Progress } from "@shared/ui/progress";
+import { useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
+  onAnswer(answer: string, actualData: string): void;
 };
 
 export const SpellTestMainContent = ({
   collection,
   index,
+  onAnswer,
 }: SpellTestMainContentPropType) => {
+  const answerRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleAnswer = () => {
+    const answer = answerRef.current?.value || "";
+    onAnswer(answer, collection[index].translation!);
+  };
+
   return (
     <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
       <div className="text-xl lg:text-2xl font-bold font-roboto text-red-600 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]">
@@ -25,10 +35,13 @@ export const SpellTestMainContent = ({
           {index + 1}/{collection.length}
         </span>
       </div>
-      <div className="mt-4">
-        <span className="font-jost text-fuchsia-700">Перевод:</span>
+      <div className="mt-4 mb-4">
+        <span className="font-jost text-fuchsia-700">Ваш ответ:</span>
         <TextareaAutosize
-          className="p-2 border-1 border-[#d34af1] rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] text-xl lg:text-2xl"
+          key={index}
+          ref={answerRef}
+          autoFocus
+          className="p-2 border-1 border-[#d34af1] rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl"
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "rgba(233,220,230,0.2) transparent",
@@ -39,7 +52,16 @@ export const SpellTestMainContent = ({
           maxLength={250}
           autoComplete="off"
         />
+        <span className="text-xs block leading-3 text-zinc-700">
+          ответ должен соответствовать содержимому, указанному в&nbsp;карточке
+        </span>
       </div>
+      <button
+        onClick={handleAnswer}
+        className="border-zinc-500 rounded-[5px] cursor-pointer border-2 p-2 mt-4 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all"
+      >
+        Ответить
+      </button>
     </div>
   );
 };

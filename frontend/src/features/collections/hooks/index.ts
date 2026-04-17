@@ -5,4 +5,4 @@ export { useEdit } from "./useEdit";
 export { useCollections } from "./useCollections";
 export { useIntervalLearning } from "./useIntervalLearning";
 export { useSpellCheck } from "./useSpellCheck";
-export { useSpellCheckTest } from "./useSpellCheckTest";
+export { useSpellTest } from "./useSpellTest";
