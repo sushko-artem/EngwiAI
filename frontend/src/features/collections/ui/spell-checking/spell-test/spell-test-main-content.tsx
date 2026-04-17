@@ -25,6 +25,13 @@ export const SpellTestMainContent = ({
     onAnswer(userAnswer, collection[index][originalValue]!);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleAnswer();
+    }
+  };
+
   return (
     <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
       <div className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]">
@@ -41,10 +48,12 @@ export const SpellTestMainContent = ({
       </div>
       <div className="mt-4 mb-4">
         <span className="font-jost text-fuchsia-700">Ваш ответ:</span>
+
         <TextareaAutosize
+          autoFocus
+          onKeyDown={handleKeyDown}
           key={index}
           ref={answerRef}
-          autoFocus
           className="p-2 border-1 border-[#d34af1] rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl"
           style={{
             scrollbarWidth: "thin",
@@ -56,8 +65,9 @@ export const SpellTestMainContent = ({
           maxLength={250}
           autoComplete="off"
         />
-        <span className="text-xs block leading-3 text-zinc-700">
-          ответ должен соответствовать содержимому, указанному в&nbsp;карточке
+
+        <span className="text-zinc-700 block leading-3 text-xs">
+          (Enter - ответить, Shift+Enter - новая&nbsp;строка)
         </span>
       </div>
       <button
