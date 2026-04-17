@@ -25,6 +25,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
+      "shared/*": ["./src/shared/*"],
       "@test/*": ["./src/test/*"],
       "@pages/*": ["./src/pages/*"],
       "@features/*": ["./src/features/*"],

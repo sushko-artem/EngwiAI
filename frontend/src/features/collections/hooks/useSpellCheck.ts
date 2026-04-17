@@ -6,6 +6,9 @@ import { useModal } from "@widgets/modal";
 export const useSpellCheck = () => {
   const navigate = useNavigate();
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
+  const [visibleSide, setVisibleSide] = useState<"word" | "translation">(
+    "word",
+  );
   const { warning } = useModal();
   const {
     data: collections,
@@ -44,5 +47,7 @@ export const useSpellCheck = () => {
     getChosenModulesIds,
     chosenIds,
     warning,
+    visibleSide,
+    setVisibleSide,
   };
 };

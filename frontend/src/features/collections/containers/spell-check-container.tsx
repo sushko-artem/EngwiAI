@@ -4,6 +4,7 @@ import { Header } from "@widgets/header";
 import { useSpellCheck } from "../hooks";
 import {
   ChooseModuleList,
+  ChooseVisibleSide,
   NotASingleCollection,
   SpellCheckDescription,
 } from "../ui";
@@ -20,6 +21,8 @@ export const SpellCheckContainer = () => {
     toggleChoosenModule,
     getChosenModulesIds,
     warning,
+    visibleSide,
+    setVisibleSide,
   } = useSpellCheck();
   const headerProps = useMemo(
     () => ({
@@ -36,9 +39,9 @@ export const SpellCheckContainer = () => {
     if (!modules.length) {
       warning("Ни одного модуля не выбрано!");
     } else {
-      navigate("/spell-check/test", { state: { modules } });
+      navigate("/spell-check/test", { state: { modules, visibleSide } });
     }
-  }, [getChosenModulesIds, warning, navigate]);
+  }, [getChosenModulesIds, warning, navigate, visibleSide]);
 
   const renderContent = () => {
     if (isLoading) return <Loader />;
@@ -51,6 +54,12 @@ export const SpellCheckContainer = () => {
           onToggle={toggleChoosenModule}
           chosenIds={chosenIds}
         />
+        <div className="mb-4 text-center">
+          <ChooseVisibleSide
+            sideValue={visibleSide}
+            onChange={setVisibleSide}
+          />
+        </div>
         <div className="text-center">
           <button
             onClick={startTest}

@@ -31,8 +31,8 @@ export const useSpellTest = () => {
   }, [navigate, location.state?.modules, getCards]);
 
   const handleAnswer = useCallback(
-    (userAnswer: string, actualData: string) => {
-      console.log({ userAnswer, actualData });
+    (userAnswer: string, actualValue: string) => {
+      console.log({ userAnswer, actualValue });
       if (state.index + 1 === collection.length) return;
       dispatch({ type: "INCREMENT_INDEX" });
     },
@@ -51,5 +51,6 @@ export const useSpellTest = () => {
     getCards,
     index: state.index,
     handleAnswer,
+    visibleSide: location.state.visibleSide,
   };
 };

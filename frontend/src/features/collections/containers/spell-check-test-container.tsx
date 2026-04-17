@@ -7,8 +7,15 @@ import { Loader } from "@shared/ui/loader";
 import { SpellTestDescription, SpellTestMainContent } from "../ui";
 
 export const SpellCheckTestContainer = () => {
-  const { back, collection, isLoading, error, index, handleAnswer } =
-    useSpellTest();
+  const {
+    back,
+    collection,
+    isLoading,
+    error,
+    index,
+    handleAnswer,
+    visibleSide,
+  } = useSpellTest();
   const headerProps = useMemo(
     () => ({
       leftIconTitle: "вернуться к выбору модулей",
@@ -31,6 +38,7 @@ export const SpellCheckTestContainer = () => {
       <>
         <SpellTestDescription />
         <SpellTestMainContent
+          visibleSide={visibleSide}
           collection={collection}
           index={index}
           onAnswer={handleAnswer}
