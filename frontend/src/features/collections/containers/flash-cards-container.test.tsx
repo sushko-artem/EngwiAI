@@ -12,7 +12,7 @@ const mockCollection = {
   ],
 };
 
-const mockBack = vi.hoisted(() => vi.fn());
+const mockNavigate = vi.hoisted(() => vi.fn());
 const mockOptions = vi.hoisted(() => vi.fn());
 const mockHandleReset = vi.hoisted(() => vi.fn());
 const mockHandleChosenStatus = vi.hoisted(() => vi.fn());
@@ -31,7 +31,6 @@ const createMockedProps = (overrides = {}) => ({
   isModalOpen: false,
   isVirtual: false,
   index: 0,
-  back: mockBack,
   options: mockOptions,
   handleReset: mockHandleReset,
   handleChosenStatus: mockHandleChosenStatus,
@@ -43,7 +42,7 @@ const createMockedProps = (overrides = {}) => ({
 });
 
 vi.mock("react-router-dom", () => ({
-  useNavigate: vi.fn(),
+  useNavigate: () => mockNavigate,
 }));
 
 vi.mock(import("@features/collections/hooks"), async (importOriginal) => {
@@ -96,13 +95,22 @@ describe("FlashCardsContainer", () => {
     expect(mockHandleChosenStatus).toHaveBeenCalledWith(false);
   });
 
-  it("should call back when clicking on back arrow", () => {
+  it("should navigate to '/dashboard' page when collection is virtual", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection, isVirtual: true }),
+    );
+    render(<FlashCardsContainer collectionId="testId-123" />);
+    fireEvent.click(screen.getByTestId("leftIconAction"));
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("should navigate to '/collections' page when regular collection", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection }),
     );
     render(<FlashCardsContainer collectionId="testId-123" />);
     fireEvent.click(screen.getByTestId("leftIconAction"));
-    expect(mockBack).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 
   it("should call options when clicking on options icon", () => {

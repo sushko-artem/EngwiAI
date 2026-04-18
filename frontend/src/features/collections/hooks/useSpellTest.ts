@@ -16,7 +16,10 @@ export const useSpellTest = () => {
   const [collection, setCollection] = useState<ICard[]>([]);
   const index = useRef(state.index);
   index.current = state.index;
-  const testInProgress = index.current > 0 && index.current < collection.length;
+  const testInProgress =
+    index.current > 0 &&
+    index.current < collection.length &&
+    index.current !== collection.length;
   const blocker = useBlocker(testInProgress);
   const blockerRef = useRef(blocker);
   blockerRef.current = blocker;

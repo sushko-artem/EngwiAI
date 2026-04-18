@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
   useUpdateCollectionMutation,
 } from "@features/collections/api";
-import { useNavigate } from "react-router-dom";
+import { useBlocker, useNavigate } from "react-router-dom";
 import { useModal } from "@widgets/modal";
 import {
   flashCardsReducer,
@@ -39,6 +39,31 @@ export const useFlashCards = (collectionId: string) => {
       return shuffled;
     }
   }, [collection]);
+
+  const testInProgress =
+    index.current > 0 &&
+    index.current < (shuffledCollection?.cards.length ?? 0) &&
+    index.current !== (shuffledCollection?.cards.length ?? 0);
+
+  const blocker = useBlocker(testInProgress);
+  const blockerRef = useRef(blocker);
+  blockerRef.current = blocker;
+
+  useEffect(() => {
+    async function handleBack() {
+      if (blockerRef.current.state === "blocked") {
+        const isBack = await confirm(
+          "Модуль не завершен! Результат не сохранится!",
+        );
+        if (isBack) {
+          blockerRef.current.proceed();
+        } else {
+          blockerRef.current.reset();
+        }
+      }
+    }
+    handleBack();
+  }, [blocker.state, confirm]);
 
   const isVirtual = useMemo(
     () => isVirtualCollection(collectionId),
@@ -90,30 +115,6 @@ export const useFlashCards = (collectionId: string) => {
     dispatch({ type: "RESET_FOR_RETRY" });
   }, []);
 
-  const back = useCallback(async () => {
-    if (
-      index.current > 0 &&
-      index.current <= shuffledCollection!.cards.length - 1
-    ) {
-      const isBack = await confirm(
-        "Модуль не завершен! Результат не сохранится!",
-      );
-      if (isBack && isVirtual) {
-        navigate("/dashboard");
-      } else if (isBack) {
-        navigate("/collections");
-      } else {
-        return;
-      }
-    } else {
-      if (isVirtual) {
-        navigate("/dashboard");
-      } else {
-        navigate("/collections");
-      }
-    }
-  }, [navigate, isVirtual, shuffledCollection, confirm]);
-
   const updateStatus = useCallback(() => {
     const updatedCards = state.actualStatus;
     updateCollection({
@@ -132,7 +133,6 @@ export const useFlashCards = (collectionId: string) => {
     isModalOpen: state.isModalOpen,
     isVirtual,
     index: state.index,
-    back,
     options,
     handleChosenStatus,
     handleDelete,
