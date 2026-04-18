@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { VIRTUAL_COLLECTIONS } from "@features/collections/helpers/virtual-collection-ident-helper";
-import { act, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { useIntervalLearning } from "./useIntervalLearning";
 
 const inactiveCollection = {
@@ -47,13 +47,8 @@ const activeCollection = {
   ],
 };
 
-const mockNavigate = vi.hoisted(() => vi.fn());
 const mockActiveRefetch = vi.hoisted(() => vi.fn());
 const mockInactiveRefetch = vi.hoisted(() => vi.fn());
-
-vi.mock("react-router-dom", () => ({
-  useNavigate: () => mockNavigate,
-}));
 
 vi.mock("@features/collections/api", () => ({
   useGetCollectionQuery: vi.fn((collectionType) => {
@@ -86,13 +81,5 @@ describe("useIntervalLearning", () => {
     const { result } = renderHook(() => useIntervalLearning());
     expect(result.current.activeLength).toBe(3);
     expect(result.current.inactiveLength).toBe(2);
-  });
-
-  it("should navigate to collections page when back", () => {
-    const { result } = renderHook(() => useIntervalLearning());
-    act(() => {
-      result.current.back();
-    });
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 });

@@ -1,10 +1,8 @@
 import { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useGetCollectionQuery } from "@features/collections/api";
 import { VIRTUAL_COLLECTIONS } from "@features/collections/helpers/virtual-collection-ident-helper";
 
 export const useIntervalLearning = () => {
-  const navigate = useNavigate();
   const {
     data: activeCollection,
     isLoading: activeLoading,
@@ -35,12 +33,7 @@ export const useIntervalLearning = () => {
     refetchQuery();
   }, [refetchQuery]);
 
-  const back = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
-
   return {
-    back,
     isLoading,
     isRefetching,
     inactiveLength: collectionsLength.inactive,

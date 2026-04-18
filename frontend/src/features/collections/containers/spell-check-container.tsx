@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 export const SpellCheckContainer = () => {
   const navigate = useNavigate();
   const {
-    back,
     collections,
     isLoading,
     chosenIds,
@@ -24,14 +23,19 @@ export const SpellCheckContainer = () => {
     visibleSide,
     setVisibleSide,
   } = useSpellCheck();
+
+  const handleBack = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
+
   const headerProps = useMemo(
     () => ({
       title: "Орфография",
       leftIcon: backArrow,
       leftIconTitle: "Вернуться на главную",
-      leftIconAction: back,
+      leftIconAction: handleBack,
     }),
-    [back],
+    [handleBack],
   );
 
   const startTest = useCallback(async () => {

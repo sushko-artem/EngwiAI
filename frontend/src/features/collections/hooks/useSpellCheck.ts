@@ -1,10 +1,8 @@
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useGetCollectionsQuery } from "@features/collections/api";
 import { useModal } from "@widgets/modal";
 
 export const useSpellCheck = () => {
-  const navigate = useNavigate();
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
   const [visibleSide, setVisibleSide] = useState<"word" | "translation">(
     "word",
@@ -33,12 +31,7 @@ export const useSpellCheck = () => {
     return Array.from(chosenIds);
   }, [chosenIds]);
 
-  const back = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
-
   return {
-    back,
     collections,
     isLoading,
     refetch,

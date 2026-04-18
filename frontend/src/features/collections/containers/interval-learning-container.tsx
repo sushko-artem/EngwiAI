@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { useIntervalLearning } from "@features/collections/hooks";
@@ -9,18 +9,25 @@ import {
 } from "@features/collections/ui";
 import { Loader } from "@shared/ui/loader";
 import { cn } from "@shared/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export const IntervalLearningContainer = () => {
-  const { back, activeLength, inactiveLength, isLoading, isRefetching } =
+  const { activeLength, inactiveLength, isLoading, isRefetching } =
     useIntervalLearning();
+  const navigate = useNavigate();
+
+  const handleBack = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
+
   const headerProps = useMemo(
     () => ({
       title: "Контрольное тестирование",
       leftIcon: backArrow,
       leftIconTitle: "Вернуться на главную",
-      leftIconAction: back,
+      leftIconAction: handleBack,
     }),
-    [back],
+    [handleBack],
   );
 
   const renderContent = () => {

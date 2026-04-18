@@ -4,8 +4,6 @@ import { useIntervalLearning } from "@features/collections/hooks";
 import { render, screen } from "@testing-library/react";
 import { IntervalLearningContainer } from "./interval-learning-container";
 
-const mockBack = vi.hoisted(() => vi.fn());
-
 vi.mock("@features/collections/hooks", () => ({
   useIntervalLearning: vi.fn(),
 }));
@@ -19,7 +17,6 @@ vi.mock("@widgets/modal", () => ({
 describe("IntervalLearningContainer", () => {
   it("should render correctly", () => {
     vi.mocked(useIntervalLearning).mockReturnValue({
-      back: mockBack,
       isLoading: false,
       isRefetching: false,
       activeLength: 17,
@@ -36,19 +33,21 @@ describe("IntervalLearningContainer", () => {
 
   it("should show Loader when loading", () => {
     vi.mocked(useIntervalLearning).mockReturnValue({
-      back: mockBack,
       isLoading: true,
       isRefetching: false,
       activeLength: 2,
       inactiveLength: 3,
     });
-    render(<IntervalLearningContainer />);
+    render(
+      <MemoryRouter>
+        <IntervalLearningContainer />
+      </MemoryRouter>,
+    );
     expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
   it("should show 'Not a single collection' when empty collections", () => {
     vi.mocked(useIntervalLearning).mockReturnValue({
-      back: mockBack,
       isLoading: false,
       isRefetching: false,
       activeLength: 0,
@@ -66,7 +65,6 @@ describe("IntervalLearningContainer", () => {
 
   it("should change opacity style when refetching", () => {
     vi.mocked(useIntervalLearning).mockReturnValue({
-      back: mockBack,
       isLoading: false,
       isRefetching: true,
       activeLength: 22,
