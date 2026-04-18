@@ -8,12 +8,12 @@ export const actions = [
     url: "/create-collection",
   },
   {
-    title: "Весь материал",
-    url: "/interval-learning",
-  },
-  {
     title: "Орфография",
     url: "/spell-check",
+  },
+  {
+    title: "Весь материал",
+    url: "/interval-learning",
   },
 ];
 
