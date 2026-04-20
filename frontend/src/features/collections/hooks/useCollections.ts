@@ -38,7 +38,7 @@ export const useCollections = () => {
         `Удалить коллекцию ${
           collectionsRef.current?.find((collection) => collection.id === id)
             ?.name
-        }?`
+        }?`,
       );
       if (isDelete) {
         try {
@@ -48,12 +48,8 @@ export const useCollections = () => {
         }
       }
     },
-    [deleteCollection, confirm]
+    [deleteCollection, confirm],
   );
-
-  const back = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
 
   return {
     collections,
@@ -61,6 +57,5 @@ export const useCollections = () => {
     error,
     isRefetching,
     onDelete,
-    back,
   };
 };

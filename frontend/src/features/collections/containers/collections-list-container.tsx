@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   CollectionsButtonsList,
   NoCollectionError,
@@ -8,19 +8,25 @@ import { Loader } from "@shared/ui/loader";
 import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { useCollections } from "@features/collections/hooks";
+import { useNavigate } from "react-router-dom";
 
 export const CollectionsListContainer = () => {
-  const { collections, isLoading, isRefetching, onDelete, back, error } =
+  const { collections, isLoading, isRefetching, onDelete, error } =
     useCollections();
+  const navigate = useNavigate();
+
+  const handleBack = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
 
   const headerProps = useMemo(
     () => ({
       title: "Мои модули",
       leftIcon: backArrow,
       leftIconTitle: "Вернуться на главную",
-      leftIconAction: back,
+      leftIconAction: handleBack,
     }),
-    [back],
+    [handleBack],
   );
 
   return (

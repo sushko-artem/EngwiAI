@@ -75,14 +75,4 @@ describe("useCollections", () => {
     expect(mockConfirm).toHaveBeenCalledWith("Удалить коллекцию Collection 1?");
     expect(mockDelete).toHaveBeenCalledWith("1");
   });
-
-  it("should redirect to '/dashboard' when back", () => {
-    const { result } = renderHook(() => useCollections());
-
-    act(() => {
-      result.current.back();
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
-  });
 });
