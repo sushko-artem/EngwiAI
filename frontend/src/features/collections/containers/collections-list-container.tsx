@@ -20,7 +20,7 @@ export const CollectionsListContainer = () => {
       leftIconTitle: "Вернуться на главную",
       leftIconAction: back,
     }),
-    [back]
+    [back],
   );
 
   return (

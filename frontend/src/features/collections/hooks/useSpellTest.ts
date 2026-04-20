@@ -4,13 +4,11 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
 import { compareUserAnswer } from "../helpers";
-import { useModal } from "@widgets/modal";
-import { useBlocker } from "react-router-dom";
+import { useNavigationGuard } from "./useNavigationGuard";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { confirm } = useModal();
   const [getCards, { isLoading, error }] = useGetCardsFromCollectionsMutation();
   const [state, dispatch] = useReducer(spellTestReducer, initialState);
   const [collection, setCollection] = useState<ICard[]>([]);
@@ -20,25 +18,11 @@ export const useSpellTest = () => {
     index.current > 0 &&
     index.current < collection.length &&
     index.current !== collection.length;
-  const blocker = useBlocker(testInProgress);
-  const blockerRef = useRef(blocker);
-  blockerRef.current = blocker;
 
-  useEffect(() => {
-    async function handleBack() {
-      if (blockerRef.current.state === "blocked") {
-        const isBack = await confirm(
-          "Покинуть страницу? Данные теста сохранены не будут!",
-        );
-        if (isBack) {
-          blockerRef.current.proceed();
-        } else {
-          blockerRef.current.reset();
-        }
-      }
-    }
-    handleBack();
-  }, [blocker.state, confirm]);
+  useNavigationGuard({
+    shouldBlock: testInProgress,
+    confirmMessage: "Покинуть страницу? Данные теста сохранены не будут!",
+  });
 
   useEffect(() => {
     if (!location.state?.modules) {

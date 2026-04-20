@@ -234,7 +234,7 @@ describe("useFlashCards", () => {
 
     await waitFor(() => {
       expect(mockConfirm).toHaveBeenCalledWith(
-        "Модуль не завершен! Результат не сохранится!",
+        "Покинуть страницу? Данные теста сохранены не будут!",
       );
     });
     expect(mockProceed).toHaveBeenCalled();

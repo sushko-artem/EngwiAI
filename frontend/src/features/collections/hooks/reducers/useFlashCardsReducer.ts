@@ -6,6 +6,7 @@ type FlashCardsStateType = {
   isReversed: boolean;
   isModalOpen: boolean;
   isMenuOpen: boolean;
+  inProgress: boolean;
   index: number;
 };
 
@@ -25,6 +26,7 @@ export const initialState: FlashCardsStateType = {
   isReversed: false,
   isModalOpen: false,
   isMenuOpen: false,
+  inProgress: true,
   index: 0,
 };
 
@@ -56,6 +58,7 @@ export function flashCardsReducer(
       }
       if (newState.index === collection.length - 1) {
         newState.isModalOpen = true;
+        newState.inProgress = false;
       } else {
         newState.index += 1;
       }

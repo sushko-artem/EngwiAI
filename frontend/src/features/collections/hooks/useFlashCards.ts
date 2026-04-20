@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
   useUpdateCollectionMutation,
 } from "@features/collections/api";
-import { useBlocker, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useModal } from "@widgets/modal";
 import {
   flashCardsReducer,
   initialState,
 } from "./reducers/useFlashCardsReducer";
 import { isVirtualCollection } from "../helpers";
+import { useNavigationGuard } from "./useNavigationGuard";
 
 export const useFlashCards = (collectionId: string) => {
   const {
@@ -23,8 +24,6 @@ export const useFlashCards = (collectionId: string) => {
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
-  const index = useRef(state.index);
-  index.current = state.index;
 
   const shuffledCollection = useMemo(() => {
     if (collection) {
@@ -40,30 +39,12 @@ export const useFlashCards = (collectionId: string) => {
     }
   }, [collection]);
 
-  const testInProgress =
-    index.current > 0 &&
-    index.current < (shuffledCollection?.cards.length ?? 0) &&
-    index.current !== (shuffledCollection?.cards.length ?? 0);
+  const testInProgress = state.index > 0 && state.inProgress;
 
-  const blocker = useBlocker(testInProgress);
-  const blockerRef = useRef(blocker);
-  blockerRef.current = blocker;
-
-  useEffect(() => {
-    async function handleBack() {
-      if (blockerRef.current.state === "blocked") {
-        const isBack = await confirm(
-          "Модуль не завершен! Результат не сохранится!",
-        );
-        if (isBack) {
-          blockerRef.current.proceed();
-        } else {
-          blockerRef.current.reset();
-        }
-      }
-    }
-    handleBack();
-  }, [blocker.state, confirm]);
+  useNavigationGuard({
+    shouldBlock: testInProgress,
+    confirmMessage: "Покинуть страницу? Данные теста сохранены не будут!",
+  });
 
   const isVirtual = useMemo(
     () => isVirtualCollection(collectionId),
