@@ -69,6 +69,7 @@ export function flashCardsReducer(
         ...state,
         index: 0,
         isModalOpen: false,
+        inProgress: true,
         actualStatus: [],
         unmemTerms: 0,
       };
