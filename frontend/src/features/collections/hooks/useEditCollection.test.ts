@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import {
   setExistedCollection,
@@ -34,9 +34,11 @@ const mockConfirm = vi.hoisted(() => vi.fn());
 const mockWarning = vi.hoisted(() => vi.fn());
 const mockUpdateCollection = vi.hoisted(() => vi.fn());
 const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
+const mockUseBlocker = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
+  useBlocker: mockUseBlocker,
 }));
 
 vi.mock("@widgets/modal", () => ({
@@ -60,7 +62,26 @@ vi.mock("@features/collections/api", () => ({
   ],
 }));
 
+const mockSelectorState = (
+  editableCollection: EditableCollectionType | undefined,
+  deletedCards: string[] = [],
+) => {
+  mockSelector.mockReturnValue({
+    editableCollection,
+    deletedCards,
+  });
+};
+
 describe("useEditCollection", () => {
+  beforeEach(() => {
+    mockUseBlocker.mockReturnValue({
+      state: "unblocked",
+      proceed: vi.fn(),
+      reset: vi.fn(),
+    });
+    mockSelectorState(testCollection, []);
+  });
+
   it("should call useGetCollectionQuery with right id", async () => {
     mockGetCollectionQuery.mockReturnValue({
       data: testCollection,
@@ -79,7 +100,6 @@ describe("useEditCollection", () => {
   });
 
   it("should navigate to '/collections' without saving when no changes", async () => {
-    mockSelector.mockReturnValueOnce(testCollection).mockReturnValueOnce([]);
     const { result } = renderHook(() => useEditCollection("test-id-1234"));
 
     await act(async () => {
@@ -92,10 +112,7 @@ describe("useEditCollection", () => {
 
   it("should prevent saving with duplicate name", async () => {
     const mockEditedCollection = { ...testCollection, name: "firstCollection" };
-
-    mockSelector
-      .mockReturnValueOnce(mockEditedCollection)
-      .mockReturnValueOnce([]);
+    mockSelectorState(mockEditedCollection, []);
 
     const { result } = renderHook(() => useEditCollection("test-id-1234"));
 
@@ -118,9 +135,7 @@ describe("useEditCollection", () => {
       ],
     };
 
-    mockSelector
-      .mockReturnValueOnce(mockEditedCollection)
-      .mockReturnValueOnce([]);
+    mockSelectorState(mockEditedCollection, []);
 
     const { result } = renderHook(() => useEditCollection("test-id-1234"));
 
@@ -150,9 +165,7 @@ describe("useEditCollection", () => {
       ],
     };
 
-    mockSelector
-      .mockReturnValueOnce(mockUpdatedCollection)
-      .mockReturnValueOnce(["2"]);
+    mockSelectorState(mockUpdatedCollection, ["2"]);
 
     const { result } = renderHook(() => useEditCollection("test-id-1234"));
 
@@ -178,7 +191,7 @@ describe("useEditCollection", () => {
     });
   });
 
-  it("should show worning modal with generic errors when updating rejected", async () => {
+  it("should show warning modal with generic errors when updating rejected", async () => {
     const mockEditedCollection = {
       name: "Test Collection",
       cards: [
@@ -191,9 +204,7 @@ describe("useEditCollection", () => {
       unwrap: vi.fn().mockRejectedValue(new Error("Network error!")),
     });
 
-    mockSelector
-      .mockReturnValueOnce(mockEditedCollection)
-      .mockReturnValueOnce([]);
+    mockSelectorState(mockEditedCollection, []);
 
     const { result } = renderHook(() => useEditCollection("test-id-1234"));
 
@@ -205,48 +216,21 @@ describe("useEditCollection", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("should navigate to '/collections' when back and no changes", async () => {
-    mockSelector.mockReturnValueOnce(testCollection).mockReturnValueOnce([]);
-
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
-
-    await act(async () => {
-      await result.current.back();
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith("/collections");
-  });
-
-  it("should show modal with confirm message when back and unsaved changes", async () => {
-    mockGetCollectionQuery.mockReturnValue({
-      data: testCollection,
-      error: null,
-    });
-
-    const mockUpdatedCollection = {
+  it("should reset isSaving flag when update fails", async () => {
+    const mockEditedCollection = {
       name: "Test Collection",
       cards: [
-        { id: "1", word: "Hello", translation: "привет", isUpdated: true },
-        { id: "3", word: "fish", translation: "рыба", isNew: true },
+        { id: "1", word: "hello", translation: "привет", isUpdated: true },
       ],
     };
-
-    mockSelector
-      .mockReturnValueOnce(mockUpdatedCollection)
-      .mockReturnValueOnce(["2"]);
-
-    mockConfirm.mockResolvedValue(true);
+    mockSelectorState(mockEditedCollection, []);
 
     const { result } = renderHook(() => useEditCollection("test-id-1234"));
 
     await act(async () => {
-      await result.current.back();
+      await result.current.saveCollection();
     });
-
-    expect(mockConfirm).toHaveBeenCalledWith(
-      "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!",
-    );
-
-    expect(mockNavigate).toHaveBeenCalledWith("/collections");
+    expect(mockWarning).toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

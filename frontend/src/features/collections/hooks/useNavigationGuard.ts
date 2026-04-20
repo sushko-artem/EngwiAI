@@ -5,6 +5,7 @@ import { useBlocker } from "react-router-dom";
 type UseNavigationGuardOptionType = {
   shouldBlock: boolean;
   confirmMessage: string;
+  skipGuard?: boolean;
   onProceed?: () => void;
   onReset?: () => void;
 };
@@ -12,10 +13,11 @@ type UseNavigationGuardOptionType = {
 export const useNavigationGuard = ({
   shouldBlock,
   confirmMessage,
+  skipGuard = false,
   onProceed,
   onReset,
 }: UseNavigationGuardOptionType) => {
-  const blocker = useBlocker(shouldBlock);
+  const blocker = useBlocker(skipGuard ? false : shouldBlock);
   const { confirm } = useModal();
   const blockerRef = useRef(blocker);
   blockerRef.current = blocker;

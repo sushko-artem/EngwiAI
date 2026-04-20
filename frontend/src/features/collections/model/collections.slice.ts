@@ -1,6 +1,10 @@
 import type { EditableCardType } from "@features/collections/ui";
 import type { RootState } from "@redux/store";
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
 
 export const COLLECTIONS_DRAFT_KEY = "collections_draft";
@@ -121,6 +125,15 @@ export const selectEditableCollection = (state: RootState) =>
 
 export const selectDeletedCards = (state: RootState) =>
   state.collections.deletedCards;
+
+export const selectEditCollectionState = createSelector(
+  selectEditableCollection,
+  selectDeletedCards,
+  (editableCollection, deletedCards) => ({
+    editableCollection,
+    deletedCards,
+  }),
+);
 
 export const {
   initDefaultCollection,
