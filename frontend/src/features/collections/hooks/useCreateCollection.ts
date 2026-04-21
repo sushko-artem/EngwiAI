@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@redux/hooks";
 import {
@@ -12,13 +12,15 @@ import {
 import { getErrorMessage } from "@shared/api";
 import { useModal } from "@widgets/modal";
 import { validateCollection } from "../helpers";
+import { useNavigationGuard } from "@shared/hooks/useNavigationGuard";
 
 export const useCreateCollection = (
   collection: EditableCollectionType | null,
 ) => {
+  const [isSaving, setIsSaving] = useState(false);
   const { data: collections } = useGetCollectionsQuery();
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
-  const { warning, confirm } = useModal();
+  const { warning } = useModal();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const collectionRef = useRef(collection);
@@ -40,14 +42,22 @@ export const useCreateCollection = (
     }
   }, [collections]);
 
-  const hasUnsavedChanges = useCallback(() => {
-    const hasAnyChanges =
-      !!collectionRef.current?.name.trim() ||
-      !!collectionRef.current?.cards.find(
-        (card) => card.word?.trim() || card.translation?.trim(),
-      );
-    return hasAnyChanges;
-  }, []);
+  const hasAnyChanges = useMemo(() => {
+    if (!collection) return false;
+
+    const hasName = !!collection.name.trim();
+    const hasCard = !!collection.cards.find(
+      (card) => card.word?.trim() || card.translation?.trim(),
+    );
+
+    return hasName || hasCard;
+  }, [collection]);
+
+  useNavigationGuard({
+    shouldBlock: hasAnyChanges,
+    skipGuard: isSaving,
+    confirmMessage: "Все несохраненные данные будут потеряны!",
+  });
 
   const saveCollection = useCallback(async () => {
     const validate = validateCollection(
@@ -60,7 +70,7 @@ export const useCreateCollection = (
       }
       return;
     }
-
+    setIsSaving(true);
     try {
       const cards = collectionRef.current!.cards.map((card) => ({
         id: card.id,
@@ -72,23 +82,12 @@ export const useCreateCollection = (
       navigate("/collections", { replace: true, state: { refetch: true } });
     } catch (error) {
       warning(getErrorMessage(error));
+      setIsSaving(false);
     }
   }, [navigate, createCollection, warning]);
-
-  const back = useCallback(async () => {
-    if (hasUnsavedChanges()) {
-      const shouldLeaveThePage = await confirm(
-        "Все несохраненные данные будут потеряны!",
-      );
-      if (shouldLeaveThePage) navigate("/dashboard");
-    } else {
-      navigate("/dashboard");
-    }
-  }, [navigate, confirm, hasUnsavedChanges]);
 
   return {
     isLoading,
     saveCollection,
-    back,
   };
 };

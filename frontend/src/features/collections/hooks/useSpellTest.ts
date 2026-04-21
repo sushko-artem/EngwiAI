@@ -4,7 +4,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
 import { compareUserAnswer } from "../helpers";
-import { useNavigationGuard } from "./useNavigationGuard";
+import { useNavigationGuard } from "@shared/hooks/useNavigationGuard";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();

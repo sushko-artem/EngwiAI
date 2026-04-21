@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   initDefaultCollection,
   type EditableCollectionType,
@@ -40,9 +40,16 @@ const mockDispatch = vi.hoisted(() => vi.fn());
 const mockConfirm = vi.hoisted(() => vi.fn());
 const mockWarning = vi.hoisted(() => vi.fn());
 const mockCreateCollection = vi.hoisted(() => vi.fn());
+const mockUseBlocker = vi.hoisted(() => vi.fn());
+const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
+
+vi.mock("@shared/hooks/useNavigationGuard", () => ({
+  useNavigationGuard: mockUseNavigationGuard,
+}));
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
+  useBlocker: mockUseBlocker,
 }));
 
 vi.mock("@widgets/modal", () => ({
@@ -65,6 +72,59 @@ vi.mock("@features/collections/api", () => ({
 }));
 
 describe("useCreateCollection", () => {
+  beforeEach(() => {
+    mockUseBlocker.mockReturnValue({
+      state: "unblocked",
+      proceed: vi.fn(),
+      reset: vi.fn(),
+    });
+  });
+
+  describe("useCreateCollection - useNavigationGuard integration", () => {
+    it("shouldBlock & skipGuard params should be false initially", () => {
+      renderHook(() => useCreateCollection(defaultCollection));
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shouldBlock: false,
+          skipGuard: false,
+        }),
+      );
+    });
+
+    it("shouldBlock param should be true when has changes", () => {
+      const editedCollection = {
+        ...defaultCollection,
+        name: "test",
+      };
+      renderHook(() => useCreateCollection(editedCollection));
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shouldBlock: true,
+        }),
+      );
+    });
+
+    it("skipGuard param should be true when correctly saving", async () => {
+      mockCreateCollection.mockReturnValue({
+        unwrap: vi.fn().mockResolvedValue({}),
+      });
+
+      const { result } = renderHook(() => useCreateCollection(testCollection));
+
+      await act(async () => {
+        await result.current.saveCollection();
+      });
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skipGuard: true,
+        }),
+      );
+    });
+  });
+
   it("should dispatch initDefaultCollection on mount", () => {
     renderHook(() => useCreateCollection(defaultCollection));
 
@@ -166,31 +226,5 @@ describe("useCreateCollection", () => {
     });
     expect(mockCreateCollection).toHaveBeenCalled();
     expect(mockWarning).toHaveBeenCalledWith("Network error!");
-  });
-
-  it("should show modal with confirm message when back and unsaved changes", async () => {
-    mockConfirm.mockResolvedValue(true);
-
-    const { result } = renderHook(() => useCreateCollection(testCollection));
-
-    await act(async () => {
-      await result.current.back();
-    });
-
-    expect(mockConfirm).toHaveBeenCalledWith(
-      "Все несохраненные данные будут потеряны!",
-    );
-
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
-  });
-
-  it("should navigate to '/dashboard' when no changes", async () => {
-    const { result } = renderHook(() => useCreateCollection(defaultCollection));
-
-    await act(async () => {
-      await result.current.back();
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 });

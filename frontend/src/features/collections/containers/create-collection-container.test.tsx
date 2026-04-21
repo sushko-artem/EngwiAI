@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useCreateCollection } from "@features/collections/hooks";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { CreateCollectionContainer } from "./create-collection-container";
+import { MemoryRouter } from "react-router-dom";
 
 const mockCollection = {
   name: "",
@@ -10,6 +11,16 @@ const mockCollection = {
     { id: "2", word: "", translation: "" },
   ],
 };
+
+const mockNavigate = vi.hoisted(() => vi.fn());
+
+vi.mock(import("react-router-dom"), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 vi.mock(import("@features/collections/hooks"), async (importOriginal) => {
   const actual = await importOriginal();
@@ -26,39 +37,47 @@ vi.mock("@redux/hooks", () => ({
 
 describe("CreateCollectionContainer", () => {
   const mockSave = vi.fn();
-  const mockBack = vi.fn();
 
   it("should show loader when is loading", () => {
     vi.mocked(useCreateCollection).mockReturnValue({
       isLoading: true,
       saveCollection: mockSave,
-      back: mockBack,
     });
 
-    render(<CreateCollectionContainer />);
+    render(
+      <MemoryRouter>
+        <CreateCollectionContainer />
+      </MemoryRouter>,
+    );
     expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
-  it("should call back when arrow-back clicked", () => {
+  it("should navigate to dashboard when back clicked and no changes", () => {
     vi.mocked(useCreateCollection).mockReturnValue({
       isLoading: false,
       saveCollection: mockSave,
-      back: mockBack,
     });
 
-    render(<CreateCollectionContainer />);
+    render(
+      <MemoryRouter>
+        <CreateCollectionContainer />
+      </MemoryRouter>,
+    );
     fireEvent.click(screen.getByTestId("leftIconAction"));
-    expect(mockBack).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 
-  it("should call saveCollection when save clicked", () => {
+  it("should call saveCollection when save button clicked", () => {
     vi.mocked(useCreateCollection).mockReturnValue({
       isLoading: false,
       saveCollection: mockSave,
-      back: mockBack,
     });
 
-    render(<CreateCollectionContainer />);
+    render(
+      <MemoryRouter>
+        <CreateCollectionContainer />
+      </MemoryRouter>,
+    );
     fireEvent.click(screen.getByTestId("rightIconAction"));
     expect(mockSave).toHaveBeenCalled();
   });

@@ -30,11 +30,15 @@ const getCollectionsQueryResult = {
 const mockNavigate = vi.hoisted(() => vi.fn());
 const mockDispatch = vi.hoisted(() => vi.fn());
 const mockSelector = vi.hoisted(() => vi.fn());
-const mockConfirm = vi.hoisted(() => vi.fn());
 const mockWarning = vi.hoisted(() => vi.fn());
 const mockUpdateCollection = vi.hoisted(() => vi.fn());
 const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
 const mockUseBlocker = vi.hoisted(() => vi.fn());
+const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
+
+vi.mock("@shared/hooks/useNavigationGuard", () => ({
+  useNavigationGuard: mockUseNavigationGuard,
+}));
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
@@ -44,7 +48,6 @@ vi.mock("react-router-dom", () => ({
 vi.mock("@widgets/modal", () => ({
   useModal: () => ({
     warning: mockWarning,
-    confirm: mockConfirm,
   }),
 }));
 
@@ -80,6 +83,73 @@ describe("useEditCollection", () => {
       reset: vi.fn(),
     });
     mockSelectorState(testCollection, []);
+  });
+
+  describe("useEditCollection - useNavigationGuard integration", () => {
+    it("shouldBlock & skipGuard should be false initially", () => {
+      mockGetCollectionQuery.mockReturnValue({
+        data: testCollection,
+        error: null,
+      });
+      renderHook(() => useEditCollection("test-id-1234"));
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shouldBlock: false,
+          skipGuard: false,
+        }),
+      );
+    });
+
+    it("shouldBlock should be true when has changes", () => {
+      mockGetCollectionQuery.mockReturnValue({
+        data: testCollection,
+        error: null,
+      });
+
+      const editedCollection = {
+        ...testCollection,
+        name: "editName",
+      };
+
+      mockSelectorState(editedCollection, []);
+      renderHook(() => useEditCollection("test-id-1234"));
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shouldBlock: true,
+        }),
+      );
+    });
+
+    it("skipGuard should be true while correctly saving", async () => {
+      mockGetCollectionQuery.mockReturnValue({
+        data: testCollection,
+        error: null,
+      });
+
+      mockUpdateCollection.mockReturnValue({
+        unwrap: vi.fn().mockResolvedValue({}),
+      });
+
+      const editedCollection = {
+        ...testCollection,
+        name: "New Name",
+      };
+
+      mockSelectorState(editedCollection, []);
+      const { result } = renderHook(() => useEditCollection("test-id-1234"));
+
+      await act(async () => {
+        result.current.saveCollection();
+      });
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skipGuard: true,
+        }),
+      );
+    });
   });
 
   it("should call useGetCollectionQuery with right id", async () => {

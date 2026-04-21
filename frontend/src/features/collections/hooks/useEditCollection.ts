@@ -16,7 +16,7 @@ import {
   validateCollection,
 } from "@features/collections/helpers";
 import { useModal } from "@widgets/modal";
-import { useNavigationGuard } from "./useNavigationGuard";
+import { useNavigationGuard } from "@shared/hooks/useNavigationGuard";
 
 export const useEditCollection = (collectionId: string) => {
   const dispatch = useAppDispatch();

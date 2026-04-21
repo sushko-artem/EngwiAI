@@ -11,7 +11,7 @@ import {
   initialState,
 } from "./reducers/useFlashCardsReducer";
 import { isVirtualCollection } from "../helpers";
-import { useNavigationGuard } from "./useNavigationGuard";
+import { useNavigationGuard } from "@shared/hooks/useNavigationGuard";
 
 export const useFlashCards = (collectionId: string) => {
   const {

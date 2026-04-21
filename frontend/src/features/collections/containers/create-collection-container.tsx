@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useAppSelector } from "@redux/hooks";
 import { selectEditableCollection } from "@features/collections/model";
 import { useCreateCollection } from "@features/collections/hooks";
@@ -7,10 +7,16 @@ import { EditableCollection } from "@features/collections/ui";
 import backArrow from "@assets/images/arrow-left.svg";
 import save from "@assets/images/check.png";
 import { Header } from "@widgets/header";
+import { useNavigate } from "react-router-dom";
 
 export const CreateCollectionContainer = () => {
   const collection = useAppSelector(selectEditableCollection);
-  const { isLoading, saveCollection, back } = useCreateCollection(collection);
+  const { isLoading, saveCollection } = useCreateCollection(collection);
+  const navigate = useNavigate();
+
+  const handleBack = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
 
   const headerProps = useMemo(
     () => ({
@@ -18,11 +24,11 @@ export const CreateCollectionContainer = () => {
       leftIconTitle: "вернуться на главную",
       rightIconTitle: "сохранить",
       rightIconAction: saveCollection,
-      leftIconAction: back,
+      leftIconAction: handleBack,
       leftIcon: backArrow,
       rightIcon: isLoading ? undefined : save,
     }),
-    [isLoading, saveCollection, back]
+    [isLoading, saveCollection, handleBack],
   );
 
   if (!collection) {
