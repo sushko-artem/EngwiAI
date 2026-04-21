@@ -51,11 +51,16 @@ export const useCollections = () => {
     [deleteCollection, confirm],
   );
 
+  const handleBack = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
+
   return {
     collections,
     isLoading,
     error,
     isRefetching,
     onDelete,
+    handleBack,
   };
 };

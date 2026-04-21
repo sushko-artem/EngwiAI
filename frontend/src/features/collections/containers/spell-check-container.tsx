@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { useSpellCheck } from "../hooks";
@@ -9,24 +9,18 @@ import {
   SpellCheckDescription,
 } from "../ui";
 import { Loader } from "@shared/ui/loader";
-import { useNavigate } from "react-router-dom";
 
 export const SpellCheckContainer = () => {
-  const navigate = useNavigate();
   const {
     collections,
     isLoading,
     chosenIds,
     toggleChoosenModule,
-    getChosenModulesIds,
-    warning,
+    startTest,
     visibleSide,
     setVisibleSide,
+    handleBack,
   } = useSpellCheck();
-
-  const handleBack = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
 
   const headerProps = useMemo(
     () => ({
@@ -37,15 +31,6 @@ export const SpellCheckContainer = () => {
     }),
     [handleBack],
   );
-
-  const startTest = useCallback(async () => {
-    const modules = getChosenModulesIds();
-    if (!modules.length) {
-      warning("Ни одного модуля не выбрано!");
-    } else {
-      navigate("/spell-check/test", { state: { modules, visibleSide } });
-    }
-  }, [getChosenModulesIds, warning, navigate, visibleSide]);
 
   const renderContent = () => {
     if (isLoading) return <Loader />;

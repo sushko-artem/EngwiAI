@@ -15,15 +15,7 @@ const mockCollections = [
   },
 ];
 
-const mockNavigate = vi.hoisted(() => vi.fn());
-
-vi.mock(import("react-router-dom"), async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
+const mockBack = vi.hoisted(() => vi.fn());
 
 vi.mock("@features/collections/hooks", () => ({
   useCollections: vi.fn(),
@@ -39,6 +31,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
+      handleBack: mockBack,
     });
 
     render(
@@ -56,6 +49,7 @@ describe("CollectionsListContainer", () => {
       error: new Error("Failed to load!"),
       isRefetching: false,
       onDelete: mockOnDelete,
+      handleBack: mockBack,
     });
 
     render(
@@ -73,6 +67,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
+      handleBack: mockBack,
     });
 
     render(
@@ -93,6 +88,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
+      handleBack: mockBack,
     });
 
     render(
@@ -111,6 +107,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
+      handleBack: mockBack,
     });
 
     render(
@@ -120,7 +117,7 @@ describe("CollectionsListContainer", () => {
     );
 
     fireEvent.click(screen.getByTestId("leftIconAction"));
-    expect(mockNavigate).toHaveBeenCalled();
+    expect(mockBack).toHaveBeenCalled();
   });
 
   it("should call onDelete when delete clicked", () => {
@@ -130,6 +127,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
+      handleBack: mockBack,
     });
 
     render(

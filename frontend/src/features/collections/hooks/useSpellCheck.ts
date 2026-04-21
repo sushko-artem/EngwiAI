@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useGetCollectionsQuery } from "@features/collections/api";
 import { useModal } from "@widgets/modal";
+import { useNavigate } from "react-router-dom";
 
 export const useSpellCheck = () => {
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
@@ -8,6 +9,7 @@ export const useSpellCheck = () => {
     "word",
   );
   const { warning } = useModal();
+  const navigate = useNavigate();
   const {
     data: collections,
     isLoading,
@@ -27,9 +29,22 @@ export const useSpellCheck = () => {
     });
   }, []);
 
+  const handleBack = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
+
   const getChosenModulesIds = useCallback(() => {
     return Array.from(chosenIds);
   }, [chosenIds]);
+
+  const startTest = useCallback(async () => {
+    const modules = getChosenModulesIds();
+    if (!modules.length) {
+      warning("Ни одного модуля не выбрано!");
+    } else {
+      navigate("/spell-check/test", { state: { modules, visibleSide } });
+    }
+  }, [getChosenModulesIds, warning, navigate, visibleSide]);
 
   return {
     collections,
@@ -37,10 +52,10 @@ export const useSpellCheck = () => {
     refetch,
     error,
     toggleChoosenModule,
-    getChosenModulesIds,
     chosenIds,
-    warning,
     visibleSide,
     setVisibleSide,
+    startTest,
+    handleBack,
   };
 };
