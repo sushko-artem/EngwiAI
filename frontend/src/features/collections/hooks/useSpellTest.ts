@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetCardsFromCollectionsMutation } from "../api/collections-api";
+import { useGetCardsFromCollectionsMutation } from "@features/collections/api";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
