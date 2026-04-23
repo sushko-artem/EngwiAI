@@ -52,7 +52,9 @@ describe("FlashCards - regression", () => {
     cy.get("[data-testid='menu-options']").should("be.visible");
     cy.get("[data-testid='menu-overlay']").click("center");
 
-    const translations = this.animals.cards.map((c) => c.translation);
+    const translations = this.animals.cards.map(
+      (c: { word: string; translation: string }) => c.translation,
+    );
     cy.get("[data-testid='word-side']").should(($el) => {
       const text = $el.text();
       expect(translations).to.include(text);
