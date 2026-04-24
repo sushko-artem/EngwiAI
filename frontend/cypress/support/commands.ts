@@ -48,7 +48,7 @@ declare global {
 
 Cypress.Commands.add("resetDatabase", () => {
   cy.request("POST", "/api/test/reset-db").then(() => {
-    cy.log("🗑️ Database reset complete");
+    cy.log("Database reset complete");
   });
 });
 

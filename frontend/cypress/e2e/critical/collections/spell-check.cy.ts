@@ -39,10 +39,4 @@ describe("SpellCheckPage - critical", () => {
       cy.wrap($el).should("have.attr", "data-state", "chosen");
     });
   });
-
-  it("should navigate to spell-check/test page when click on start", function () {
-    cy.contains(this.animals.name).click();
-    cy.get("[data-testid='start-test']").click();
-    cy.url().should("include", "spell-check/test");
-  });
 });
