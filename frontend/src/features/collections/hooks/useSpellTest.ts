@@ -3,7 +3,6 @@ import { useGetCardsFromCollectionsMutation } from "@features/collections/api";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
-import { compareUserAnswer } from "../helpers";
 import { useNavigationGuard } from "@shared/hooks/useNavigationGuard";
 
 export const useSpellTest = () => {
@@ -14,14 +13,12 @@ export const useSpellTest = () => {
   const [collection, setCollection] = useState<ICard[]>([]);
   const index = useRef(state.index);
   index.current = state.index;
-  const testInProgress =
-    index.current > 0 &&
-    index.current < collection.length &&
-    index.current !== collection.length;
+  const testInProgress = index.current > 0 && state.inProgress;
 
   useNavigationGuard({
     shouldBlock: testInProgress,
-    confirmMessage: "Покинуть страницу? Данные теста сохранены не будут!",
+    confirmMessage:
+      "Тест не окончен! Вы действительно хотите покинуть страницу?",
   });
 
   useEffect(() => {
@@ -45,21 +42,33 @@ export const useSpellTest = () => {
 
   const handleAnswer = useCallback(
     (userAnswer: string, originalValue: string) => {
-      const isRight = compareUserAnswer(userAnswer, originalValue);
-      console.log(isRight);
-      if (state.index + 1 === collection.length) return;
-      dispatch({ type: "INCREMENT_INDEX" });
+      dispatch({
+        type: "HANDLE_ANSWER",
+        payload: {
+          collectionLength: collection.length,
+          userAnswer,
+          originalValue,
+        },
+      });
     },
-    [state.index, collection.length],
+    [collection.length],
   );
 
+  const resetTest = useCallback(() => {
+    dispatch({ type: "RESET_TEST" });
+  }, []);
+
   return {
+    isSummaryOpen: state.isSummaryModalOpen,
     collection,
     isLoading,
     error,
     getCards,
     index: state.index,
     handleAnswer,
+    resetTest,
     visibleSide: location.state.visibleSide,
+    rightAnswersCount: state.rightAnswersCounter,
+    userMistakes: state.mistakesMadeIn,
   };
 };

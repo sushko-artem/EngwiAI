@@ -1,15 +1,28 @@
 import { useCallback, useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
-import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
 import { useSpellTest } from "../hooks";
 import { Loader } from "@shared/ui/loader";
-import { SpellTestDescription, SpellTestMainContent } from "../ui";
+import {
+  SpellTestDescription,
+  SpellTestMainContent,
+  SpellTestResultModal,
+} from "../ui";
 import { useNavigate } from "react-router-dom";
 
 export const SpellCheckTestContainer = () => {
-  const { collection, isLoading, error, index, handleAnswer, visibleSide } =
-    useSpellTest();
+  const {
+    collection,
+    isLoading,
+    error,
+    index,
+    handleAnswer,
+    visibleSide,
+    isSummaryOpen,
+    rightAnswersCount,
+    userMistakes,
+    resetTest,
+  } = useSpellTest();
   const navigate = useNavigate();
 
   const handleBack = useCallback(() => {
@@ -23,7 +36,6 @@ export const SpellCheckTestContainer = () => {
       rightIconAction: () => {},
       leftIconAction: handleBack,
       leftIcon: backArrow,
-      rightIcon: option,
       title: "Тест орфографии",
     }),
     [handleBack],
@@ -43,6 +55,14 @@ export const SpellCheckTestContainer = () => {
           index={index}
           onAnswer={handleAnswer}
         />
+        {isSummaryOpen && (
+          <SpellTestResultModal
+            totalCards={collection.length}
+            rightAnswers={rightAnswersCount}
+            userMistakes={userMistakes}
+            reset={resetTest}
+          />
+        )}
       </>
     );
   };

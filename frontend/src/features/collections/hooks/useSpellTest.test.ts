@@ -75,7 +75,8 @@ describe("useSpellTest", () => {
 
     expect(mockUseNavigationGuard).toHaveBeenCalledWith({
       shouldBlock: false,
-      confirmMessage: "Покинуть страницу? Данные теста сохранены не будут!",
+      confirmMessage:
+        "Тест не окончен! Вы действительно хотите покинуть страницу?",
     });
   });
 

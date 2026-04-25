@@ -1,5 +1,4 @@
 export { ModalFlash } from "./flash-cards/flash-modal/flash-cards-modal";
-export { FlashModalAction } from "./flash-cards/flash-modal/modal-action";
 export { ModalSummary } from "./flash-cards/flash-modal/modal-summary";
 export { MenuOptions } from "./flash-cards/flash-option-menu";
 export { SelectCollectionButton } from "./collection-list/select-collection-button";
@@ -28,3 +27,4 @@ export { ChooseModuleAction } from "./spell-checking/choose-module-action";
 export { SpellTestDescription } from "./spell-checking/spell-test/spell-test-description";
 export { SpellTestMainContent } from "./spell-checking/spell-test/spell-test-main-content";
 export { ChooseVisibleSide } from "./spell-checking/choose-side-radio-group";
+export { SpellTestResultModal } from "./spell-checking/spell-test/test-results-modal/spell-test-modal";

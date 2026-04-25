@@ -26,8 +26,9 @@ export const IntervalLearningAction = ({
   };
   return (
     <div
+      onClick={handleClick}
       data-testid="interval-learning-box"
-      className={`flex flex-col text-center border-3 rounded-[5px] p-2 ${isActive ? "border-green-600" : "border-red-600"}`}
+      className={`flex flex-col cursor-pointer text-center border-3 rounded-[5px] p-2 ${isActive ? "border-green-600" : "border-red-600"}`}
     >
       <div>
         <span
