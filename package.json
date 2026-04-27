@@ -15,8 +15,8 @@
     "test:ci:down": "docker compose --env-file .env.test -f compose.test.ci.yaml down",
     "rebuild:frontend_test": "docker builder prune -a -f && docker compose -f compose.test.yaml build frontend_test --no-cache",
     "rebuild:backend_test": "docker builder prune -a -f && docker compose --env-file .env.test -f compose.test.yaml build backend_test --no-cache",
-    "rebuild:frontend": "docker builder prune -a -f && docker compose build frontend --no-cache && docker compose up -d frontend",
-    "rebuild:backend": "docker builder prune -a -f && docker compose build backend --no-cache && docker compose up -d backend",
+    "rebuild:frontend": "docker builder prune -a -f && docker compose build frontend --no-cache",
+    "rebuild:backend": "docker builder prune -a -f && docker compose build backend --no-cache",
     "test:e2e:up": "npm run test:e2e:local && npm run cy:open",
     "test:e2e:down": "docker compose -f compose.test.yaml down"
   }

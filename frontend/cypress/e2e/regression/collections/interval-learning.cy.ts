@@ -39,7 +39,7 @@ describe("IntervalLearningPage - regression", () => {
     for (let i = 2; i < this.animals.cards.length; i++) {
       cy.get("[data-testid='chosen-status-button']").eq(0).click();
     }
-    cy.contains("Выбрать другой модуль").click();
+    cy.contains("Выбрать другой").click();
     cy.url().should("include", "/collections");
     cy.get("[data-testid='leftIconAction']").click();
     cy.contains("Весь материал").click();
