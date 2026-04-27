@@ -21,7 +21,7 @@ const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
 const mockGetCards = vi.hoisted(() => vi.fn());
 const mockLocationState = { modules: [] as string[], visibleSide: "word" };
 
-vi.mock("@shared/hooks/useNavigationGuard", () => ({
+vi.mock("@shared/hooks", () => ({
   useNavigationGuard: mockUseNavigationGuard,
 }));
 

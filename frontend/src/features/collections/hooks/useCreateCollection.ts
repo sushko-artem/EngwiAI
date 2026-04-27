@@ -12,7 +12,7 @@ import {
 import { getErrorMessage } from "@shared/api";
 import { useModal } from "@widgets/modal";
 import { validateCollection } from "../helpers";
-import { useNavigationGuard } from "@shared/hooks/useNavigationGuard";
+import { useNavigationGuard } from "@shared/hooks";
 
 export const useCreateCollection = (
   collection: EditableCollectionType | null,

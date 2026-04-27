@@ -36,7 +36,7 @@ describe("ModalFlash", () => {
   it("should call reset when clicking reset", async () => {
     render(<ModalFlash {...defaultProps} />);
 
-    await user.click(screen.getByText("Пройти модуль заново"));
+    await user.click(screen.getByText("Пройти заново"));
 
     expect(defaultProps.reset).toHaveBeenCalled();
   });
@@ -44,7 +44,7 @@ describe("ModalFlash", () => {
   it("should navigate to '/edit-collection' when clicking editCollection", async () => {
     render(<ModalFlash {...defaultProps} />);
 
-    await user.click(screen.getByText("Редактировать модуль"));
+    await user.click(screen.getByText("Редактировать"));
 
     expect(mockNavigate).toHaveBeenCalledWith("/edit-collection/id-123");
   });
@@ -52,7 +52,7 @@ describe("ModalFlash", () => {
   it("should navigate to '/collections' page and update cards status", async () => {
     render(<ModalFlash {...defaultProps} />);
 
-    await user.click(screen.getByText("Выбрать другой модуль"));
+    await user.click(screen.getByText("Выбрать другой"));
     expect(defaultProps.updateStatus).toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
@@ -61,8 +61,8 @@ describe("ModalFlash", () => {
     defaultProps.isVirtual = true;
     render(<ModalFlash {...defaultProps} />);
 
-    expect(screen.queryByText("Редактировать модуль")).not.toBeInTheDocument();
-    expect(screen.getByText("Пройти модуль заново")).toBeInTheDocument();
+    expect(screen.queryByText("Редактировать")).not.toBeInTheDocument();
+    expect(screen.getByText("Пройти заново")).toBeInTheDocument();
     expect(screen.getByText("Завершить")).toBeInTheDocument();
   });
 

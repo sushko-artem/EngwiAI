@@ -36,7 +36,7 @@ const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
 const mockUseBlocker = vi.hoisted(() => vi.fn());
 const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
 
-vi.mock("@shared/hooks/useNavigationGuard", () => ({
+vi.mock("@shared/hooks", () => ({
   useNavigationGuard: mockUseNavigationGuard,
 }));
 

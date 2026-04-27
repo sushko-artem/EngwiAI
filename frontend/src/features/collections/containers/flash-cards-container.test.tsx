@@ -154,7 +154,7 @@ describe("FlashCardsContainer", () => {
       createMockedProps({ collection: mockCollection, isModalOpen: true }),
     );
     render(<FlashCardsContainer collectionId="testId-123" />);
-    fireEvent.click(screen.getByText("Пройти модуль заново"));
+    fireEvent.click(screen.getByText("Пройти заново"));
     expect(mockHandleReset).toHaveBeenCalled();
   });
 });

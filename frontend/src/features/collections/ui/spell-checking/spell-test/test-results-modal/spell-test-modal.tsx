@@ -19,10 +19,6 @@ export const SpellTestResultModal = ({
   const mistakes = Object.values(userMistakes);
   const progress = Math.floor((rightAnswers / totalCards) * 100);
 
-  // const getDetailedReport = useMemo(() => {
-  //   const report =
-  // }, [])
-
   const getEvaluation = useMemo(() => {
     if (progress === 100) {
       return {
