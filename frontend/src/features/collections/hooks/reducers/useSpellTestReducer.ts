@@ -1,5 +1,3 @@
-import { compareUserAnswer } from "@features/collections/helpers";
-
 type SpellTestStateType = {
   index: number;
   rightAnswersCounter: number;
@@ -14,7 +12,8 @@ type SpellTestActionsType =
       payload: {
         collectionLength: number;
         userAnswer: string;
-        originalValue: string;
+        correctAnswer: string;
+        isCorrect: boolean;
       };
     }
   | { type: "RESET_TEST" };
@@ -36,17 +35,16 @@ export function spellTestReducer(
       const {
         collectionLength: length,
         userAnswer,
-        originalValue,
+        correctAnswer,
+        isCorrect,
       } = action.payload;
-
-      const isRight = compareUserAnswer(userAnswer, originalValue);
 
       const newState = { ...state };
 
-      if (!isRight) {
+      if (!isCorrect) {
         newState.mistakesMadeIn = {
           ...newState.mistakesMadeIn,
-          [originalValue]: userAnswer,
+          [correctAnswer]: userAnswer,
         };
       } else {
         newState.rightAnswersCounter += 1;

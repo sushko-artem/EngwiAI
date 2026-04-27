@@ -7,7 +7,7 @@ const normalizeString = (str: string) => {
 
 export const compareUserAnswer = (
   userAnswer: string,
-  originalValue: string,
+  correctAnswer: string,
 ): boolean => {
-  return normalizeString(userAnswer) === normalizeString(originalValue);
+  return normalizeString(userAnswer) === normalizeString(correctAnswer);
 };

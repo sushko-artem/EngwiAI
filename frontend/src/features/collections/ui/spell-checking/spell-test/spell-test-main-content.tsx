@@ -1,13 +1,14 @@
+import { compareUserAnswer } from "@features/collections/helpers";
 import type { ICard } from "@shared/api";
 import { Progress } from "@shared/ui/progress";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
   visibleSide: "word" | "translation";
-  onAnswer(answer: string, originalValue: string): void;
+  onAnswer(answer: string, originalValue: string, isCorrect: boolean): void;
 };
 
 export const SpellTestMainContent = ({
@@ -17,12 +18,22 @@ export const SpellTestMainContent = ({
   visibleSide,
 }: SpellTestMainContentPropType) => {
   const answerRef = useRef<HTMLTextAreaElement>(null);
+  const [answerStatus, setAnswerStatus] = useState<
+    "correct" | "incorrect" | null
+  >(null);
+
+  useEffect(() => {
+    setAnswerStatus(null);
+  }, [index]);
 
   const originalValue = visibleSide === "word" ? "translation" : "word";
 
   const handleAnswer = () => {
     const userAnswer = answerRef.current?.value || "";
-    onAnswer(userAnswer, collection[index][originalValue]!);
+    const correctAnswer = collection[index][originalValue]!;
+    const isCorrect = compareUserAnswer(userAnswer, correctAnswer);
+    setAnswerStatus(isCorrect ? "correct" : "incorrect");
+    onAnswer(userAnswer, correctAnswer, isCorrect);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -31,6 +42,13 @@ export const SpellTestMainContent = ({
       handleAnswer();
     }
   };
+
+  const borderColorClass =
+    answerStatus === "correct"
+      ? "border-green-500 focus:border-green-600"
+      : answerStatus === "incorrect"
+        ? "border-red-500 focus:border-red-600"
+        : "border-[#e5e7eb] focus:border-[#e5e7eb]";
 
   return (
     <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
@@ -54,7 +72,7 @@ export const SpellTestMainContent = ({
           onKeyDown={handleKeyDown}
           key={index}
           ref={answerRef}
-          className="p-2 border-1 border-[#d34af1] rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl"
+          className={`p-2 border-1 rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl transition-colors duration-300 ${borderColorClass}`}
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "rgba(233,220,230,0.2) transparent",

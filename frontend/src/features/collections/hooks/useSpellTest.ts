@@ -43,13 +43,14 @@ export const useSpellTest = () => {
   }, [navigate, location.state?.modules, getCards]);
 
   const handleAnswer = useCallback(
-    (userAnswer: string, originalValue: string) => {
+    (userAnswer: string, correctAnswer: string, isCorrect: boolean) => {
       dispatch({
         type: "HANDLE_ANSWER",
         payload: {
           collectionLength: collection.length,
           userAnswer,
-          originalValue,
+          correctAnswer,
+          isCorrect,
         },
       });
     },
