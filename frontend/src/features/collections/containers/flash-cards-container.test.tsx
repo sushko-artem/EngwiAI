@@ -31,6 +31,7 @@ const createMockedProps = (overrides = {}) => ({
   isModalOpen: false,
   isVirtual: false,
   index: 0,
+  isDeleting: false,
   options: mockOptions,
   handleReset: mockHandleReset,
   handleChosenStatus: mockHandleChosenStatus,

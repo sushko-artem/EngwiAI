@@ -3,7 +3,7 @@ import { useGetCardsFromCollectionsMutation } from "@features/collections/api";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
-import { useNavigationGuard } from "@shared/hooks";
+import { useNavigationGuard, usePreventReload } from "@shared/hooks";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
@@ -20,6 +20,8 @@ export const useSpellTest = () => {
     confirmMessage:
       "Тест не окончен! Вы действительно хотите покинуть страницу?",
   });
+
+  usePreventReload(testInProgress);
 
   useEffect(() => {
     if (!location.state?.modules) {

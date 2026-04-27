@@ -4,14 +4,14 @@ export const usePreventReload = (shouldPrevent: boolean) => {
   useEffect(() => {
     if (!shouldPrevent) return;
 
-    const handleBeforaUnload = (e: BeforeUnloadEvent) => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
     };
 
-    window.addEventListener("beforeunload", handleBeforaUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforaUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [shouldPrevent]);
 };

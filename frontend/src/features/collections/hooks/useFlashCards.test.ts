@@ -27,6 +27,7 @@ vi.mock("react-router-dom", () => ({
 vi.mock("@widgets/modal", () => ({
   useModal: () => ({
     confirm: mockConfirm,
+    warning: vi.fn(),
   }),
 }));
 

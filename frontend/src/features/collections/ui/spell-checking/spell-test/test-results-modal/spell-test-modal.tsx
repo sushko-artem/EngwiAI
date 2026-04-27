@@ -25,24 +25,24 @@ export const SpellTestResultModal = ({
         text: "Идеально!",
         style: "text-green-500",
       };
-    } else if (progress > 90 && progress < 100) {
+    } else if (progress < 100 && progress >= 90) {
       return {
         text: "Олично!",
         style: "text-green-500",
       };
-    } else if (progress < 90 && progress > 70) {
+    } else if (progress < 90 && progress >= 70) {
       return {
-        text: "Хорошо",
-        style: "text-amber-500",
+        text: "Хорошо!",
+        style: "text-orange-500",
       };
-    } else if (progress < 70 && progress > 50) {
+    } else if (progress < 70 && progress >= 50) {
       return {
-        text: "Можно лучше",
-        style: "text-amber-500",
+        text: "Можно лучше!",
+        style: "text-orange-500",
       };
-    } else if (progress < 50 && progress > 30) {
+    } else if (progress < 50 && progress >= 30) {
       return {
-        text: "Удовлетворительно",
+        text: "Удовлетворительно.",
         style: "text-red-500",
       };
     } else {
@@ -68,7 +68,7 @@ export const SpellTestResultModal = ({
         </h1>
         <div className="mt-1 flex flex-col text-center font-jost md:text-xl">
           <div>
-            Прогресс:{" "}
+            Правильных ответов:{" "}
             <span className={`${getEvaluation.style} font-bold`}>
               {progress}%
             </span>
@@ -80,7 +80,7 @@ export const SpellTestResultModal = ({
         >
           {!!mistakes.length && (
             <ModalAction
-              content="Подробный отчет"
+              content="Отчёт об ошибках"
               onClick={() => console.log(userMistakes)}
             />
           )}

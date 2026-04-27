@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
@@ -20,7 +20,8 @@ export const useFlashCards = (collectionId: string) => {
     error,
   } = useGetCollectionQuery(collectionId);
   const [state, dispatch] = useReducer(flashCardsReducer, initialState);
-  const { confirm } = useModal();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { confirm, warning } = useModal();
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
@@ -43,6 +44,7 @@ export const useFlashCards = (collectionId: string) => {
 
   useNavigationGuard({
     shouldBlock: testInProgress,
+    skipGuard: isDeleting,
     confirmMessage: "Покинуть страницу? Данные теста сохранены не будут!",
   });
 
@@ -61,14 +63,24 @@ export const useFlashCards = (collectionId: string) => {
       `Удалить коллекцию "${shuffledCollection?.name}"?`,
     );
     if (isDelete) {
+      setIsDeleting(true);
       try {
-        navigate("/collections");
         await deleteCollection(collectionId).unwrap();
+        navigate("/collections");
       } catch (error) {
         console.error(error);
+        warning("Не удалось удалить коллекцию. Попробуйте позже.");
+        setIsDeleting(false);
       }
     }
-  }, [confirm, navigate, deleteCollection, shuffledCollection, collectionId]);
+  }, [
+    confirm,
+    navigate,
+    deleteCollection,
+    shuffledCollection,
+    collectionId,
+    warning,
+  ]);
 
   const closeMenu = useCallback(() => {
     dispatch({ type: "CLOSE_MENU" });
@@ -121,5 +133,6 @@ export const useFlashCards = (collectionId: string) => {
     closeMenu,
     handleReset,
     updateStatus,
+    isDeleting,
   };
 };

@@ -19,10 +19,12 @@ const mockNavigate = vi.hoisted(() => vi.fn());
 const mockBlocker = vi.hoisted(() => vi.fn());
 const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
 const mockGetCards = vi.hoisted(() => vi.fn());
+const mockPreventReload = vi.hoisted(() => vi.fn());
 const mockLocationState = { modules: [] as string[], visibleSide: "word" };
 
 vi.mock("@shared/hooks", () => ({
   useNavigationGuard: mockUseNavigationGuard,
+  usePreventReload: mockPreventReload,
 }));
 
 vi.mock("react-router-dom", () => ({
