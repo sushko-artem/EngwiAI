@@ -22,6 +22,7 @@ export const SpellCheckTestContainer = () => {
     rightAnswersCount,
     userMistakes,
     resetTest,
+    inProgress,
   } = useSpellTest();
   const navigate = useNavigate();
 
@@ -53,6 +54,7 @@ export const SpellCheckTestContainer = () => {
           visibleSide={visibleSide}
           collection={collection}
           index={index}
+          inProgress={inProgress}
           onAnswer={handleAnswer}
         />
         {isSummaryOpen && (

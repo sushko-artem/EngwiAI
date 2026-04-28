@@ -3,10 +3,12 @@ import type { ICard } from "@shared/api";
 import { Progress } from "@shared/ui/progress";
 import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import { useSound } from "@shared/hooks";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
+  inProgress: boolean;
   visibleSide: "word" | "translation";
   onAnswer(answer: string, originalValue: string, isCorrect: boolean): void;
 };
@@ -16,11 +18,13 @@ export const SpellTestMainContent = ({
   index,
   onAnswer,
   visibleSide,
+  inProgress,
 }: SpellTestMainContentPropType) => {
   const answerRef = useRef<HTMLTextAreaElement>(null);
   const [answerStatus, setAnswerStatus] = useState<
     "correct" | "incorrect" | null
   >(null);
+  const { play } = useSound();
 
   useEffect(() => {
     setAnswerStatus(null);
@@ -32,7 +36,9 @@ export const SpellTestMainContent = ({
     const userAnswer = answerRef.current?.value || "";
     const correctAnswer = collection[index][originalValue]!;
     const isCorrect = compareUserAnswer(userAnswer, correctAnswer);
-    setAnswerStatus(isCorrect ? "correct" : "incorrect");
+    const status = isCorrect ? "correct" : "incorrect";
+    setAnswerStatus(status);
+    play(status);
     onAnswer(userAnswer, correctAnswer, isCorrect);
   };
 
@@ -68,6 +74,7 @@ export const SpellTestMainContent = ({
         <span className="font-jost text-fuchsia-700">Ваш ответ:</span>
 
         <TextareaAutosize
+          disabled={!inProgress}
           autoFocus
           onKeyDown={handleKeyDown}
           key={index}

@@ -73,5 +73,6 @@ export const useSpellTest = () => {
     visibleSide: location.state.visibleSide,
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
+    inProgress: state.inProgress,
   };
 };
