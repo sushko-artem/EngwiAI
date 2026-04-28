@@ -67,14 +67,14 @@ jobs:
           outputs: type=docker,dest=/tmp/frontend.tar
 
       - name: Upload backend image
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: image-backend
           path: /tmp/backend.tar
           retention-days: 7
 
       - name: Upload frontend image
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: image-frontend
           path: /tmp/frontend.tar
@@ -92,7 +92,7 @@ jobs:
 
       - name: Download images
         id: download_images
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           pattern: image-*
           path: /tmp

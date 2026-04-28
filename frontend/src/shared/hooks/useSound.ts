@@ -8,7 +8,11 @@ import {
 type SoundGroupType = keyof typeof SOUND_GROUP;
 
 export const useSound = () => {
-  const [mutedGroup, setMutedGroup] = useState<Set<SoundGroupType>>(new Set());
+  const [mutedGroup, setMutedGroup] = useState<Set<SoundGroupType>>(() => {
+    const muted = new Set<SoundGroupType>();
+    if (sounds.correct.mute()) muted.add("spellTest");
+    return muted;
+  });
 
   const play = useCallback((type: SoundNameType) => {
     sounds[type].play();
