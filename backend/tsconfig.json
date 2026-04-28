@@ -26,5 +26,6 @@
       "@user/*": ["./src/user/*"],
       "@shared/*": ["./src/shared/*"]
     }
-  }
+  },
+  "include": ["src/**/*", "prisma/generated/prisma/**/*"]
 }
