@@ -25,6 +25,11 @@ const mockLocationState = { modules: [] as string[], visibleSide: "word" };
 vi.mock("@shared/hooks", () => ({
   useNavigationGuard: mockUseNavigationGuard,
   usePreventReload: mockPreventReload,
+  useSound: () => ({
+    play: vi.fn(),
+    toggleGroup: vi.fn(),
+    isGroupMuted: vi.fn(),
+  }),
 }));
 
 vi.mock("react-router-dom", () => ({

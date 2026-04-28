@@ -2,6 +2,7 @@ type SpellTestStateType = {
   index: number;
   rightAnswersCounter: number;
   mistakesMadeIn: Record<string, string>;
+  isMenuOptionsOpen: boolean;
   isSummaryModalOpen: boolean;
   inProgress: boolean;
 };
@@ -16,13 +17,16 @@ type SpellTestActionsType =
         isCorrect: boolean;
       };
     }
-  | { type: "RESET_TEST" };
+  | { type: "RESET_TEST" }
+  | { type: "TOGGLE_MENU" }
+  | { type: "CLOSE_MENU" };
 
 export const initialState: SpellTestStateType = {
   index: 0,
   rightAnswersCounter: 0,
   mistakesMadeIn: {},
   isSummaryModalOpen: false,
+  isMenuOptionsOpen: false,
   inProgress: true,
 };
 
@@ -58,6 +62,12 @@ export function spellTestReducer(
       }
       return newState;
     }
+    case "TOGGLE_MENU": {
+      return { ...state, isMenuOptionsOpen: !state.isMenuOptionsOpen };
+    }
+    case "CLOSE_MENU": {
+      return { ...state, isMenuOptionsOpen: false };
+    }
     case "RESET_TEST": {
       return {
         ...state,
@@ -65,6 +75,7 @@ export function spellTestReducer(
         rightAnswersCounter: 0,
         mistakesMadeIn: {},
         isSummaryModalOpen: false,
+        isMenuOptionsOpen: false,
         inProgress: true,
       };
     }

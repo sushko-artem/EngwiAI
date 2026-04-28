@@ -3,7 +3,7 @@ import { useGetCardsFromCollectionsMutation } from "@features/collections/api";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import type { ICard } from "@shared/api";
 import { initialState, spellTestReducer } from "./reducers/useSpellTestReducer";
-import { useNavigationGuard, usePreventReload } from "@shared/hooks";
+import { useNavigationGuard, usePreventReload, useSound } from "@shared/hooks";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ export const useSpellTest = () => {
   const [getCards, { isLoading, error }] = useGetCardsFromCollectionsMutation();
   const [state, dispatch] = useReducer(spellTestReducer, initialState);
   const [collection, setCollection] = useState<ICard[]>([]);
+  const { play, toggleGroup, isGroupMuted } = useSound();
   const index = useRef(state.index);
   index.current = state.index;
   const testInProgress = index.current > 0 && state.inProgress;
@@ -57,6 +58,14 @@ export const useSpellTest = () => {
     [collection.length],
   );
 
+  const options = useCallback(() => {
+    dispatch({ type: "TOGGLE_MENU" });
+  }, []);
+
+  const closeMenuOptions = useCallback(() => {
+    dispatch({ type: "CLOSE_MENU" });
+  }, []);
+
   const resetTest = useCallback(() => {
     dispatch({ type: "RESET_TEST" });
   }, []);
@@ -74,5 +83,11 @@ export const useSpellTest = () => {
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,
+    options,
+    isMenuOptionsOpen: state.isMenuOptionsOpen,
+    closeMenuOptions,
+    play,
+    toggleGroup,
+    isGroupMuted,
   };
 };

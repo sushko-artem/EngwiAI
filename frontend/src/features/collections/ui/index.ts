@@ -28,3 +28,4 @@ export { SpellTestDescription } from "./spell-checking/spell-test/spell-test-des
 export { SpellTestMainContent } from "./spell-checking/spell-test/spell-test-main-content";
 export { ChooseVisibleSide } from "./spell-checking/choose-side-radio-group";
 export { SpellTestResultModal } from "./spell-checking/spell-test/test-results-modal/spell-test-modal";
+export { SpellTestOptionsMenu } from "./spell-checking/spell-test/spell-test-options-menu";

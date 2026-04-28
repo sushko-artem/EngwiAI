@@ -35,9 +35,9 @@ export const FlashOptionMenu = ({
             onCheckedChange={onSwitchChange}
             checked={isReversed}
             className="my-auto mr-2 cursor-pointer"
-            id="switch side"
+            id="switch-side"
           />
-          <label className="cursor-pointer" htmlFor="switch side">
+          <label className="cursor-pointer" htmlFor="switch-side">
             Перевернуть карточки
           </label>
         </div>
