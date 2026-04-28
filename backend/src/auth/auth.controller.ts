@@ -8,7 +8,7 @@ import ms from 'ms';
 import { Itokens } from './interfaces';
 import { GoogleGuard } from './guards/google.guard';
 import { User } from '@generated/prisma/client';
-import { TokensService } from 'src/tokens/tokens.service';
+import { TokensService } from '../tokens/tokens.service';
 import { UserService } from '@user/user.service';
 
 @Public()

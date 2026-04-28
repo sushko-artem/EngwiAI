@@ -12,11 +12,36 @@ describe("FlashCards - smoke", () => {
     });
   });
 
-  it("should navigate to collection page when clicking back", function () {
+  it("should navigate to '/collections' page when clicking back and status has not been selected yet", function () {
     cy.get("[data-testid='leftIconAction']").click();
     cy.url().should("include", `/collections`);
     cy.contains(this.animals.name).should("be.visible");
     cy.contains(this.food.name).should("be.visible");
+  });
+
+  it("should show modal warning if module is not completed and clicking back", () => {
+    cy.get("[data-testid='chosen-status-button']").eq(0).click();
+    cy.get("[data-testid='leftIconAction']").click();
+    cy.get("[data-testid='modal-view']").should("be.visible");
+  });
+
+  it("should navigate to '/collections' page after confirming action when clicking back and status has been selected", function () {
+    cy.get("[data-testid='chosen-status-button']").eq(0).click();
+    cy.get("[data-testid='leftIconAction']").click();
+    cy.get("[data-testid='modal-view']").should("be.visible");
+    cy.get("img[alt='confirm']").click();
+    cy.url().should("include", `/collections`);
+    cy.contains(this.animals.name).should("be.visible");
+    cy.contains(this.food.name).should("be.visible");
+  });
+
+  it("should prevent navigation to '/collections' page after closing modal when clicking back and status has been selected", function () {
+    cy.get("[data-testid='chosen-status-button']").eq(0).click();
+    cy.get("[data-testid='leftIconAction']").click();
+    cy.get("[data-testid='modal-view']").should("be.visible");
+    cy.get("img[alt='close']").click();
+    cy.get("[data-testid='modal-view']").should("not.exist");
+    cy.url().should("include", `flash-cards/${collecionId}`);
   });
 
   it("should navigate to edit collection page", function () {

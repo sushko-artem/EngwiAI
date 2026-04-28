@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { useSignUp } from "./useSignUp";
 import { act } from "react";
-import { setupAuthHook } from "test/utils";
+import { setupAuthHook } from "@test/utils";
 
 vi.mock("formik");
 vi.mock("react-router-dom");
@@ -62,7 +62,7 @@ describe("useSignUp", () => {
           values: { name: "", email: "", password: "", confirmPassword: "" },
           setErrors: mockSetErrors,
         },
-      }
+      },
     );
     mockRegister.mockReturnValue({
       unwrap: vi.fn().mockRejectedValue({
@@ -96,7 +96,7 @@ describe("useSignUp", () => {
           values: { name: "", email: "", password: "", confirmPassword: "" },
           setStatus: mockSetStatus,
         },
-      }
+      },
     );
     mockRegister.mockReturnValue({
       unwrap: vi.fn().mockRejectedValue(new Error("Network error")),

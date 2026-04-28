@@ -15,12 +15,13 @@ const mockCollections = [
   },
 ];
 
+const mockBack = vi.hoisted(() => vi.fn());
+
 vi.mock("@features/collections/hooks", () => ({
   useCollections: vi.fn(),
 }));
 
 describe("CollectionsListContainer", () => {
-  const mockBack = vi.fn();
   const mockOnDelete = vi.fn();
 
   it("should show loader when loading", () => {
@@ -30,10 +31,14 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      back: mockBack,
+      handleBack: mockBack,
     });
 
-    render(<CollectionsListContainer />);
+    render(
+      <MemoryRouter>
+        <CollectionsListContainer />
+      </MemoryRouter>,
+    );
     expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
@@ -44,10 +49,14 @@ describe("CollectionsListContainer", () => {
       error: new Error("Failed to load!"),
       isRefetching: false,
       onDelete: mockOnDelete,
-      back: mockBack,
+      handleBack: mockBack,
     });
 
-    render(<CollectionsListContainer />);
+    render(
+      <MemoryRouter>
+        <CollectionsListContainer />
+      </MemoryRouter>,
+    );
     expect(screen.getByText("Error: Failed to load!")).toBeInTheDocument();
   });
 
@@ -58,7 +67,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      back: mockBack,
+      handleBack: mockBack,
     });
 
     render(
@@ -66,6 +75,7 @@ describe("CollectionsListContainer", () => {
         <CollectionsListContainer />
       </MemoryRouter>,
     );
+
     expect(
       screen.getByText("Ни одного модуля пока не создано!"),
     ).toBeInTheDocument();
@@ -78,7 +88,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      back: mockBack,
+      handleBack: mockBack,
     });
 
     render(
@@ -90,14 +100,14 @@ describe("CollectionsListContainer", () => {
     expect(screen.getByText("SecondCollection")).toBeInTheDocument();
   });
 
-  it("should call back when arrow-back clicked", () => {
+  it("should navigate to '/dashboard' when arrow-back clicked", () => {
     vi.mocked(useCollections).mockReturnValue({
       collections: mockCollections,
       isLoading: false,
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      back: mockBack,
+      handleBack: mockBack,
     });
 
     render(
@@ -117,7 +127,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      back: mockBack,
+      handleBack: mockBack,
     });
 
     render(

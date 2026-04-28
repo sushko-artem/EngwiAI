@@ -5,4 +5,5 @@ export const COLLECTION_ENDPOINTS = {
   DELETE: "/collections/delete/",
   GET_ONE: "/collections/",
   UPDATE_CARDS_STATUS: "/collections/cards/update_status",
+  GET_CARDS_FROM_COLLECTIONS: "/collections/cards/batch",
 };

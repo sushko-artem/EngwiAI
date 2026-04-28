@@ -12,13 +12,13 @@ export const FlashCardsCollectionView = memo(
   ({ collection, index, isReversed }: FlashCardsViewPropType) => {
     return (
       <>
-        <h1 className="text-center text-fuchsia-800 font-comic text-xl md:text-2xl mt-8">
+        <h1 className="text-center text-fuchsia-800 font-comic text-xl md:text-2xl mt-6">
           {collection.name}
         </h1>
-        <div className="flex flex-col align-middle justify-center mt-10">
+        <div className="flex flex-col align-middle justify-center mt-6">
           <FlashCard card={collection.cards[index]} isReversed={isReversed} />
         </div>
       </>
     );
-  }
+  },
 );

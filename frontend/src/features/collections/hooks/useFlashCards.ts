@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import {
   useGetCollectionQuery,
   useDeleteCollectionMutation,
@@ -6,8 +6,12 @@ import {
 } from "@features/collections/api";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "@widgets/modal";
-import { flashCardsReducer, initialState } from "./useFlashCardsReducer";
+import {
+  flashCardsReducer,
+  initialState,
+} from "./reducers/useFlashCardsReducer";
 import { isVirtualCollection } from "../helpers";
+import { useNavigationGuard } from "@shared/hooks";
 
 export const useFlashCards = (collectionId: string) => {
   const {
@@ -16,7 +20,8 @@ export const useFlashCards = (collectionId: string) => {
     error,
   } = useGetCollectionQuery(collectionId);
   const [state, dispatch] = useReducer(flashCardsReducer, initialState);
-  const { confirm } = useModal();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { confirm, warning } = useModal();
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
@@ -35,6 +40,14 @@ export const useFlashCards = (collectionId: string) => {
     }
   }, [collection]);
 
+  const testInProgress = state.index > 0 && state.inProgress;
+
+  useNavigationGuard({
+    shouldBlock: testInProgress,
+    skipGuard: isDeleting,
+    confirmMessage: "Покинуть страницу? Данные теста сохранены не будут!",
+  });
+
   const isVirtual = useMemo(
     () => isVirtualCollection(collectionId),
     [collectionId],
@@ -50,14 +63,24 @@ export const useFlashCards = (collectionId: string) => {
       `Удалить коллекцию "${shuffledCollection?.name}"?`,
     );
     if (isDelete) {
+      setIsDeleting(true);
       try {
-        navigate("/collections");
         await deleteCollection(collectionId).unwrap();
+        navigate("/collections");
       } catch (error) {
         console.error(error);
+        warning("Не удалось удалить коллекцию. Попробуйте позже.");
+        setIsDeleting(false);
       }
     }
-  }, [confirm, navigate, deleteCollection, shuffledCollection, collectionId]);
+  }, [
+    confirm,
+    navigate,
+    deleteCollection,
+    shuffledCollection,
+    collectionId,
+    warning,
+  ]);
 
   const closeMenu = useCallback(() => {
     dispatch({ type: "CLOSE_MENU" });
@@ -85,10 +108,6 @@ export const useFlashCards = (collectionId: string) => {
     dispatch({ type: "RESET_FOR_RETRY" });
   }, []);
 
-  const back = useCallback(() => {
-    navigate("/collections");
-  }, [navigate]);
-
   const updateStatus = useCallback(() => {
     const updatedCards = state.actualStatus;
     updateCollection({
@@ -107,7 +126,6 @@ export const useFlashCards = (collectionId: string) => {
     isModalOpen: state.isModalOpen,
     isVirtual,
     index: state.index,
-    back,
     options,
     handleChosenStatus,
     handleDelete,
@@ -115,5 +133,6 @@ export const useFlashCards = (collectionId: string) => {
     closeMenu,
     handleReset,
     updateStatus,
+    isDeleting,
   };
 };

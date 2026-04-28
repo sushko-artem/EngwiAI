@@ -12,8 +12,8 @@ import {
 import { UserService } from './user.service';
 import { UserEntity } from './entities';
 import { GetCurrentUser, Roles } from '@common/decorators';
-import { IjwtPayload } from 'src/shared/interfaces';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { IjwtPayload } from '../shared/interfaces';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { Role } from '@generated/prisma/client';
 
 @Controller('user')

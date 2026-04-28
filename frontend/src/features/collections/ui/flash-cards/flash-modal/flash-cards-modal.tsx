@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FlashModalAction } from "./modal-action";
+import { ModalAction } from "@shared/ui/modal-action";
 import { ModalSummary } from "./modal-summary";
 
 type ModalPropType = {
@@ -8,7 +8,6 @@ type ModalPropType = {
   moduleLength: number;
   unknownTerms: number;
   isVirtual: boolean;
-  back(): void;
   reset(): void;
   updateStatus(): void;
 };
@@ -20,13 +19,16 @@ export const ModalFlash = ({
   unknownTerms,
   isVirtual,
   updateStatus,
-  back,
   reset,
 }: ModalPropType) => {
   const navigate = useNavigate();
 
   const goBackWithSavingStatus = () => {
-    back();
+    if (isVirtual) {
+      navigate("/dashboard");
+    } else {
+      navigate("/collections");
+    }
     updateStatus();
   };
 
@@ -49,15 +51,12 @@ export const ModalFlash = ({
           data-testid="flash-modal-actions-container"
           className="grid gap-2 m-auto mt-4 max-w-[80%]"
         >
-          <FlashModalAction content="Пройти модуль заново" onClick={reset} />
+          <ModalAction content="Пройти заново" onClick={reset} />
           {!isVirtual && (
-            <FlashModalAction
-              content="Редактировать модуль"
-              onClick={editCollection}
-            />
+            <ModalAction content="Редактировать" onClick={editCollection} />
           )}
-          <FlashModalAction
-            content="Выбрать другой модуль"
+          <ModalAction
+            content={isVirtual ? "Завершить" : "Выбрать другой"}
             onClick={goBackWithSavingStatus}
           />
         </div>

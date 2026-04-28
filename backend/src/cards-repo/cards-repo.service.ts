@@ -147,6 +147,24 @@ export class CardsRepoService {
     });
   }
 
+  async getCardsFromCollections(userId: string, ids: string[]) {
+    const cardsCollection = await this.prisma.card.findMany({
+      where: {
+        collection: {
+          userId,
+          id: { in: ids },
+        },
+      },
+      select: {
+        id: true,
+        word: true,
+        translation: true,
+        status: true,
+      },
+    });
+    return cardsCollection;
+  }
+
   async getCardsByStatus(userId: string, status: CardStatus) {
     const collectionId = status.toLowerCase();
     const collectionName = collectionId === 'active' ? 'Изученные' : 'Неизученные';

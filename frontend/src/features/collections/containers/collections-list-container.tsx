@@ -10,17 +10,16 @@ import { Header } from "@widgets/header";
 import { useCollections } from "@features/collections/hooks";
 
 export const CollectionsListContainer = () => {
-  const { collections, isLoading, isRefetching, onDelete, back, error } =
+  const { collections, isLoading, isRefetching, onDelete, error, handleBack } =
     useCollections();
-
   const headerProps = useMemo(
     () => ({
       title: "Мои модули",
       leftIcon: backArrow,
       leftIconTitle: "Вернуться на главную",
-      leftIconAction: back,
+      leftIconAction: handleBack,
     }),
-    [back]
+    [handleBack],
   );
 
   return (

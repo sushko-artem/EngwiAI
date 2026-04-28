@@ -1,11 +1,15 @@
 export const actions = [
   {
+    title: "Создать модуль",
+    url: "/create-collection",
+  },
+  {
     title: "Модули",
     url: "/collections",
   },
   {
-    title: "Создать модуль",
-    url: "/create-collection",
+    title: "Орфография",
+    url: "/spell-check",
   },
   {
     title: "Весь материал",

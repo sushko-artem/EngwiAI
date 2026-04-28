@@ -16,6 +16,7 @@ export default defineConfig({
             extensions: [".ts", ".js"],
             alias: {
               "@shared/*": path.resolve(__dirname, "src/shared/*"),
+              "@features/*": path.resolve(__dirname, "src/features/*"),
             },
           },
           module: {

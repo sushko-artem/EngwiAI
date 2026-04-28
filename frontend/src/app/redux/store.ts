@@ -3,6 +3,7 @@ import { collectionReducer } from "@features/collections/model";
 import { modalReducer } from "@entities/modal/model";
 import { api } from "@shared/api";
 import { modalMiddleware } from "@widgets/modal";
+import { persistCollectionMiddleware } from "@features/collections/model";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,11 @@ export const store = configureStore({
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware, modalMiddleware),
+    getDefaultMiddleware().concat(
+      api.middleware,
+      modalMiddleware,
+      persistCollectionMiddleware,
+    ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

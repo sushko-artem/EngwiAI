@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { useFlashCards } from "./useFlashCards";
 import type { ICollectionCardsResponse } from "@shared/api";
 
@@ -13,6 +13,7 @@ const testCollection: ICollectionCardsResponse | undefined = {
 };
 
 const mockNavigate = vi.hoisted(() => vi.fn());
+const mockBlocker = vi.hoisted(() => vi.fn());
 const mockConfirm = vi.hoisted(() => vi.fn());
 const mockDeleteCollection = vi.hoisted(() => vi.fn());
 const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
@@ -20,11 +21,13 @@ const mockUpdateCollection = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
+  useBlocker: mockBlocker,
 }));
 
 vi.mock("@widgets/modal", () => ({
   useModal: () => ({
     confirm: mockConfirm,
+    warning: vi.fn(),
   }),
 }));
 
@@ -40,6 +43,12 @@ describe("useFlashCards", () => {
       data: testCollection,
       isLoading: false,
       error: null,
+    });
+
+    mockBlocker.mockReturnValue({
+      state: "unblocked",
+      proceed: vi.fn(),
+      reset: vi.fn(),
     });
   });
   it("should call useGetCollectionQuery with correct id", () => {
@@ -104,16 +113,6 @@ describe("useFlashCards", () => {
     expect(result.current.error).toMatchObject({
       message: "Collection not found!",
     });
-  });
-
-  it("should navigate to '/collections' when back", () => {
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
-
-    act(() => {
-      result.current.back();
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 
   it("should increase unmemTerms when status is false", () => {
@@ -215,5 +214,30 @@ describe("useFlashCards", () => {
     expect(mockConfirm).toHaveBeenCalled();
     expect(mockDeleteCollection).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("should block browser back button when test in progress", async () => {
+    const mockProceed = vi.fn();
+    const mockReset = vi.fn();
+    const { result, rerender } = renderHook(() => useFlashCards("test-id-123"));
+    mockConfirm.mockResolvedValue(true);
+    act(() => {
+      result.current.handleChosenStatus(true);
+    });
+
+    mockBlocker.mockReturnValue({
+      state: "blocked",
+      proceed: mockProceed,
+      reset: mockReset,
+    });
+
+    rerender();
+
+    await waitFor(() => {
+      expect(mockConfirm).toHaveBeenCalledWith(
+        "Покинуть страницу? Данные теста сохранены не будут!",
+      );
+    });
+    expect(mockProceed).toHaveBeenCalled();
   });
 });

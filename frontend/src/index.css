@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Comic Relief";
-  src: url("../src/assets/fonts/ComicRelief-Regular.woff") format("woff");
+  src: url("/fonts/ComicRelief-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: "Jost";
-  src: url("../src/assets/fonts/Jost-Regular.woff") format("woff");
+  src: url("/fonts/Jost-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: "Roboto";
-  src: url("../src/assets/fonts/RobotoFlex-Regular.woff") format("woff");
+  src: url("/fonts/RobotoFlex-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;

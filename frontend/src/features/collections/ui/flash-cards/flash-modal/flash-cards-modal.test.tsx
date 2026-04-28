@@ -16,7 +16,6 @@ describe("ModalFlash", () => {
     moduleLength: 5,
     unknownTerms: 2,
     isVirtual: false,
-    back: vi.fn(),
     reset: vi.fn(),
     updateStatus: vi.fn(),
   };
@@ -37,32 +36,41 @@ describe("ModalFlash", () => {
   it("should call reset when clicking reset", async () => {
     render(<ModalFlash {...defaultProps} />);
 
-    await user.click(screen.getByText("Пройти модуль заново"));
+    await user.click(screen.getByText("Пройти заново"));
 
     expect(defaultProps.reset).toHaveBeenCalled();
   });
 
-  it("should navigate to 'edit-collection' when clicking editCollection", async () => {
+  it("should navigate to '/edit-collection' when clicking editCollection", async () => {
     render(<ModalFlash {...defaultProps} />);
 
-    await user.click(screen.getByText("Редактировать модуль"));
+    await user.click(screen.getByText("Редактировать"));
 
     expect(mockNavigate).toHaveBeenCalledWith("/edit-collection/id-123");
   });
 
-  it("should call back when clicking back", async () => {
+  it("should navigate to '/collections' page and update cards status", async () => {
     render(<ModalFlash {...defaultProps} />);
 
-    await user.click(screen.getByText("Выбрать другой модуль"));
-
-    expect(defaultProps.back).toHaveBeenCalled();
+    await user.click(screen.getByText("Выбрать другой"));
+    expect(defaultProps.updateStatus).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 
   it("should render correct summary actions fields when collection is virtual", () => {
     defaultProps.isVirtual = true;
     render(<ModalFlash {...defaultProps} />);
 
-    expect(screen.queryByText("Редактировать модуль")).not.toBeInTheDocument();
-    expect(screen.getByText("Пройти модуль заново")).toBeInTheDocument();
+    expect(screen.queryByText("Редактировать")).not.toBeInTheDocument();
+    expect(screen.getByText("Пройти заново")).toBeInTheDocument();
+    expect(screen.getByText("Завершить")).toBeInTheDocument();
+  });
+
+  it("should navigate to '/dashboard' page and update cards status when complete module and collectioin is Virtual", async () => {
+    defaultProps.isVirtual = true;
+    render(<ModalFlash {...defaultProps} />);
+    await user.click(screen.getByText("Завершить"));
+    expect(defaultProps.updateStatus).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 });

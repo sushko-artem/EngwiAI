@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it } from "vitest";
 import { SignInFormContainer } from "./sign-in-form-container";
-import { createMockFormik } from "test/utils";
+import { createMockFormik } from "@test/utils";
 import { render, screen } from "@testing-library/react";
 
 describe("SignInFormContainer", () => {

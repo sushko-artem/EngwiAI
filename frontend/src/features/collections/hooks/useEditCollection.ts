@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
-  clearCollection,
   setExistedCollection,
-  selectDeletedCards,
-  selectEditableCollection,
+  selectEditCollectionState,
 } from "@features/collections/model";
 import {
   useGetCollectionQuery,
@@ -18,16 +16,19 @@ import {
   validateCollection,
 } from "@features/collections/helpers";
 import { useModal } from "@widgets/modal";
+import { useNavigationGuard } from "@shared/hooks";
 
 export const useEditCollection = (collectionId: string) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { warning, confirm } = useModal();
-  const editableCollection = useAppSelector(selectEditableCollection);
-  const deletedCards = useAppSelector(selectDeletedCards);
+  const { warning } = useModal();
+  const { editableCollection, deletedCards } = useAppSelector(
+    selectEditCollectionState,
+  );
   const { data: collections } = useGetCollectionsQuery();
   const { data: collection, error } = useGetCollectionQuery(collectionId);
   const [updateCollection, { isLoading }] = useUpdateCollectionMutation();
+  const [isSaving, setIsSaving] = useState(false);
   const originalCollectionNameRef = useRef(collection?.name);
   const editableCollectionRef = useRef(editableCollection);
   const deletedCardsRef = useRef(deletedCards);
@@ -40,9 +41,6 @@ export const useEditCollection = (collectionId: string) => {
       originalCollectionNameRef.current = collection.name;
       dispatch(setExistedCollection(collection));
     }
-    return () => {
-      dispatch(clearCollection());
-    };
   }, [dispatch, collection]);
 
   useEffect(() => {
@@ -53,25 +51,31 @@ export const useEditCollection = (collectionId: string) => {
     }
   }, [collections]);
 
-  const hasAnyChanges = useCallback(() => {
+  const hasChanges = useMemo(() => {
     const isNameUpdated =
-      editableCollectionRef.current?.name.trim() !==
+      editableCollection?.name.trim() !==
       originalCollectionNameRef.current?.trim();
     const isCardsUpdated =
-      editableCollectionRef.current?.cards.some(
-        (card) => card.isUpdated || card.isNew
-      ) || !!deletedCardsRef.current.length;
+      editableCollection?.cards.some((card) => card.isUpdated || card.isNew) ||
+      deletedCards.length > 0;
     return isNameUpdated || isCardsUpdated;
-  }, []);
+  }, [editableCollection, deletedCards]);
+
+  useNavigationGuard({
+    shouldBlock: hasChanges,
+    skipGuard: isSaving,
+    confirmMessage:
+      "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!",
+  });
 
   const saveCollection = useCallback(async () => {
-    if (!hasAnyChanges()) {
+    if (!hasChanges) {
       navigate("/collections");
       return;
     }
     const validate = validateCollection(
       editableCollectionRef.current,
-      existedNamesRef.current
+      existedNamesRef.current,
     );
     if (!validate.isValid) {
       if (validate.errorMessage) {
@@ -82,9 +86,10 @@ export const useEditCollection = (collectionId: string) => {
     const dto = createUpdateDto(
       originalCollectionNameRef.current!,
       editableCollectionRef.current!,
-      deletedCardsRef.current
+      deletedCardsRef.current,
     );
     if (Object.keys(dto).length > 0) {
+      setIsSaving(true);
       try {
         await updateCollection({ id: collectionId, dto }).unwrap();
         navigate("/collections", { replace: true, state: { refetch: true } });
@@ -92,24 +97,12 @@ export const useEditCollection = (collectionId: string) => {
         warning(getErrorMessage(error));
       }
     }
-  }, [navigate, updateCollection, collectionId, warning, hasAnyChanges]);
-
-  const back = useCallback(async () => {
-    if (hasAnyChanges()) {
-      const shouldLeaveThePage = await confirm(
-        "Вы действительно хотите покинуть страницу? Внесенные изменения сохранены не будут!"
-      );
-      if (shouldLeaveThePage) navigate("/collections");
-    } else {
-      navigate("/collections");
-    }
-  }, [navigate, confirm, hasAnyChanges]);
+  }, [navigate, updateCollection, collectionId, warning, hasChanges]);
 
   return {
     error,
     isLoading,
     editableCollection,
     saveCollection,
-    back,
   };
 };

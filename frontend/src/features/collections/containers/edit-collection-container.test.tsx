@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useEditCollection } from "@features/collections/hooks";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { EditCollectionContainer } from "./edit-collection-container";
+import { MemoryRouter } from "react-router-dom";
 
 const mockCollection = {
   name: "Test Name",
@@ -10,6 +11,16 @@ const mockCollection = {
     { id: "2", word: "Black", translation: "Черный" },
   ],
 };
+
+const mockNavigate = vi.hoisted(() => vi.fn());
+
+vi.mock(import("react-router-dom"), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 vi.mock("@redux/hooks", () => ({
   useAppDispatch: vi.fn(),
@@ -25,18 +36,20 @@ vi.mock(import("@features/collections/hooks"), async (importOriginal) => {
 
 describe("EditCollectionContainer", () => {
   const mockSave = vi.fn();
-  const mockBack = vi.fn();
 
   it("should call hook with correct argument", () => {
     vi.mocked(useEditCollection).mockReturnValue({
       isLoading: false,
       error: null,
       saveCollection: mockSave,
-      back: mockBack,
       editableCollection: mockCollection,
     });
 
-    render(<EditCollectionContainer collectionId="id-123" />);
+    render(
+      <MemoryRouter>
+        <EditCollectionContainer collectionId="id-123" />
+      </MemoryRouter>,
+    );
     expect(useEditCollection).toHaveBeenCalledWith("id-123");
   });
 
@@ -45,11 +58,14 @@ describe("EditCollectionContainer", () => {
       isLoading: false,
       error: null,
       saveCollection: mockSave,
-      back: mockBack,
       editableCollection: null,
     });
 
-    render(<EditCollectionContainer collectionId="id-123" />);
+    render(
+      <MemoryRouter>
+        <EditCollectionContainer collectionId="id-123" />
+      </MemoryRouter>,
+    );
     expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
@@ -58,11 +74,14 @@ describe("EditCollectionContainer", () => {
       isLoading: true,
       error: null,
       saveCollection: mockSave,
-      back: mockBack,
       editableCollection: mockCollection,
     });
 
-    render(<EditCollectionContainer collectionId="id-123" />);
+    render(
+      <MemoryRouter>
+        <EditCollectionContainer collectionId="id-123" />
+      </MemoryRouter>,
+    );
     expect(screen.getByTestId("loader")).toBeInTheDocument();
     expect(screen.getByText("Сохранение...")).toBeInTheDocument();
   });
@@ -72,26 +91,32 @@ describe("EditCollectionContainer", () => {
       isLoading: false,
       error: new Error("Failed to load!"),
       saveCollection: mockSave,
-      back: mockBack,
       editableCollection: mockCollection,
     });
 
-    render(<EditCollectionContainer collectionId="id-123" />);
+    render(
+      <MemoryRouter>
+        <EditCollectionContainer collectionId="id-123" />
+      </MemoryRouter>,
+    );
     expect(screen.getByText("Error: Failed to load!")).toBeInTheDocument();
   });
 
-  it("should call back when arrow-back clicked", () => {
+  it("should navigate to '/collections' when arrow-back clicked", () => {
     vi.mocked(useEditCollection).mockReturnValue({
       isLoading: false,
       error: null,
       saveCollection: mockSave,
-      back: mockBack,
       editableCollection: mockCollection,
     });
 
-    render(<EditCollectionContainer collectionId="id-123" />);
+    render(
+      <MemoryRouter>
+        <EditCollectionContainer collectionId="id-123" />
+      </MemoryRouter>,
+    );
     fireEvent.click(screen.getByTestId("leftIconAction"));
-    expect(mockBack).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
 
   it("should call saveCollection when save clicked", () => {
@@ -99,11 +124,14 @@ describe("EditCollectionContainer", () => {
       isLoading: false,
       error: null,
       saveCollection: mockSave,
-      back: mockBack,
       editableCollection: mockCollection,
     });
 
-    render(<EditCollectionContainer collectionId="id-123" />);
+    render(
+      <MemoryRouter>
+        <EditCollectionContainer collectionId="id-123" />
+      </MemoryRouter>,
+    );
     fireEvent.click(screen.getByTestId("rightIconAction"));
     expect(mockSave).toHaveBeenCalled();
   });

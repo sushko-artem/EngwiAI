@@ -6,6 +6,7 @@ type FlashCardsStateType = {
   isReversed: boolean;
   isModalOpen: boolean;
   isMenuOpen: boolean;
+  inProgress: boolean;
   index: number;
 };
 
@@ -25,6 +26,7 @@ export const initialState: FlashCardsStateType = {
   isReversed: false,
   isModalOpen: false,
   isMenuOpen: false,
+  inProgress: true,
   index: 0,
 };
 
@@ -54,8 +56,9 @@ export function flashCardsReducer(
           { id: collection[newState.index].id, status: "ACTIVE" },
         ];
       }
-      if (newState.index >= collection.length - 1) {
+      if (newState.index === collection.length - 1) {
         newState.isModalOpen = true;
+        newState.inProgress = false;
       } else {
         newState.index += 1;
       }
@@ -66,6 +69,7 @@ export function flashCardsReducer(
         ...state,
         index: 0,
         isModalOpen: false,
+        inProgress: true,
         actualStatus: [],
         unmemTerms: 0,
       };

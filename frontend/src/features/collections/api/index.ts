@@ -4,4 +4,5 @@ export {
   useGetCollectionQuery,
   useUpdateCollectionMutation,
   useDeleteCollectionMutation,
+  useGetCardsFromCollectionsMutation,
 } from "./collections-api";

@@ -1,3 +1,4 @@
+import { actions as dashboardActions } from "@features/dashboard/lib";
 describe("Dashboard - critical", () => {
   beforeEach(() => {
     cy.resetDatabase();
@@ -6,17 +7,23 @@ describe("Dashboard - critical", () => {
   });
 
   it("should load dashboard for authenticated user", () => {
-    cy.contains("Модули").should("be.visible");
-    cy.contains("Создать модуль").should("be.visible");
+    cy.contains(dashboardActions[0].title).should("be.visible");
+    cy.contains(dashboardActions[1].title).should("be.visible");
+    cy.contains(dashboardActions[2].title).should("be.visible");
   });
 
   it("should have working navigation to modules", () => {
-    cy.contains("Модули").click();
-    cy.url().should("include", "/collections");
+    cy.contains(dashboardActions[0].title).click();
+    cy.url().should("include", dashboardActions[0].url);
   });
 
   it("should have working navigation to create-collection page", () => {
-    cy.contains("Создать модуль").click();
-    cy.url().should("include", "/create-collection");
+    cy.contains(dashboardActions[1].title).click();
+    cy.url().should("include", dashboardActions[1].url);
+  });
+
+  it("should have working navigation to interval-learning page", () => {
+    cy.contains(dashboardActions[2].title).click();
+    cy.url().should("include", dashboardActions[2].url);
   });
 });

@@ -3,7 +3,7 @@ type ModalActionPropType = {
   onClick(): void;
 };
 
-export const FlashModalAction = ({ content, onClick }: ModalActionPropType) => {
+export const ModalAction = ({ content, onClick }: ModalActionPropType) => {
   return (
     <div
       onClick={onClick}

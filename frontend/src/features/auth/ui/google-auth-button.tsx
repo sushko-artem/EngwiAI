@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { googleAuthRedirect } from "../utils";
+import googleIcon from "@assets/images/google.svg";
 
 export const GoogleAuth = memo(({ description }: { description: string }) => {
   const handleGoogleAuth = () => {
@@ -14,7 +15,7 @@ export const GoogleAuth = memo(({ description }: { description: string }) => {
         className="w-[30px]"
         width={30}
         height={30}
-        src="/google.svg"
+        src={googleIcon}
         alt="google"
       />
       <span className="m-auto text-center">{description}</span>

@@ -4,14 +4,15 @@ import option from "@assets/images/options.png";
 import {
   ChosenStatusButtonContainer,
   FlashCardsCollectionView,
-  MenuOptions,
+  FlashOptionMenu,
   ModalFlash,
   NoCollectionError,
   ProgressBar,
 } from "@features/collections/ui";
 import { Header } from "@widgets/header";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useFlashCards } from "@features/collections/hooks";
+import { useNavigate } from "react-router-dom";
 
 export const FlashCardsContainer = ({
   collectionId,
@@ -20,7 +21,6 @@ export const FlashCardsContainer = ({
 }) => {
   const {
     options,
-    back,
     collection,
     index,
     isReversed,
@@ -30,23 +30,33 @@ export const FlashCardsContainer = ({
     isLoading,
     ...props
   } = useFlashCards(collectionId);
+  const navigate = useNavigate();
+
+  const handleBack = useCallback(() => {
+    if (props.isVirtual) {
+      navigate("/dashboard");
+    } else {
+      navigate("/collections");
+    }
+  }, [navigate, props.isVirtual]);
 
   const headerProps = useMemo(
     () => ({
       leftIconTitle: "вернуться к списку коллекций",
       rightIconTitle: "настройки",
       rightIconAction: options,
-      leftIconAction: back,
+      leftIconAction: handleBack,
       leftIcon: backArrow,
       rightIcon: !error ? option : undefined,
       title: "Флэш - карты",
     }),
-    [options, back, error],
+    [options, handleBack, error],
   );
 
   return (
     <>
       <Header {...headerProps} />
+      {props.isDeleting && <Loader />}
       {isLoading && !collection && <Loader />}
       {!collection && !isLoading && <NoCollectionError error={error} />}
       {collection && (
@@ -70,12 +80,11 @@ export const FlashCardsContainer = ({
           unknownTerms={props.unmemTerms}
           updateStatus={props.updateStatus}
           isVirtual={props.isVirtual}
-          back={back}
           reset={handleReset}
         />
       )}
       {collection && props.isMenuOpen && (
-        <MenuOptions
+        <FlashOptionMenu
           onSwitchChange={props.handleSwitchChange}
           isMenuOpen={props.isMenuOpen}
           onClose={props.closeMenu}

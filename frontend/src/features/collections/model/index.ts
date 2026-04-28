@@ -8,6 +8,7 @@ export {
   updateCard,
   deleteCard,
   selectEditableCollection,
-  selectDeletedCards,
+  selectEditCollectionState,
   type EditableCollectionType,
 } from "./collections.slice";
+export { persistCollectionMiddleware } from "./middleware/persistCollectionMiddleware";
