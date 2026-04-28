@@ -12,7 +12,7 @@
  */
 
 import * as runtime from "@prisma/client/runtime/client"
-import type * as Prisma from "./prismaNamespace.js"
+import type * as Prisma from "./prismaNamespace"
 
 
 const config: runtime.GetPrismaClientConfig = {
@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.1.0",
   "engineVersion": "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"./generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id          String       @id @default(uuid())\n  name        String\n  email       String       @unique\n  password    String?\n  collections Collection[]\n  roles       Role[]\n  token       Token[]\n  createdAt   DateTime     @default(now()) @map(\"created_at\")\n  updatedAt   DateTime     @updatedAt @map(\"updated_at\")\n\n  @@map(\"users\")\n}\n\nmodel Collection {\n  id        String   @id @default(uuid())\n  name      String\n  cards     Card[]\n  userId    String   @map(\"user_id\")\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@unique([userId, name])\n  @@index([userId, name])\n  @@map(\"collections\")\n}\n\nmodel Card {\n  id           String     @id @default(uuid())\n  status       CardStatus @default(INACTIVE)\n  word         String     @db.VarChar(255)\n  translation  String     @db.VarChar(255)\n  collectionId String     @map(\"collection_id\")\n  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)\n  createdAt    DateTime   @default(now()) @map(\"created_at\")\n  updatedAt    DateTime   @updatedAt @map(\"updated_at\")\n\n  @@index([collectionId])\n  @@map(\"cards\")\n}\n\nmodel Token {\n  token     String   @unique\n  exp       DateTime\n  userAgent String   @map(\"user_agent\")\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId    String   @map(\"user_id\")\n\n  @@unique([userId, userAgent], name: \"user_device_unique\")\n  @@map(\"tokens\")\n}\n\nenum Role {\n  USER\n  SUPERUSER\n}\n\nenum CardStatus {\n  ACTIVE\n  INACTIVE\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id          String       @id @default(uuid())\n  name        String\n  email       String       @unique\n  password    String?\n  collections Collection[]\n  roles       Role[]\n  token       Token[]\n  createdAt   DateTime     @default(now()) @map(\"created_at\")\n  updatedAt   DateTime     @updatedAt @map(\"updated_at\")\n\n  @@map(\"users\")\n}\n\nmodel Collection {\n  id        String   @id @default(uuid())\n  name      String\n  cards     Card[]\n  userId    String   @map(\"user_id\")\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@unique([userId, name])\n  @@index([userId, name])\n  @@map(\"collections\")\n}\n\nmodel Card {\n  id           String     @id @default(uuid())\n  status       CardStatus @default(INACTIVE)\n  word         String     @db.VarChar(255)\n  translation  String     @db.VarChar(255)\n  collectionId String     @map(\"collection_id\")\n  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)\n  createdAt    DateTime   @default(now()) @map(\"created_at\")\n  updatedAt    DateTime   @updatedAt @map(\"updated_at\")\n\n  @@index([collectionId])\n  @@map(\"cards\")\n}\n\nmodel Token {\n  token     String   @unique\n  exp       DateTime\n  userAgent String   @map(\"user_agent\")\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId    String   @map(\"user_id\")\n\n  @@unique([userId, userAgent], name: \"user_device_unique\")\n  @@map(\"tokens\")\n}\n\nenum Role {\n  USER\n  SUPERUSER\n}\n\nenum CardStatus {\n  ACTIVE\n  INACTIVE\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -37,10 +37,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.js"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.mjs"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.js")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.mjs")
     return await decodeBase64AsWasm(wasm)
   }
 }
