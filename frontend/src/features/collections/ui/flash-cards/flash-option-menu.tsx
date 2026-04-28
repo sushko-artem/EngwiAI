@@ -1,7 +1,6 @@
-import { useRef, useEffect } from "react";
-import { useSpring, animated } from "@react-spring/web";
 import { Switch } from "@shared/ui/switch";
 import { useNavigate } from "react-router-dom";
+import { OptionsMenu } from "@widgets/options-menu";
 
 type MenuOptionsPropsType = {
   collectionId: string;
@@ -13,7 +12,7 @@ type MenuOptionsPropsType = {
   onDelete: () => void;
 };
 
-export const MenuOptions = ({
+export const FlashOptionMenu = ({
   collectionId,
   isMenuOpen,
   isVirtual,
@@ -22,76 +21,15 @@ export const MenuOptions = ({
   onSwitchChange,
   isReversed,
 }: MenuOptionsPropsType) => {
-  const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const [menuSpring, menuApi] = useSpring(() => ({
-    from: {
-      opacity: 0,
-      y: -100,
-      scale: 0.9,
-    },
-    config: {
-      tension: 300,
-      friction: 30,
-    },
-  }));
-
-  const [overlaySpring, overlayApi] = useSpring(() => ({
-    from: { opacity: 0 },
-    config: { duration: 200 },
-  }));
-
-  useEffect(() => {
-    const handlePointerDown = (e: PointerEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-
-    if (isMenuOpen) {
-      document.addEventListener("pointerdown", handlePointerDown);
-      menuApi.start({
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      });
-      overlayApi.start({ opacity: 0.5 });
-    } else {
-      menuApi.start({
-        opacity: 0,
-        y: -100,
-        scale: 0.9,
-      });
-      overlayApi.start({ opacity: 0 });
-    }
-
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [isMenuOpen, menuApi, overlayApi, onClose]);
 
   const editCollection = () => {
     navigate(`/edit-collection/${collectionId}`);
   };
 
   return (
-    <>
-      <animated.div
-        data-testid="menu-overlay"
-        style={overlaySpring}
-        className="fixed inset-0 bg-black z-40"
-        onClick={onClose}
-      />
-      <animated.div
-        data-testid="menu-options"
-        ref={menuRef}
-        style={{
-          opacity: menuSpring.opacity,
-          transform: menuSpring.y.to((y) => `translate(-50%, ${y}px)`),
-          scale: menuSpring.scale,
-        }}
-        className="fixed top-0 left-1/2 z-50 w-[60%] max-w-md bg-[rgba(244,244,230,1)] rounded-b-md"
-      >
+    <OptionsMenu isMenuOpen={isMenuOpen} onClose={onClose}>
+      <>
         <div className="flex text-center justify-center p-4 font-jost">
           <Switch
             onCheckedChange={onSwitchChange}
@@ -125,7 +63,7 @@ export const MenuOptions = ({
             </div>
           </>
         )}
-      </animated.div>
-    </>
+      </>
+    </OptionsMenu>
   );
 };

@@ -1,6 +1,6 @@
 export { ModalFlash } from "./flash-cards/flash-modal/flash-cards-modal";
 export { ModalSummary } from "./flash-cards/flash-modal/modal-summary";
-export { MenuOptions } from "./flash-cards/flash-option-menu";
+export { FlashOptionMenu } from "./flash-cards/flash-option-menu";
 export { SelectCollectionButton } from "./collection-list/select-collection-button";
 export { NoCollectionError } from "./no-collection-error";
 export { EditableCard } from "./create_update-collection/editable-card";

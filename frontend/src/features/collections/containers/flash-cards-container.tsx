@@ -4,7 +4,7 @@ import option from "@assets/images/options.png";
 import {
   ChosenStatusButtonContainer,
   FlashCardsCollectionView,
-  MenuOptions,
+  FlashOptionMenu,
   ModalFlash,
   NoCollectionError,
   ProgressBar,
@@ -84,7 +84,7 @@ export const FlashCardsContainer = ({
         />
       )}
       {collection && props.isMenuOpen && (
-        <MenuOptions
+        <FlashOptionMenu
           onSwitchChange={props.handleSwitchChange}
           isMenuOpen={props.isMenuOpen}
           onClose={props.closeMenu}
