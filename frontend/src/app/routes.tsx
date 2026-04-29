@@ -11,6 +11,7 @@ import { IntervalLearningPage } from "@pages/IntervalLearning";
 import { SpellCheckingPage } from "@pages/SpellChecking";
 import { AppLayout } from "./components/app-layout";
 import { SpellCheckTestPage } from "@pages/SpellCheckTest";
+import { TestReportPage } from "@pages/TestReport";
 
 const routes = [
   {
@@ -89,6 +90,14 @@ const routes = [
         element: (
           <ProtectedRoute>
             <SpellCheckTestPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/test-report",
+        element: (
+          <ProtectedRoute>
+            <TestReportPage />
           </ProtectedRoute>
         ),
       },

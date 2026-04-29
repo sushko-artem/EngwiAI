@@ -57,6 +57,17 @@ export const SpellTestResultModal = ({
     navigate("/spell-check");
   };
 
+  const showTestReport = () => {
+    const testReport = {
+      testType: "spell",
+      totalTerms: totalCards,
+      progress,
+      totalMistakes: totalCards - rightAnswers,
+      mistakesReport: userMistakes,
+    };
+    navigate("/test-report", { state: { testReport } });
+  };
+
   return (
     <div
       data-testid="spell-test-modal"
@@ -79,10 +90,7 @@ export const SpellTestResultModal = ({
           className="grid gap-2 m-auto mt-4 max-w-[80%]"
         >
           {!!mistakes.length && (
-            <ModalAction
-              content="Отчёт об ошибках"
-              onClick={() => console.log(userMistakes)}
-            />
+            <ModalAction content="Отчёт об ошибках" onClick={showTestReport} />
           )}
           <ModalAction content="Пройти заново" onClick={reset} />
           <ModalAction content="Завершить" onClick={backToSpellCheck} />
