@@ -8,16 +8,16 @@ export const MistakesReport = ({ report }: MistakesReportPropType) => {
       <table>
         <caption className="text-red-700 font-comic">Анализ ошибок</caption>
         <thead>
-          <tr className="text-fuchsia-900">
+          <tr className="text-fuchsia-900 font-roboto">
             <th>Ваш ответ</th>
             <th>Правильный ответ</th>
           </tr>
         </thead>
         <tbody>
           {Object.entries(report).map(([key, value], index) => (
-            <tr className="text-center" key={index}>
+            <tr className="text-center font-roboto" key={index}>
               <td>{!value ? "--" : value}</td>
-              <td>{key}</td>
+              <td className="text-green-900">{key}</td>
             </tr>
           ))}
         </tbody>
