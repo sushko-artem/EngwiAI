@@ -2,11 +2,11 @@ import { Header } from "@widgets/header";
 import backArrow from "@assets/images/arrow-left.svg";
 import { useMemo } from "react";
 import { useTestReport } from "../hooks";
-import { ResultSummary } from "../ui";
+import { MistakesReport, ResultSummary } from "../ui";
 
 export const TestResultReportContainer = () => {
   const { handleBack, testReport } = useTestReport();
-  const { totalTerms, progress, totalMistakes } = testReport;
+  const { totalTerms, progress, totalMistakes, mistakesReport } = testReport;
   const headerProps = useMemo(
     () => ({
       title: "Результаты теста",
@@ -24,6 +24,7 @@ export const TestResultReportContainer = () => {
         progress={progress}
         totalMistakes={totalMistakes}
       />
+      <MistakesReport report={mistakesReport} />
     </>
   );
 };

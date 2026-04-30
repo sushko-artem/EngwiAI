@@ -219,7 +219,6 @@ body {
 }
 
 table {
-  border-collapse: separate;
   border: 2px solid rgb(140 140 140);
   font-family: jost;
 }
