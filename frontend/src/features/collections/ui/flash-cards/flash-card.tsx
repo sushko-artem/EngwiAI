@@ -15,34 +15,39 @@ export const FlashCard = ({ card, isReversed }: CardPropsType) => {
     config: { mass: 5, tension: 500, friction: 80 },
   });
   return (
-    <div className="flex justify-center items-center">
-      <div
-        data-testid="flash-card"
-        onClick={() => setFlipped((state) => !state)}
-        className="relative w-[350px] h-[200px] md:w-[500px] md:h-[300px]"
-      >
-        <animated.div
-          data-testid="word-side"
-          className="card-container font-roboto text-lg md:text-2xl"
-          style={{
-            opacity: opacity.to((o) => 1 - o),
-            transform,
-          }}
+    <>
+      <div className="flex justify-center items-center">
+        <div
+          data-testid="flash-card"
+          onClick={() => setFlipped((state) => !state)}
+          className="relative w-[350px] h-[200px] md:w-[500px] md:h-[300px]"
         >
-          {isReversed ? card.translation : card.word}
-        </animated.div>
-        <animated.div
-          data-testid="translation-side"
-          className="card-container font-roboto text-lg md:text-2xl"
-          style={{
-            opacity,
-            transform,
-            rotateX: "180deg",
-          }}
-        >
-          {isReversed ? card.word : card.translation}
-        </animated.div>
+          <animated.div
+            data-testid="word-side"
+            className="card-container font-roboto text-lg md:text-2xl"
+            style={{
+              opacity: opacity.to((o) => 1 - o),
+              transform,
+            }}
+          >
+            {isReversed ? card.translation : card.word}
+          </animated.div>
+          <animated.div
+            data-testid="translation-side"
+            className="card-container font-roboto text-lg md:text-2xl"
+            style={{
+              opacity,
+              transform,
+              rotateX: "180deg",
+            }}
+          >
+            {isReversed ? card.word : card.translation}
+          </animated.div>
+        </div>
       </div>
-    </div>
+      <span className="text-xs text-center text-zinc-500 font-jost">
+        Нажмите на карточку, чтобы перевернуть
+      </span>
+    </>
   );
 };
