@@ -25,6 +25,7 @@ export const SpellTestOptionsMenu = ({
       <>
         <div className="flex text-center justify-center p-4 font-jost">
           <Switch
+            data-testid="switch-sound"
             onCheckedChange={toggleSounds}
             checked={isSoundsOn}
             className="my-auto mr-2 cursor-pointer"

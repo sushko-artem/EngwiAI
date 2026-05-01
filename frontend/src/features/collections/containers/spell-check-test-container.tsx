@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
-import { useSpellTest } from "../hooks";
+import { useSpellTest } from "@features/collections/hooks";
 import { Loader } from "@shared/ui/loader";
 import {
   SpellTestDescription,
