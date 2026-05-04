@@ -36,7 +36,6 @@ vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
   useBlocker: mockBlocker,
   useLocation: () => ({
-    pathname: "/spell-check/test",
     state: mockLocationState,
   }),
 }));

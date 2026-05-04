@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type TestReportType = {
+export type TestReportType = {
   testType: "spell" | "grammar";
   totalTerms: number;
   progress: number;
