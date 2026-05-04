@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useSpellTest } from "./useSpellTest";
 
@@ -71,6 +71,17 @@ describe("useSpellTest", () => {
     expect(result.current.error).toBe(null);
   });
 
+  it("should navigate to /spell-check on fetch error", async () => {
+    mockLocationState.modules = ["1", "2"];
+    mockGetCards.mockReturnValue({
+      unwrap: vi.fn().mockRejectedValue(new Error("Fetch failed")),
+    });
+    renderHook(() => useSpellTest());
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith("/spell-check");
+    });
+  });
+
   it("should pass correct params to useNavigationGuard", () => {
     mockLocationState.modules = ["1", "2"];
 
@@ -85,6 +96,12 @@ describe("useSpellTest", () => {
       confirmMessage:
         "Тест не окончен! Вы действительно хотите покинуть страницу?",
     });
+  });
+
+  it("should call usePreventReload with correct value", () => {
+    mockLocationState.modules = ["1", "2"];
+    renderHook(() => useSpellTest());
+    expect(mockPreventReload).toHaveBeenCalledWith(false);
   });
 
   it("should update shouldBlock when test progresses", async () => {
@@ -114,5 +131,52 @@ describe("useSpellTest", () => {
         shouldBlock: true,
       }),
     );
+  });
+
+  it("should reset state on resetTest", async () => {
+    mockLocationState.modules = ["1", "2"];
+
+    mockGetCards.mockReturnValue({
+      unwrap: vi.fn().mockResolvedValue(cards),
+    });
+
+    const { result } = renderHook(() => useSpellTest());
+
+    await waitFor(() => {
+      expect(result.current.collection).toHaveLength(2);
+    });
+
+    act(() => {
+      result.current.handleAnswer("hello", "hello", true);
+    });
+
+    act(() => {
+      result.current.resetTest();
+    });
+
+    expect(result.current.index).toBe(0);
+    expect(result.current.rightAnswersCount).toBe(0);
+  });
+
+  it("should toggle and close menu options", () => {
+    mockLocationState.modules = ["1", "2"];
+
+    mockGetCards.mockReturnValue({
+      unwrap: vi.fn().mockResolvedValue(cards),
+    });
+
+    const { result } = renderHook(() => useSpellTest());
+
+    act(() => {
+      result.current.options();
+    });
+
+    expect(result.current.isMenuOptionsOpen).toBe(true);
+
+    act(() => {
+      result.current.closeMenuOptions();
+    });
+
+    expect(result.current.isMenuOptionsOpen).toBe(false);
   });
 });
