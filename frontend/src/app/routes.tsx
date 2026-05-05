@@ -12,6 +12,7 @@ import { SpellCheckingPage } from "@pages/SpellChecking";
 import { AppLayout } from "./components/app-layout";
 import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 import { TestReportPage } from "@pages/TestReport";
+import { NotFoundPage } from "@widgets/not-found-page";
 
 const routes = [
   {
@@ -103,7 +104,7 @@ const routes = [
       },
       {
         path: "*",
-        element: <div>"Error 404! Страница не найдена!"</div>,
+        element: <NotFoundPage />,
       },
     ],
   },
