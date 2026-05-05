@@ -52,8 +52,7 @@ export const SpellCheckTestContainer = () => {
   );
 
   const renderContent = () => {
-    if (isLoading) return <Loader />;
-    if (!collection.length) return null;
+    if (isLoading || !collection) return <Loader />;
     if (error) return <div>Ошибка загрузки карточек. Попробуйте позже.</div>;
 
     return (

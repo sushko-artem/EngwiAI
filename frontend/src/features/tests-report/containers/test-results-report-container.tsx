@@ -3,10 +3,10 @@ import backArrow from "@assets/images/arrow-left.svg";
 import { useMemo } from "react";
 import { useTestReport } from "../hooks";
 import { MistakesReport, ResultSummary } from "../ui";
+import { Navigate } from "react-router-dom";
 
 export const TestResultReportContainer = () => {
   const { handleBack, testReport } = useTestReport();
-  const { totalTerms, progress, totalMistakes, mistakesReport } = testReport;
   const headerProps = useMemo(
     () => ({
       title: "Результаты теста",
@@ -16,6 +16,9 @@ export const TestResultReportContainer = () => {
     }),
     [handleBack],
   );
+  if (!testReport) return <Navigate to="/dashboard" replace />;
+  const { totalTerms, progress, totalMistakes, mistakesReport } = testReport;
+
   return (
     <>
       <Header {...headerProps} />

@@ -20,10 +20,6 @@ describe("useTestReport", () => {
     totalMistakes: 1,
     mistakesReport: { hello: "hell" },
   };
-  it("should navigate to /dashboard page when no state", () => {
-    renderHook(() => useTestReport());
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
-  });
 
   it("should return correct testReport object", () => {
     mockTestReport.state = { testReport: report as TestReportType };

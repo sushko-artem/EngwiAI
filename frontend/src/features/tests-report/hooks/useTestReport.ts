@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export type TestReportType = {
@@ -13,12 +13,6 @@ export const useTestReport = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!location.state?.testReport) {
-      navigate("/dashboard");
-    }
-  }, [location.state, navigate]);
-
   const handleBack = useCallback(() => {
     if (location.state?.testReport.testType === "spell") {
       navigate("/spell-check");
@@ -28,7 +22,7 @@ export const useTestReport = () => {
   }, [navigate, location.state]);
 
   return {
-    testReport: location.state?.testReport as TestReportType,
+    testReport: location.state?.testReport as TestReportType | undefined,
     handleBack,
   };
 };

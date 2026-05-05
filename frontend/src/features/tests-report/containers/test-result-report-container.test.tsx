@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useTestReport } from "../hooks";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { TestResultReportContainer } from "./test-results-report-container";
+import { MemoryRouter } from "react-router-dom";
 
 const mockHandleBack = vi.hoisted(() => vi.fn());
 
@@ -37,5 +38,18 @@ describe("TestResultReportContainer", () => {
     render(<TestResultReportContainer />);
     fireEvent.click(screen.getByTestId("leftIconAction"));
     expect(mockHandleBack).toHaveBeenCalled();
+  });
+
+  it("should navigate to /dashboard when no report in location.state", () => {
+    vi.mocked(useTestReport).mockReturnValue({
+      handleBack: mockHandleBack,
+      testReport: undefined,
+    });
+    render(
+      <MemoryRouter>
+        <TestResultReportContainer />
+      </MemoryRouter>,
+    );
+    expect(screen.queryByText("Анализ ошибок")).not.toBeInTheDocument();
   });
 });

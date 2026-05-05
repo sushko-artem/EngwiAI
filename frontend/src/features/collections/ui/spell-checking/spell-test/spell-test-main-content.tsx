@@ -75,6 +75,7 @@ export const SpellTestMainContent = memo(
           <span className="font-jost text-fuchsia-700">Ваш ответ:</span>
 
           <TextareaAutosize
+            data-testid="user-answer-textarea"
             disabled={!inProgress}
             autoFocus
             onKeyDown={handleKeyDown}

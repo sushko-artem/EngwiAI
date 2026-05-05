@@ -10,7 +10,7 @@ export const useSpellTest = () => {
   const location = useLocation();
   const [getCards, { isLoading, error }] = useGetCardsFromCollectionsMutation();
   const [state, dispatch] = useReducer(spellTestReducer, initialState);
-  const [collection, setCollection] = useState<ICard[]>([]);
+  const [collection, setCollection] = useState<ICard[] | null>(null);
   const { play, toggleGroup, isGroupMuted } = useSound();
   const index = useRef(state.index);
   index.current = state.index;
@@ -45,6 +45,7 @@ export const useSpellTest = () => {
 
   const handleAnswer = useCallback(
     (userAnswer: string, correctAnswer: string, isCorrect: boolean) => {
+      if (!collection) return;
       dispatch({
         type: "HANDLE_ANSWER",
         payload: {
@@ -55,7 +56,7 @@ export const useSpellTest = () => {
         },
       });
     },
-    [collection.length],
+    [collection],
   );
 
   const options = useCallback(() => {
@@ -76,7 +77,7 @@ export const useSpellTest = () => {
     isLoading,
     isSummaryOpen: state.isSummaryModalOpen,
     index: state.index,
-    visibleSide: location.state.visibleSide,
+    visibleSide: location.state?.visibleSide ?? "word",
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,
