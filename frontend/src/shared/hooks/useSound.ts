@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   sounds,
   type SoundNameType,
@@ -9,6 +9,11 @@ type SoundGroupType = keyof typeof SOUND_GROUP;
 
 export const useSound = () => {
   const [mutedGroup, setMutedGroup] = useState<Set<SoundGroupType>>(new Set());
+
+  useEffect(() => {
+    Object.values(sounds).forEach((sound) => sound.mute(false));
+    setMutedGroup(new Set());
+  }, []);
 
   const play = useCallback((type: SoundNameType) => {
     sounds[type].play();

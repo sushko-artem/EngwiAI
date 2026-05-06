@@ -9,7 +9,7 @@ type SpellTestMainContentPropType = {
   index: number;
   inProgress: boolean;
   visibleSide: "word" | "translation";
-  playSound(type: string): void;
+  playSound(type: "correct" | "incorrect"): void;
   onAnswer(answer: string, originalValue: string, isCorrect: boolean): void;
 };
 
@@ -75,6 +75,7 @@ export const SpellTestMainContent = memo(
           <span className="font-jost text-fuchsia-700">Ваш ответ:</span>
 
           <TextareaAutosize
+            data-testid="user-answer-textarea"
             disabled={!inProgress}
             autoFocus
             onKeyDown={handleKeyDown}
@@ -97,6 +98,7 @@ export const SpellTestMainContent = memo(
           </span>
         </div>
         <button
+          data-testid="spell-test-answer-button"
           onClick={handleAnswer}
           className="border-zinc-500 rounded-[5px] cursor-pointer border-2 p-2 mt-4 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all"
         >

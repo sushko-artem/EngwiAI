@@ -38,7 +38,7 @@ export const FlashOptionMenu = ({
             id="switch-side"
           />
           <label className="cursor-pointer" htmlFor="switch-side">
-            Перевернуть карточки
+            {isReversed ? "Показывать перевод" : "Показывать термин"}
           </label>
         </div>
         {!isVirtual && (
