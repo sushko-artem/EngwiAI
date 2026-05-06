@@ -1,4 +1,4 @@
-describe("SpellCheckPage - critical", () => {
+describe("SpellCheckPage - regression", () => {
   beforeEach(() => {
     cy.resetDatabase();
     cy.createAndLoginUser();
