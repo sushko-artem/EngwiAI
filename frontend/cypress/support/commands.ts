@@ -7,6 +7,7 @@ import {
   ICollectionDto,
   AUTH_ENDPOINTS,
   COLLECTION_ENDPOINTS,
+  ICard,
 } from "@shared/api";
 
 type UserOptionsOverridesType = {
@@ -41,6 +42,8 @@ declare global {
         password: string;
         collection: ICollectionResponse;
       }>;
+      answerCurrentCard(cards: ICard[]): Chainable<void>;
+      answerAllCards(cards: ICard[]): Chainable<void>;
       resetDatabase(): Chainable<void>;
     }
   }
@@ -142,6 +145,28 @@ Cypress.Commands.add(
     });
   },
 );
+
+Cypress.Commands.add("answerCurrentCard", (cards: ICard[]) => {
+  const answerMap = new Map(
+    cards.flatMap((card) => [
+      [card.word, card.translation],
+      [card.translation, card.word],
+    ]),
+  );
+  cy.get("[data-testid='test-termin']")
+    .invoke("text")
+    .then((text) => {
+      const answer = answerMap.get(text.trim());
+      cy.get("[data-testid='user-answer-textarea']").type(answer!);
+      cy.get("[data-testid='spell-test-answer-button']").click();
+    });
+});
+
+Cypress.Commands.add("answerAllCards", (cards: ICard[]) => {
+  cards.forEach(() => {
+    cy.answerCurrentCard(cards);
+  });
+});
 //
 //
 // -- This is a child command --

@@ -59,7 +59,10 @@ export const SpellTestMainContent = memo(
 
     return (
       <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
-        <div className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]">
+        <div
+          data-testid="test-termin"
+          className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]"
+        >
           {collection[index][visibleSide]}
         </div>
         <div className="mt-2">

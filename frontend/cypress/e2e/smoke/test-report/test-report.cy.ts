@@ -1,5 +1,3 @@
-import { ICard } from "@shared/api";
-
 describe("TestReportPage - smoke", () => {
   beforeEach(() => {
     cy.resetDatabase();
@@ -23,10 +21,7 @@ describe("TestReportPage - smoke", () => {
     cy.get("[data-testid='spell-test-answer-button']").click();
     cy.get("[data-testid='user-answer-textarea']").type("wrong answer-2");
     cy.get("[data-testid='spell-test-answer-button']").click();
-    this.animals.cards.slice(2).forEach((card: ICard) => {
-      cy.get("[data-testid='user-answer-textarea']").type(card.word!);
-      cy.get("[data-testid='spell-test-answer-button']").click();
-    });
+    cy.answerAllCards(this.animals.cards.slice(2));
     cy.get("[data-testid='modal-action']").eq(0).click();
     cy.url().should("include", "/test-report");
     cy.contains("wrong answer-1").should("be.visible");

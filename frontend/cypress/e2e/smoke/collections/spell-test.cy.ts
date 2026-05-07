@@ -19,6 +19,9 @@ describe("SpellTestPage - smoke", () => {
     cy.get("[data-testid='start-test']").click();
     cy.get("[data-testid='spell-test-answer-button']").should("be.visible");
     cy.get("[data-testid='user-answer-textarea']").should("be.visible");
-    cy.contains(this.animals.cards[0].translation).should("be.visible");
+    const translations = this.animals.cards.map(
+      (card: { word: string; translation: string }) => card.translation,
+    );
+    cy.contains(new RegExp(translations.join("|"))).should("be.visible");
   });
 });
