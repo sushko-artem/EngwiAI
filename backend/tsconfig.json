@@ -27,5 +27,5 @@
       "@shared/*": ["./src/shared/*"]
     }
   },
-  "include": ["src/**/*", "prisma/generated/prisma/**/*", "prisma.config.ts"]
+  "include": ["src/**/*", "prisma/generated/prisma/**/*", "prisma.config.ts", "@types/ms.d.ts"]
 }

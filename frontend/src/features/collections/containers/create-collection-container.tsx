@@ -32,17 +32,17 @@ export const CreateCollectionContainer = () => {
   );
 
   if (!collection) {
-    return <Loader />;
+    return <div>Инициализация коллекции...</div>;
   }
 
   return (
     <>
-      {isLoading && <Loader />}
       <Header {...headerProps} />
       <EditableCollection
         collection={collection.cards}
         name={collection.name}
       />
+      {isLoading && <Loader />}
     </>
   );
 };

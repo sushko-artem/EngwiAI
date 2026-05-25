@@ -25,12 +25,12 @@ export const CollectionsListContainer = () => {
   return (
     <>
       <Header {...headerProps} />
-      {(isLoading || isRefetching) && <Loader />}
       {!collections && error && <NoCollectionError error={error} />}
       {collections?.length === 0 && <NotASingleCollection />}
       {collections && (
         <CollectionsButtonsList collections={collections} onDelete={onDelete} />
       )}
+      {(isLoading || isRefetching) && <Loader />}
     </>
   );
 };

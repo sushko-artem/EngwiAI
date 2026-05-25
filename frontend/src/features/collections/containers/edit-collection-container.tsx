@@ -36,22 +36,20 @@ export const EditCollectionContainer = ({
     [isLoading, error, saveCollection, handleBack],
   );
 
-  if (!editableCollection && !error) {
-    return <Loader />;
-  }
-
   return (
     <>
-      {isLoading && <Loader />}
       <Header {...headerProps} />
-      {error ? (
+      {editableCollection ? (
+        <EditableCollection
+          name={editableCollection.name}
+          collection={editableCollection.cards}
+        />
+      ) : error ? (
         <NoCollectionError error={error} />
       ) : (
-        <EditableCollection
-          name={editableCollection!.name}
-          collection={editableCollection!.cards}
-        />
+        <div>Загрузка...</div>
       )}
+      {isLoading && <Loader />}
     </>
   );
 };
