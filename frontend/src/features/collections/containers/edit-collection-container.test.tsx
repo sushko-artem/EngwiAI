@@ -39,7 +39,7 @@ describe("EditCollectionContainer", () => {
 
   it("should call hook with correct argument", () => {
     vi.mocked(useEditCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       error: null,
       saveCollection: mockSave,
       editableCollection: mockCollection,
@@ -55,7 +55,7 @@ describe("EditCollectionContainer", () => {
 
   it("should show loader when collection is loading", () => {
     vi.mocked(useEditCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       error: null,
       saveCollection: mockSave,
       editableCollection: null,
@@ -66,12 +66,12 @@ describe("EditCollectionContainer", () => {
         <EditCollectionContainer collectionId="id-123" />
       </MemoryRouter>,
     );
-    expect(screen.getByTestId("loader")).toBeInTheDocument();
+    expect(screen.getByText("Загрузка...")).toBeInTheDocument();
   });
 
   it("should show loader on saving edited collection", () => {
     vi.mocked(useEditCollection).mockReturnValue({
-      isLoading: true,
+      isSaving: true,
       error: null,
       saveCollection: mockSave,
       editableCollection: mockCollection,
@@ -88,10 +88,10 @@ describe("EditCollectionContainer", () => {
 
   it("should show error when no collection and error exist", () => {
     vi.mocked(useEditCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       error: new Error("Failed to load!"),
       saveCollection: mockSave,
-      editableCollection: mockCollection,
+      editableCollection: null,
     });
 
     render(
@@ -104,7 +104,7 @@ describe("EditCollectionContainer", () => {
 
   it("should navigate to '/collections' when arrow-back clicked", () => {
     vi.mocked(useEditCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       error: null,
       saveCollection: mockSave,
       editableCollection: mockCollection,
@@ -121,7 +121,7 @@ describe("EditCollectionContainer", () => {
 
   it("should call saveCollection when save clicked", () => {
     vi.mocked(useEditCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       error: null,
       saveCollection: mockSave,
       editableCollection: mockCollection,

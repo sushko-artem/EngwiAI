@@ -101,7 +101,7 @@ export const useEditCollection = (collectionId: string) => {
 
   return {
     error,
-    isLoading,
+    isSaving: isSaving || isLoading,
     editableCollection,
     saveCollection,
   };

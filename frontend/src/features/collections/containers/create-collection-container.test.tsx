@@ -40,7 +40,7 @@ describe("CreateCollectionContainer", () => {
 
   it("should show loader when is loading", () => {
     vi.mocked(useCreateCollection).mockReturnValue({
-      isLoading: true,
+      isSaving: true,
       saveCollection: mockSave,
     });
 
@@ -54,7 +54,7 @@ describe("CreateCollectionContainer", () => {
 
   it("should navigate to dashboard when back clicked and no changes", () => {
     vi.mocked(useCreateCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       saveCollection: mockSave,
     });
 
@@ -69,7 +69,7 @@ describe("CreateCollectionContainer", () => {
 
   it("should call saveCollection when save button clicked", () => {
     vi.mocked(useCreateCollection).mockReturnValue({
-      isLoading: false,
+      isSaving: false,
       saveCollection: mockSave,
     });
 

@@ -15,7 +15,7 @@ export const EditCollectionContainer = ({
 }: {
   collectionId: string;
 }) => {
-  const { error, isLoading, editableCollection, saveCollection } =
+  const { error, isSaving, editableCollection, saveCollection } =
     useEditCollection(collectionId);
   const navigate = useNavigate();
 
@@ -30,10 +30,10 @@ export const EditCollectionContainer = ({
       rightIconAction: saveCollection,
       leftIconAction: handleBack,
       leftIcon: backArrow,
-      rightIcon: isLoading || error ? undefined : save,
-      title: isLoading ? "Сохранение..." : "Редактирование",
+      rightIcon: isSaving || error ? undefined : save,
+      title: isSaving ? "Сохранение..." : "Редактирование",
     }),
-    [isLoading, error, saveCollection, handleBack],
+    [isSaving, error, saveCollection, handleBack],
   );
 
   return (
@@ -49,7 +49,7 @@ export const EditCollectionContainer = ({
       ) : (
         <div>Загрузка...</div>
       )}
-      {isLoading && <Loader />}
+      {isSaving && <Loader />}
     </>
   );
 };

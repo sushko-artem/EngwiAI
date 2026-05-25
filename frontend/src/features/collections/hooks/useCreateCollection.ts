@@ -87,7 +87,7 @@ export const useCreateCollection = (
   }, [navigate, createCollection, warning]);
 
   return {
-    isLoading,
+    isSaving: isSaving || isLoading,
     saveCollection,
   };
 };

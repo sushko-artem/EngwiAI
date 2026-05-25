@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 export const CreateCollectionContainer = () => {
   const collection = useAppSelector(selectEditableCollection);
-  const { isLoading, saveCollection } = useCreateCollection(collection);
+  const { isSaving, saveCollection } = useCreateCollection(collection);
   const navigate = useNavigate();
 
   const handleBack = useCallback(() => {
@@ -20,29 +20,29 @@ export const CreateCollectionContainer = () => {
 
   const headerProps = useMemo(
     () => ({
-      title: isLoading ? "Сохранение..." : "Новая коллекция",
+      title: isSaving ? "Сохранение..." : "Новая коллекция",
       leftIconTitle: "вернуться на главную",
       rightIconTitle: "сохранить",
       rightIconAction: saveCollection,
       leftIconAction: handleBack,
       leftIcon: backArrow,
-      rightIcon: isLoading ? undefined : save,
+      rightIcon: isSaving ? undefined : save,
     }),
-    [isLoading, saveCollection, handleBack],
+    [isSaving, saveCollection, handleBack],
   );
-
-  if (!collection) {
-    return <div>Инициализация коллекции...</div>;
-  }
 
   return (
     <>
       <Header {...headerProps} />
-      <EditableCollection
-        collection={collection.cards}
-        name={collection.name}
-      />
-      {isLoading && <Loader />}
+      {collection ? (
+        <EditableCollection
+          collection={collection.cards}
+          name={collection.name}
+        />
+      ) : (
+        <div>Инициализация коллекции...</div>
+      )}
+      {isSaving && <Loader />}
     </>
   );
 };
