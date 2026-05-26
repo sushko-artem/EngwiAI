@@ -14,6 +14,48 @@ import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 import { TestReportPage } from "@pages/TestReport";
 import { NotFoundPage } from "@widgets/not-found-page";
 
+const protectedRoutes = [
+  {
+    path: "/create-collection",
+    element: <CreateCollectionPage />,
+  },
+  {
+    path: "/flash-cards/:collectionId",
+    element: <FlashCardsPage />,
+  },
+  {
+    path: "/edit-collection/:collectionId",
+    element: <EditCollectionPage />,
+  },
+  {
+    path: "/collections",
+    element: <CollectionsListPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardPage />,
+  },
+  {
+    path: "/interval-learning",
+    element: <IntervalLearningPage />,
+  },
+  {
+    path: "/spell-check",
+    element: <SpellCheckingPage />,
+  },
+  {
+    path: "/spell-check/test",
+    element: <SpellCheckTestPage />,
+  },
+  {
+    path: "/test-report",
+    element: <TestReportPage />,
+  },
+].map((route) => ({
+  ...route,
+  element: <ProtectedRoute>{route.element}</ProtectedRoute>,
+}));
+
 const routes = [
   {
     element: <AppLayout />,
@@ -30,78 +72,7 @@ const routes = [
         path: "/sign-in",
         element: <SignInPage />,
       },
-      {
-        path: "/create-collection",
-        element: (
-          <ProtectedRoute>
-            <CreateCollectionPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/flash-cards/:collectionId",
-        element: (
-          <ProtectedRoute>
-            <FlashCardsPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/edit-collection/:collectionId",
-        element: (
-          <ProtectedRoute>
-            <EditCollectionPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/collections",
-        element: (
-          <ProtectedRoute>
-            <CollectionsListPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/dashboard",
-        element: (
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/interval-learning",
-        element: (
-          <ProtectedRoute>
-            <IntervalLearningPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/spell-check",
-        element: (
-          <ProtectedRoute>
-            <SpellCheckingPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/spell-check/test",
-        element: (
-          <ProtectedRoute>
-            <SpellCheckTestPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/test-report",
-        element: (
-          <ProtectedRoute>
-            <TestReportPage />
-          </ProtectedRoute>
-        ),
-      },
+      ...protectedRoutes,
       {
         path: "*",
         element: <NotFoundPage />,

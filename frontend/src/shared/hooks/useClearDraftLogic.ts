@@ -3,7 +3,7 @@ import { useAppDispatch } from "@redux/hooks";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
-export const ClearDraftLogic = () => {
+export const useClearDraftLogic = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const prevPathRef = useRef(location.pathname);
@@ -18,6 +18,4 @@ export const ClearDraftLogic = () => {
 
     prevPathRef.current = location.pathname;
   }, [location.pathname, dispatch]);
-
-  return null;
 };
