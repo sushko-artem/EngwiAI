@@ -31,6 +31,10 @@ export const FlashCardsContainer = ({
     ...props
   } = useFlashCards(collectionId);
   const navigate = useNavigate();
+  const isLoadingOrDeleting = props.isDeleting || (isLoading && !collection);
+  const isNoCollectionError = !collection && !isLoading && error;
+  const isModalOpen = collection && props.isModalOpen;
+  const isMenuOpen = collection && props.isMenuOpen;
 
   const handleBack = useCallback(() => {
     if (props.isVirtual) {
@@ -56,9 +60,6 @@ export const FlashCardsContainer = ({
   return (
     <>
       <Header {...headerProps} />
-      {props.isDeleting && <Loader />}
-      {isLoading && !collection && <Loader />}
-      {!collection && !isLoading && <NoCollectionError error={error} />}
       {collection && (
         <main>
           <FlashCardsCollectionView
@@ -72,7 +73,8 @@ export const FlashCardsContainer = ({
           />
         </main>
       )}
-      {collection && props.isModalOpen && (
+      {isNoCollectionError && <NoCollectionError error={error} />}
+      {isModalOpen && (
         <ModalFlash
           collectionId={collection.id}
           moduleName={collection.name}
@@ -83,7 +85,7 @@ export const FlashCardsContainer = ({
           reset={handleReset}
         />
       )}
-      {collection && props.isMenuOpen && (
+      {isMenuOpen && (
         <FlashOptionMenu
           onSwitchChange={props.handleSwitchChange}
           isMenuOpen={props.isMenuOpen}
@@ -94,6 +96,7 @@ export const FlashCardsContainer = ({
           onDelete={props.handleDelete}
         />
       )}
+      {isLoadingOrDeleting && <Loader />}
     </>
   );
 };
