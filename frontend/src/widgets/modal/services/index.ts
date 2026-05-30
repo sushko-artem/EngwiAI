@@ -1,0 +1,1 @@
+export { ModalPromisesManager } from "./modalPromiseManager";
