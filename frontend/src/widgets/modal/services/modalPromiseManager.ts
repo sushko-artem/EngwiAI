@@ -3,11 +3,13 @@ type PromiseResolverType = {
   timeoutId: ReturnType<typeof setTimeout>;
 };
 
-export class ModalPromisesManager {
+export const MODAL_TIMEOUT = 5 * 60 * 1000;
+
+class ModalPromisesManager {
   private promises = new Map<string, PromiseResolverType>();
   private defaultTimeout: number;
 
-  constructor(defaultTimeout = 5 * 60 * 1000) {
+  constructor(defaultTimeout = MODAL_TIMEOUT) {
     this.defaultTimeout = defaultTimeout;
   }
 
@@ -38,4 +40,18 @@ export class ModalPromisesManager {
     this.promises.delete(modalId);
     return true;
   }
+
+  get size() {
+    return this.promises.size;
+  }
+
+  destroy() {
+    this.promises.forEach((resolver) => {
+      clearTimeout(resolver.timeoutId);
+      resolver.resolve(false);
+    });
+    this.promises.clear();
+  }
 }
+
+export const modalPromises = new ModalPromisesManager();

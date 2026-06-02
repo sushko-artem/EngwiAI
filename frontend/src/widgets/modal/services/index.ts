@@ -1,1 +1,1 @@
-export { ModalPromisesManager } from "./modalPromiseManager";
+export { modalPromises, MODAL_TIMEOUT } from "./modalPromiseManager";

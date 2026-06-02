@@ -5,9 +5,7 @@ import {
   confirmModalAction,
   cancelModalAction,
 } from "../actions";
-import { ModalPromisesManager } from "../services";
-
-const modalPromises = new ModalPromisesManager();
+import { modalPromises } from "../services";
 
 export const modalMiddleware: Middleware = (store) => (next) => (action) => {
   if (openModalWithPromise.match(action)) {

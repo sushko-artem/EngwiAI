@@ -8,17 +8,14 @@ import {
   vi,
   type Mock,
 } from "vitest";
-import {
-  modalMiddleware,
-  modalPromises,
-  MODAL_TIMEOUT,
-} from "./modalMiddleware";
+import { modalMiddleware } from "./modalMiddleware";
 import {
   confirmModalAction,
   openModalWithPromise,
   cancelModalAction,
 } from "../actions";
 import { closeModal, openModal } from "@entities/modal/model";
+import { modalPromises, MODAL_TIMEOUT } from "../services";
 
 vi.mock("@reduxjs/toolkit", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@reduxjs/toolkit")>();
@@ -34,7 +31,8 @@ describe("ModalMiddleware", () => {
   let mockMiddleware: any;
 
   beforeEach(() => {
-    modalPromises.clear();
+    vi.useFakeTimers();
+    modalPromises.destroy();
     mockStore = {
       getState: vi.fn(() => ({ modal: { modalId: null } })),
       dispatch: vi.fn(),
@@ -43,7 +41,6 @@ describe("ModalMiddleware", () => {
     mockNext = vi.fn();
 
     mockMiddleware = modalMiddleware(mockStore)(mockNext);
-    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -121,7 +118,7 @@ describe("ModalMiddleware", () => {
 
     const promise = mockMiddleware(openAction);
 
-    vi.advanceTimersByTime(MODAL_TIMEOUT + 1000);
+    vi.advanceTimersByTime(MODAL_TIMEOUT);
 
     const result = await promise;
 
