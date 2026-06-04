@@ -1,5 +1,5 @@
+import { EditCollectionContainer } from "@features/edit-collection";
 import { useParams } from "react-router-dom";
-import { EditCollectionContainer } from "@features/collections";
 
 export const EditCollectionPage = () => {
   const { collectionId = "" } = useParams<{ collectionId?: string }>();

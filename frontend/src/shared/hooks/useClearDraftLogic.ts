@@ -1,4 +1,4 @@
-import { clearCollection } from "@features/collections/model";
+import { clearCollection } from "@entities/collection/model";
 import { useAppDispatch } from "@redux/hooks";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";

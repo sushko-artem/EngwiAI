@@ -1,3 +1,3 @@
-import { CreateCollectionContainer } from "@features/collections";
+import { CreateCollectionContainer } from "@features/create-collection";
 
 export const CreateCollectionPage = () => <CreateCollectionContainer />;

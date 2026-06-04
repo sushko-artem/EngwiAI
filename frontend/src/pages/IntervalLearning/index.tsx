@@ -1,3 +1,3 @@
-import { IntervalLearningContainer } from "@features/collections";
+import { IntervalLearningContainer } from "@features/interval-learning";
 
 export const IntervalLearningPage = () => <IntervalLearningContainer />;

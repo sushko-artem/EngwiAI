@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { collectionReducer } from "@features/collections/model";
+import { collectionReducer } from "@entities/collection/model";
 import { modalReducer } from "@entities/modal/model";
 import { api } from "@shared/api";
 import { modalMiddleware } from "@widgets/modal";
-import { persistCollectionMiddleware } from "@features/collections/model";
+import { persistCollectionMiddleware } from "@entities/collection/model";
 
 export const store = configureStore({
   reducer: {
