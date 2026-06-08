@@ -13,6 +13,7 @@ import { AppLayout } from "./components/app-layout";
 import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 import { TestReportPage } from "@pages/TestReport";
 import { NotFoundPage } from "@widgets/not-found-page";
+import { GrammarCheckingPage } from "@pages/GrammarChecking";
 
 const protectedRoutes = [
   {
@@ -46,6 +47,10 @@ const protectedRoutes = [
   {
     path: "/spell-check/test",
     element: <SpellCheckTestPage />,
+  },
+  {
+    path: "/grammar-check",
+    element: <GrammarCheckingPage />,
   },
   {
     path: "/test-report",
