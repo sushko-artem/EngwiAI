@@ -37,7 +37,7 @@ export const useSpellCheck = () => {
     return Array.from(chosenIds);
   }, [chosenIds]);
 
-  const startTest = useCallback(async () => {
+  const startTest = useCallback(() => {
     const modules = getChosenModulesIds();
     if (!modules.length) {
       warning("Ни одного модуля не выбрано!");

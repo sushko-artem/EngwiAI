@@ -4,11 +4,11 @@ import { Header } from "@widgets/header";
 import { Loader } from "@shared/ui/loader";
 import { useSpellCheck } from "../lib";
 import { NotASingleCollection } from "@entities/collection/ui";
+import { SpellCheckDescription } from "../ui";
 import {
   ChooseModuleList,
   ChooseVisibleSide,
-  SpellCheckDescription,
-} from "../ui";
+} from "@widgets/choose-collection";
 
 export const SpellCheckContainer = () => {
   const {

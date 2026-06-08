@@ -4,7 +4,7 @@ import { ChooseModuleAction } from "./choose-module-action";
 type ChooseModuleListPropType = {
   collectionsList: ICollectionResponse[];
   onToggle(id: string): void;
-  chosenIds: Set<string>;
+  chosenIds: Set<string> | string;
 };
 
 export const ChooseModuleList = ({
@@ -19,7 +19,11 @@ export const ChooseModuleList = ({
           key={collection.id}
           id={collection.id}
           onClick={onToggle}
-          isChosen={chosenIds.has(collection.id)}
+          isChosen={
+            typeof chosenIds === "string"
+              ? chosenIds === collection.id
+              : chosenIds.has(collection.id)
+          }
         >
           {collection.name}
         </ChooseModuleAction>
