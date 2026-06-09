@@ -3,8 +3,9 @@ import { Cache } from 'cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { CardUpdateDto, CreateCollectionDto, UpdateCollectionDto } from './DTO';
-import { CardStatus } from '@generated/prisma/enums';
 import { isVirtualCollection, VIRTUAL_COLLECTION_TO_STATUS } from './constants/virtual-collection-ident';
+import { CollectionWithCards } from './types/collection.return-type';
+import { CardStatus } from '@generated/prisma/enums';
 
 @Injectable()
 export class CardsRepoService {
@@ -35,7 +36,7 @@ export class CardsRepoService {
     });
   }
 
-  async getCollection(userId: string, collectionId: string) {
+  async getCollection(userId: string, collectionId: string): Promise<CollectionWithCards> {
     if (isVirtualCollection(collectionId)) {
       const status = VIRTUAL_COLLECTION_TO_STATUS[collectionId];
       return this.getCardsByStatus(userId, status);
@@ -59,9 +60,9 @@ export class CardsRepoService {
         },
       });
       await this.cacheManager.set(collectionId, collection);
-      return collection;
+      return collection as CollectionWithCards;
     }
-    return collection;
+    return collection as CollectionWithCards;
   }
 
   async getCollectionsList(userId: string) {
