@@ -12,7 +12,7 @@ type CooseVisibleSidePropType = {
 export const ChooseVisibleSide = memo(
   ({ sideValue, onChange }: CooseVisibleSidePropType) => {
     return (
-      <>
+      <div className="mb-4 text-center">
         <RadioGroup
           onValueChange={onChange}
           value={sideValue}
@@ -47,7 +47,7 @@ export const ChooseVisibleSide = memo(
             </Label>
           </div>
         </RadioGroup>
-      </>
+      </div>
     );
   },
 );

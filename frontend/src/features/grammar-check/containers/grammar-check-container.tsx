@@ -1,7 +1,11 @@
 import { Header } from "@widgets/header";
 import { useMemo } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
-import { GrammarCheckDescription } from "../ui";
+import {
+  ChooseCount,
+  ChooseDifficultyLevel,
+  GrammarCheckDescription,
+} from "../ui";
 import { useGrammarCheck } from "../lib/hooks/useGrammarCheck";
 import { Loader } from "shared/ui/loader";
 import {
@@ -20,6 +24,10 @@ export const GrammarCheckContainer = () => {
     setVisibleSide,
     setChosenId,
     chosenId,
+    level,
+    setLevel,
+    count,
+    setCount,
   } = useGrammarCheck();
   const headerProps = useMemo(
     () => ({
@@ -42,12 +50,9 @@ export const GrammarCheckContainer = () => {
           onToggle={setChosenId}
           chosenIds={chosenId}
         />
-        <div className="mb-4 text-center">
-          <ChooseVisibleSide
-            sideValue={visibleSide}
-            onChange={setVisibleSide}
-          />
-        </div>
+        <ChooseVisibleSide sideValue={visibleSide} onChange={setVisibleSide} />
+        <ChooseDifficultyLevel level={level} onChange={setLevel} />
+        <ChooseCount count={count} onChange={setCount} />
         <div className="text-center">
           <button
             data-testid="start-test"

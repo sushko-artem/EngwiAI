@@ -43,12 +43,7 @@ export const SpellCheckContainer = () => {
           onToggle={toggleChoosenModule}
           chosenIds={chosenIds}
         />
-        <div className="mb-4 text-center">
-          <ChooseVisibleSide
-            sideValue={visibleSide}
-            onChange={setVisibleSide}
-          />
-        </div>
+        <ChooseVisibleSide sideValue={visibleSide} onChange={setVisibleSide} />
         <div className="text-center">
           <button
             data-testid="start-test"

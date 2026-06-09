@@ -8,6 +8,10 @@ export const useGrammarCheck = () => {
   const [visibleSide, setVisibleSide] = useState<"word" | "translation">(
     "word",
   );
+  const [level, setLevel] = useState<"beginner" | "intermediate" | "advanced">(
+    "beginner",
+  );
+  const [count, setCount] = useState<"5" | "7" | "10">("5");
   const { warning } = useModal();
   const navigate = useNavigate();
   const { data: collections, isLoading, error } = useGetCollectionsQuery();
@@ -20,9 +24,11 @@ export const useGrammarCheck = () => {
     if (!chosenId) {
       warning("Ни одного модуля не выбрано!");
     } else {
-      navigate("/grammar-check/test", { state: { chosenId, visibleSide } });
+      navigate("/grammar-check/test", {
+        state: { chosenId, visibleSide, level, count },
+      });
     }
-  }, [warning, chosenId, visibleSide, navigate]);
+  }, [warning, chosenId, visibleSide, navigate, level, count]);
 
   return {
     chosenId,
@@ -34,5 +40,9 @@ export const useGrammarCheck = () => {
     error,
     handleBack,
     startTest,
+    level,
+    setLevel,
+    count,
+    setCount,
   };
 };
