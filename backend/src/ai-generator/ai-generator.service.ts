@@ -1,9 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GenerateSentencesDto } from './DTO/generate-sentences.dto';
 import { CardsRepoService } from '../cards-repo/cards-repo.service';
 import { AIGenerationResult } from './types/ai.types';
 import { GroqResponse } from './types/groq.types';
+import { AIGenerationException } from './exceptions/ai-generation.exception';
 
 @Injectable()
 export class AIService {
@@ -29,10 +30,22 @@ export class AIService {
 
   async generateSentences(userId: string, dto: GenerateSentencesDto): Promise<AIGenerationResult> {
     const { id, difficulty, cardSide, count } = dto;
+
     this.logger.log(`Generating ${count} sentences`);
+
     const collection = await this.cardsRepoService.getCollection(userId, id);
-    const termsForSentencesGeneration = collection.cards.map((card) => card[cardSide]).join(', ');
-    const translateTo = collection.cards.map((card) => (cardSide === 'word' ? card.translation : card.word)).join(', ');
+    const validCards = collection.cards.filter((card) => {
+      const term = card[cardSide];
+      return this.isValidTerms(term);
+    });
+
+    if (validCards.length === 0) {
+      throw new AIGenerationException('No valid terms', HttpStatus.BAD_REQUEST);
+    }
+
+    const termsForSentencesGeneration = validCards.map((card) => card[cardSide]).join(', ');
+    const translateTo = validCards.map((card) => (cardSide === 'word' ? card.translation : card.word)).join(', ');
+
     const systemPrompt = this.buildSystemPrompt(difficulty);
     const userPrompt = this.buildUserPrompt(termsForSentencesGeneration, count, translateTo);
 
@@ -57,8 +70,11 @@ export class AIService {
 
       if (!response.ok) {
         const errorBody = await response.text();
-        this.logger.error(`Groq API error: ${response.status} - ${errorBody}`);
-        throw new Error(`Failed to generate sentences: ${response.status}`);
+        this.logger.error(`AI API error: ${response.status} - ${errorBody}`);
+        throw new AIGenerationException(
+          `Failed to generate sentences: ${response.status}`,
+          response.status === 429 ? HttpStatus.TOO_MANY_REQUESTS : HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
 
       const data = (await response.json()) as GroqResponse;
@@ -69,16 +85,30 @@ export class AIService {
       const result = JSON.parse(content) as AIGenerationResult;
 
       if (!result.sentences || !Array.isArray(result.sentences)) {
-        throw new Error('Invalid response structure from AI');
+        throw new AIGenerationException('Invalid response structure from AI', HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
       return result;
     } catch (error) {
-      if (error instanceof Error) {
-        this.logger.error(`Generation failed: ${error.message}`);
+      if (error instanceof AIGenerationException) {
+        throw error;
       }
-      throw error;
+      this.logger.error(`Unexpected error: ${error}`);
+      throw new AIGenerationException('An unexpected error occurred', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  private isValidTerms(term: string): boolean {
+    if (!term || term.length < 2) return false;
+
+    const hasLetter = /\p{L}/u.test(term);
+    if (!hasLetter) return false;
+
+    const letters = term.match(/\p{L}/gu) || [];
+    const ratio = letters.length / term.length;
+    if (ratio < 0.4) return false;
+
+    return true;
   }
 
   private buildSystemPrompt(difficulty: string): string {
@@ -87,8 +117,8 @@ export class AIService {
       intermediate: 'средний',
       advanced: 'продвинутый',
     };
-    return `Ты — ассистент по изучению языков.
-Твоя задача — создавать предложения, которые помогают запоминать термины через контекст.
+    return `Ты - ассистент по изучению языков.
+Твоя задача - создавать предложения, которые помогают запоминать термины через контекст.
 Правила:
 - Уровень сложности: ${difficultyMap[difficulty]}
 - Каждое предложение должно быть естественным и ясно показывать использование термина.
@@ -112,9 +142,9 @@ export class AIService {
     return `Создай ровно ${count} предложений, используя эти термины: ${terms}
 
 Требования:
-- Каждый термин должен быть использован ровно в одном предложении
-- Если терминов больше чем ${count}, выбери самые употребительные
-- Если терминов меньше, добавь предложения с похожей лексикой
+- В одном предложении можно использовать несколько терминов, сохраняя естественный контекст
+- Если терминов меньше чем ${count}, добавь предложения с похожей лексикой
+- Постарайся охватить все предоставленные термины в этих ${count} предложениях
 - Предложения должны быть разнообразными и естественными
 - Перевод каждого предложения должен быть на языке, на котором написаны эти термины: ${translateTo}
 - Убедись, что перевод точный и соответствует контексту`;
