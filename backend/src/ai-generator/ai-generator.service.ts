@@ -22,10 +22,6 @@ export class AIService {
     this.model = this.configService.getOrThrow<string>('AI_MODEL');
     this.maxTokens = this.configService.getOrThrow<number>('AI_MAX_TOKENS');
     this.apiUrl = this.configService.getOrThrow<string>('AI_API_URL');
-
-    if (!this.apiKey) {
-      throw new Error('AI_API_KEY is not defined');
-    }
   }
 
   async generateSentences(userId: string, dto: GenerateSentencesDto): Promise<AIGenerationResult> {
