@@ -14,6 +14,7 @@ import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 import { TestReportPage } from "@pages/TestReport";
 import { NotFoundPage } from "@widgets/not-found-page";
 import { GrammarCheckingPage } from "@pages/GrammarChecking";
+import { GrammarTestPage } from "@pages/GrammarTest";
 
 const protectedRoutes = [
   {
@@ -51,6 +52,10 @@ const protectedRoutes = [
   {
     path: "/grammar-check",
     element: <GrammarCheckingPage />,
+  },
+  {
+    path: "/grammar-test",
+    element: <GrammarTestPage />,
   },
   {
     path: "/test-report",

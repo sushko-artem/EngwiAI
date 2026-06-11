@@ -17,7 +17,7 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
     const refreshResult = await baseQuery(
       AUTH_ENDPOINTS.REFRESH,
       api,
-      extraOptions
+      extraOptions,
     );
 
     if (refreshResult.data) {
@@ -33,6 +33,6 @@ const baseQueryWithReauth: BaseQueryFn = async (args, api, extraOptions) => {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Collection"],
+  tagTypes: ["User", "Collection", "AIGenerated"],
   endpoints: () => ({}),
 });
