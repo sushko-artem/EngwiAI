@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { CardsRepoModule } from './cards-repo/cards-repo.module';
 import { TestModule } from './test/test.module';
+import { AIModule } from './ai-generator/ai-generator.module';
 
 const envFilePath =
   process.env.NODE_ENV === 'production' ? undefined : process.env.NODE_ENV === 'test' ? '.env.test' : '.env.local';
@@ -21,6 +22,7 @@ const envFilePath =
     TokensModule,
     CardsRepoModule,
     TestModule,
+    AIModule,
   ],
   providers: [
     {

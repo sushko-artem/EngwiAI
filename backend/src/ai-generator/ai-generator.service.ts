@@ -20,7 +20,7 @@ export class AIService {
   ) {
     this.apiKey = this.configService.getOrThrow<string>('AI_API_KEY');
     this.model = this.configService.getOrThrow<string>('AI_MODEL');
-    this.maxTokens = this.configService.getOrThrow<number>('AI_MAX_TOKENS');
+    this.maxTokens = Number(this.configService.getOrThrow<string>('AI_MAX_TOKENS'));
     this.apiUrl = this.configService.getOrThrow<string>('AI_API_URL');
   }
 
@@ -43,7 +43,13 @@ export class AIService {
     const translateTo = validCards.map((card) => (cardSide === 'word' ? card.translation : card.word)).join(', ');
 
     const systemPrompt = this.buildSystemPrompt(difficulty);
-    const userPrompt = this.buildUserPrompt(termsForSentencesGeneration, count, translateTo);
+    const userPrompt = this.buildUserPrompt(termsForSentencesGeneration, count, translateTo, difficulty);
+
+    const complexityTokens = {
+      beginner: 1000,
+      intermediate: 2000,
+      advanced: 4000,
+    };
 
     try {
       const response = await fetch(this.apiUrl, {
@@ -59,7 +65,7 @@ export class AIService {
             { role: 'user', content: userPrompt },
           ],
           temperature: 0.7,
-          max_tokens: this.maxTokens,
+          max_tokens: complexityTokens[difficulty] || this.maxTokens,
           response_format: { type: 'json_object' },
         }),
       });
@@ -117,7 +123,7 @@ export class AIService {
 Твоя задача - создавать предложения, которые помогают запоминать термины через контекст.
 Правила:
 - Уровень сложности: ${difficultyMap[difficulty]}
-- Каждое предложение должно быть естественным и ясно показывать использование термина.
+- Каждое предложение должно быть естественным и ясно показывать использование терминов.
 - Предложения должны быть полезны для метода интервальных повторений.
 - Отвечай ТОЛЬКО валидным JSON, без markdown и лишнего текста.
 - Не добавляй комментарии, объяснения или форматирование.
@@ -125,8 +131,8 @@ export class AIService {
 {
   "sentences": [
       {
-      "term": "исходный термин",
-      "sentence": "Естественное предложение с использованием термина",
+      "terms": "исходные термины",
+      "sentence": "Естественное предложение с использованием терминов",
       "translation": "Перевод предложения"
       }
   ]
@@ -134,12 +140,37 @@ export class AIService {
 `;
   }
 
-  private buildUserPrompt(terms: string, count: number, translateTo: string) {
+  private buildUserPrompt(terms: string, count: number, translateTo: string, difficulty: string) {
+    const difficultyMap = {
+      beginner: 'начальный',
+      intermediate: 'средний',
+      advanced: 'продвинутый',
+    };
+    const difficultyGuidelines = {
+      beginner: `
+- Используй простую грамматику (настоящее время, простые предложения)
+- Избегай сложных конструкций, деепричастий, страдательного залога
+- Длина предложения: 5-10 слов
+- Лексика должна быть базовой, соответствующей уровню A1-A2`,
+      intermediate: `
+- Можно использовать разные времена, условные предложения
+- Допустимы причастные и деепричастные обороты
+- Длина предложения: 8-15 слов
+- Лексика уровня B1-B2`,
+      advanced: `
+- Допустимы любые грамматические конструкции
+- Можно использовать идиомы, метафоры, сложные обороты
+- Длина предложения: 10-25 слов
+- Лексика уровня C1-C2, включая профессиональную терминологию`,
+    };
     return `Создай ровно ${count} предложений, используя эти термины: ${terms}
+Уровень сложности: ${difficultyMap[difficulty]}
+${difficultyGuidelines[difficulty] || difficultyGuidelines.intermediate}
 
 Требования:
 - В одном предложении можно использовать несколько терминов, сохраняя естественный контекст
-- Если терминов меньше чем ${count}, добавь предложения с похожей лексикой
+- Адаптируй сложность предложений под уровень ученика, но сохраняй осмысленность
+- Если терминов меньше чем ${count}, добавь предложения с похожей лексикой соответствующего уровня
 - Постарайся охватить все предоставленные термины в этих ${count} предложениях
 - Предложения должны быть разнообразными и естественными
 - Перевод каждого предложения должен быть на языке, на котором написаны эти термины: ${translateTo}

@@ -5,12 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 export const useGrammarCheck = () => {
   const [chosenId, setChosenId] = useState<string>("");
-  const [visibleSide, setVisibleSide] = useState<"word" | "translation">(
-    "word",
-  );
-  const [level, setLevel] = useState<"beginner" | "intermediate" | "advanced">(
-    "beginner",
-  );
+  const [cardSide, setCardSide] = useState<"word" | "translation">("word");
+  const [difficulty, setDifficulty] = useState<
+    "beginner" | "intermediate" | "advanced"
+  >("beginner");
   const [count, setCount] = useState<"5" | "7" | "10">("5");
   const { warning } = useModal();
   const navigate = useNavigate();
@@ -24,24 +22,25 @@ export const useGrammarCheck = () => {
     if (!chosenId) {
       warning("Ни одного модуля не выбрано!");
     } else {
-      navigate("/grammar-check/test", {
-        state: { chosenId, visibleSide, level, count },
+      const numberCount = Number(count);
+      navigate("/grammar-test", {
+        state: { chosenId, cardSide, difficulty, numberCount },
       });
     }
-  }, [warning, chosenId, visibleSide, navigate, level, count]);
+  }, [warning, chosenId, cardSide, navigate, difficulty, count]);
 
   return {
     chosenId,
     setChosenId,
-    visibleSide,
-    setVisibleSide,
+    cardSide,
+    setCardSide,
     collections,
     isLoading,
     error,
     handleBack,
     startTest,
-    level,
-    setLevel,
+    difficulty,
+    setDifficulty,
     count,
     setCount,
   };

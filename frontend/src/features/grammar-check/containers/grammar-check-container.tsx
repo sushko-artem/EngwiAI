@@ -20,12 +20,12 @@ export const GrammarCheckContainer = () => {
     handleBack,
     startTest,
     collections,
-    visibleSide,
-    setVisibleSide,
+    cardSide,
+    setCardSide,
     setChosenId,
     chosenId,
-    level,
-    setLevel,
+    difficulty,
+    setDifficulty,
     count,
     setCount,
   } = useGrammarCheck();
@@ -50,8 +50,8 @@ export const GrammarCheckContainer = () => {
           onToggle={setChosenId}
           chosenIds={chosenId}
         />
-        <ChooseVisibleSide sideValue={visibleSide} onChange={setVisibleSide} />
-        <ChooseDifficultyLevel level={level} onChange={setLevel} />
+        <ChooseVisibleSide sideValue={cardSide} onChange={setCardSide} />
+        <ChooseDifficultyLevel level={difficulty} onChange={setDifficulty} />
         <ChooseCount count={count} onChange={setCount} />
         <div className="text-center">
           <button

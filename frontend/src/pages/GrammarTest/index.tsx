@@ -1,3 +1,3 @@
-import { GrammarCheckContainer } from "@features/grammar-check";
+import { GrammarTestContainer } from "@features/grammar-test";
 
-export const GrammarTestPage = () => <GrammarCheckContainer />;
+export const GrammarTestPage = () => <GrammarTestContainer />;
