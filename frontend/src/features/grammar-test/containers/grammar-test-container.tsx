@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from "react";
-import backArrow from "@assets/images/arrow-left.svg";
 import { useNavigate } from "react-router-dom";
+import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
-import { useGrammarTest } from "../lib/hooks/useGrammarTest";
-import { Loader } from "shared/ui/loader";
+import { Loader } from "@shared/ui/loader";
+import { GenerationError } from "../ui";
+import { useGrammarTest } from "../lib";
 
 export const GrammarTestContainer = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const GrammarTestContainer = () => {
 
   const renderContent = () => {
     if ((isLoading || !sentences) && !error) return <Loader />;
-    if (error) return <div>{JSON.stringify(error)}</div>;
+    if (error) return <GenerationError error={error} />;
     return <>{JSON.stringify(sentences)}</>;
   };
 

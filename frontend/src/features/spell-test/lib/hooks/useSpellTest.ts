@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import type { ICard } from "@shared/api";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   initialState,
   spellTestReducer,
@@ -11,9 +10,9 @@ import { useNavigationGuard, usePreventReload, useSound } from "@shared/hooks";
 export const useSpellTest = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [getCards, { isLoading, error }] = useGetCardsFromCollectionsMutation();
+  const [getCards, { data: collection, isLoading, error }] =
+    useGetCardsFromCollectionsMutation();
   const [state, dispatch] = useReducer(spellTestReducer, initialState);
-  const [collection, setCollection] = useState<ICard[] | null>(null);
   const { play, toggleGroup, isGroupMuted } = useSound();
   const index = useRef(state.index);
   index.current = state.index;
@@ -32,18 +31,9 @@ export const useSpellTest = () => {
       navigate("/spell-check");
       return;
     }
-    async function getCardsFromCollections() {
-      try {
-        const result = await getCards({
-          collectionIds: location.state.modules,
-        }).unwrap();
-        setCollection(result);
-      } catch (err) {
-        console.error("Failed to load cards:", err);
-        navigate("/spell-check");
-      }
-    }
-    getCardsFromCollections();
+    getCards({
+      collectionIds: location.state.modules,
+    });
   }, [navigate, location.state?.modules, getCards]);
 
   const handleAnswer = useCallback(

@@ -1,15 +1,11 @@
 import { useGenerateSentencesMutation } from "@features/grammar-test/api/ai-api";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { IGenerationResponse } from "shared/api";
 
 export const useGrammarTest = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sentences, setSentences] = useState<IGenerationResponse | undefined>(
-    undefined,
-  );
-  const [generateSentences, { isLoading, error }] =
+  const [generateSentences, { data: sentences, isLoading, error }] =
     useGenerateSentencesMutation();
 
   useEffect(() => {
@@ -23,20 +19,13 @@ export const useGrammarTest = () => {
       cardSide,
       numberCount: count,
     } = location.state;
-    async function generate() {
-      try {
-        const result = await generateSentences({
-          id,
-          difficulty,
-          cardSide,
-          count,
-        }).unwrap();
-        setSentences(result);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    generate();
+
+    generateSentences({
+      id,
+      difficulty,
+      cardSide,
+      count,
+    });
   }, [location.state, navigate, generateSentences]);
 
   return {

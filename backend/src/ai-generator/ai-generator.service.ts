@@ -36,7 +36,10 @@ export class AIService {
     });
 
     if (validCards.length === 0) {
-      throw new AIGenerationException('No valid terms', HttpStatus.BAD_REQUEST);
+      throw new AIGenerationException(
+        'В коллекции нет подходящих слов для генерации предложений.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const termsForSentencesGeneration = validCards.map((card) => card[cardSide]).join(', ');
@@ -73,9 +76,15 @@ export class AIService {
       if (!response.ok) {
         const errorBody = await response.text();
         this.logger.error(`AI API error: ${response.status} - ${errorBody}`);
+        if (response.status === 429) {
+          throw new AIGenerationException(
+            `Слишком много запросов. Пожалуйста, подождите минуту и попробуйте снова.`,
+            HttpStatus.TOO_MANY_REQUESTS,
+          );
+        }
         throw new AIGenerationException(
-          `Failed to generate sentences: ${response.status}`,
-          response.status === 429 ? HttpStatus.TOO_MANY_REQUESTS : HttpStatus.INTERNAL_SERVER_ERROR,
+          `Не удалось сгенерировать предложения. Попробуйте позже или выберите другую коллекцию`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
@@ -87,7 +96,10 @@ export class AIService {
       const result = JSON.parse(content) as AIGenerationResult;
 
       if (!result.sentences || !Array.isArray(result.sentences)) {
-        throw new AIGenerationException('Invalid response structure from AI', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new AIGenerationException(
+          'Некорректная структура ответа от ИИ. Пожалуйста, попробуйте позже.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
 
       return result;
@@ -96,7 +108,10 @@ export class AIService {
         throw error;
       }
       this.logger.error(`Unexpected error: ${error}`);
-      throw new AIGenerationException('An unexpected error occurred', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new AIGenerationException(
+        'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
@@ -10,7 +11,6 @@ import {
   SpellTestOptionsMenu,
   SpellTestResultModal,
 } from "../ui";
-import { useNavigate } from "react-router-dom";
 
 export const SpellCheckTestContainer = () => {
   const {
