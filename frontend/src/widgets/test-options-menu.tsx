@@ -1,24 +1,27 @@
 import { OptionsMenu } from "@widgets/options-menu";
 import { Switch } from "@shared/ui/switch";
+import type { SoundGroupType } from "@shared/hooks";
 
-type SpellTestOptionsMenuPropType = {
+type TestOptionsMenuPropType = {
   isMenuOpen: boolean;
-  isGroupMuted(group: "spellTest"): boolean;
-  toggleGroup(group: "spellTest"): void;
+  soundGroup: SoundGroupType;
+  isGroupMuted(group: SoundGroupType): boolean;
+  toggleGroup(group: SoundGroupType): void;
   onClose(): void;
   reset(): void;
 };
 
-export const SpellTestOptionsMenu = ({
+export const TestOptionsMenu = ({
   isMenuOpen,
+  soundGroup,
   onClose,
   reset,
   isGroupMuted,
   toggleGroup,
-}: SpellTestOptionsMenuPropType) => {
-  const isSoundsOn = !isGroupMuted("spellTest");
+}: TestOptionsMenuPropType) => {
+  const isSoundsOn = !isGroupMuted(soundGroup);
   const toggleSounds = () => {
-    toggleGroup("spellTest");
+    toggleGroup(soundGroup);
   };
   return (
     <OptionsMenu isMenuOpen={isMenuOpen} onClose={onClose}>

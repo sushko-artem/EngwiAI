@@ -8,9 +8,9 @@ import { Loader } from "@shared/ui/loader";
 import {
   SpellTestDescription,
   SpellTestMainContent,
-  SpellTestOptionsMenu,
   SpellTestResultModal,
 } from "../ui";
+import { TestOptionsMenu } from "@widgets/test-options-menu";
 
 export const SpellCheckTestContainer = () => {
   const {
@@ -75,7 +75,8 @@ export const SpellCheckTestContainer = () => {
           />
         )}
         {isMenuOptionsOpen && (
-          <SpellTestOptionsMenu
+          <TestOptionsMenu
+            soundGroup="TestGroup"
             isMenuOpen={isMenuOptionsOpen}
             onClose={closeMenuOptions}
             reset={resetTest}
