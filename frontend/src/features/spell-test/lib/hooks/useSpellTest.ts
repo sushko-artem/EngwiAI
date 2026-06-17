@@ -1,6 +1,6 @@
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
-import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   initialState,
   spellTestReducer,

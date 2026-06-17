@@ -12,6 +12,7 @@ import {
 } from "../reducers/useFlashCardsReducer";
 import { useNavigationGuard } from "@shared/hooks";
 import { isVirtualCollection } from "@entities/collection/lib";
+import { shuffler } from "shared/helpers";
 
 export const useFlashCards = (collectionId: string) => {
   const {
@@ -25,22 +26,16 @@ export const useFlashCards = (collectionId: string) => {
   const navigate = useNavigate();
   const [deleteCollection] = useDeleteCollectionMutation();
   const [updateCollection] = useUpdateCollectionMutation();
+  const testInProgress = state.index > 0 && state.inProgress;
 
   const shuffledCollection = useMemo(() => {
     if (collection) {
-      const shuffled = { ...collection, cards: [...collection.cards] };
-      for (let i = shuffled.cards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled.cards[i], shuffled.cards[j]] = [
-          shuffled.cards[j],
-          shuffled.cards[i],
-        ];
-      }
-      return shuffled;
+      return {
+        ...collection,
+        cards: shuffler(collection.cards),
+      };
     }
   }, [collection]);
-
-  const testInProgress = state.index > 0 && state.inProgress;
 
   useNavigationGuard({
     shouldBlock: testInProgress,

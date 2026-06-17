@@ -1,11 +1,12 @@
 import { useGenerateSentencesMutation } from "@features/grammar-test/api/ai-api";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { transformDataForTest } from "../helpers";
 
 export const useGrammarTest = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [generateSentences, { data: sentences, isLoading, error }] =
+  const [generateSentences, { data, isLoading, error }] =
     useGenerateSentencesMutation();
 
   useEffect(() => {
@@ -28,8 +29,13 @@ export const useGrammarTest = () => {
     });
   }, [location.state, navigate, generateSentences]);
 
+  const processedSentences = useMemo(() => {
+    if (!data?.sentences) return null;
+    return transformDataForTest(data);
+  }, [data]);
+
   return {
-    sentences,
+    sentences: processedSentences,
     isLoading,
     error,
   };
