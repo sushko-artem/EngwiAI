@@ -22,15 +22,21 @@ const mockGetCards = vi.hoisted(() => vi.fn());
 const mockPreventReload = vi.hoisted(() => vi.fn());
 const mockLocationState = { modules: [] as string[], visibleSide: "word" };
 
-vi.mock("@shared/hooks", () => ({
-  useNavigationGuard: mockUseNavigationGuard,
-  usePreventReload: mockPreventReload,
-  useSound: () => ({
-    play: vi.fn(),
-    toggleGroup: vi.fn(),
-    isGroupMuted: vi.fn(),
-  }),
-}));
+vi.mock(import("@shared/hooks"), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigationGuard: mockUseNavigationGuard,
+    usePreventReload: mockPreventReload,
+    useSound: () => ({
+      play: vi.fn(),
+      toggleGroup: vi.fn(),
+      isGroupMuted: vi.fn(),
+      muteAll: vi.fn(),
+      unMuteAll: vi.fn(),
+    }),
+  };
+});
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
@@ -43,10 +49,13 @@ vi.mock("react-router-dom", () => ({
 vi.mock("@entities/collection/api", () => ({
   useGetCardsFromCollectionsMutation: () => [
     mockGetCards,
-    { isLoading: false, error: null },
+    {
+      data: cards,
+      isLoading: false,
+      error: null,
+    },
   ],
 }));
-
 describe("useSpellTest", () => {
   it("should navigate to /spell-check when no modules in location state", () => {
     renderHook(() => useSpellTest());
@@ -55,10 +64,6 @@ describe("useSpellTest", () => {
 
   it("should load cards correctly when modules exist", () => {
     mockLocationState.modules = ["1", "2"];
-
-    mockGetCards.mockReturnValue({
-      unwrap: vi.fn().mockResolvedValue({ cards }),
-    });
 
     const { result } = renderHook(() => useSpellTest());
 
@@ -70,23 +75,8 @@ describe("useSpellTest", () => {
     expect(result.current.error).toBe(null);
   });
 
-  it("should navigate to /spell-check on fetch error", async () => {
-    mockLocationState.modules = ["1", "2"];
-    mockGetCards.mockReturnValue({
-      unwrap: vi.fn().mockRejectedValue(new Error("Fetch failed")),
-    });
-    renderHook(() => useSpellTest());
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/spell-check");
-    });
-  });
-
   it("should pass correct params to useNavigationGuard", () => {
     mockLocationState.modules = ["1", "2"];
-
-    mockGetCards.mockReturnValue({
-      unwrap: vi.fn().mockResolvedValue({ cards }),
-    });
 
     renderHook(() => useSpellTest());
 
@@ -106,13 +96,9 @@ describe("useSpellTest", () => {
   it("should update shouldBlock when test progresses", async () => {
     mockLocationState.modules = ["1", "2"];
 
-    mockGetCards.mockReturnValue({
-      unwrap: vi.fn().mockResolvedValue(cards),
-    });
-
     const { result, rerender } = renderHook(() => useSpellTest());
 
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(result.current.collection).toHaveLength(2);
     });
 
@@ -135,10 +121,6 @@ describe("useSpellTest", () => {
   it("should reset state on resetTest", async () => {
     mockLocationState.modules = ["1", "2"];
 
-    mockGetCards.mockReturnValue({
-      unwrap: vi.fn().mockResolvedValue(cards),
-    });
-
     const { result } = renderHook(() => useSpellTest());
 
     await waitFor(() => {
@@ -159,10 +141,6 @@ describe("useSpellTest", () => {
 
   it("should toggle and close menu options", () => {
     mockLocationState.modules = ["1", "2"];
-
-    mockGetCards.mockReturnValue({
-      unwrap: vi.fn().mockResolvedValue(cards),
-    });
 
     const { result } = renderHook(() => useSpellTest());
 

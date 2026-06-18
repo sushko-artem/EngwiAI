@@ -2,7 +2,7 @@ import type { ICard } from "@shared/api";
 import { Progress } from "@shared/ui/progress";
 import { memo, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { compareUserAnswer } from "../lib/compare-user-answer";
+import { compareUserAnswer } from "@shared/helpers";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];

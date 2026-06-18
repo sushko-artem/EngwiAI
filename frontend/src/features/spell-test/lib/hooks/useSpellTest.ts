@@ -2,17 +2,19 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
 import {
+  useNavigationGuard,
+  usePreventReload,
+  useSound,
   initialState,
-  spellTestReducer,
-} from "../reducers/useSpellTestReducer";
-import { useNavigationGuard, usePreventReload, useSound } from "@shared/hooks";
+  testReducer,
+} from "@shared/hooks";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [getCards, { data: collection, isLoading, error }] =
     useGetCardsFromCollectionsMutation();
-  const [state, dispatch] = useReducer(spellTestReducer, initialState);
+  const [state, dispatch] = useReducer(testReducer, initialState);
   const { play, toggleGroup, isGroupMuted } = useSound();
   const index = useRef(state.index);
   index.current = state.index;
@@ -27,7 +29,7 @@ export const useSpellTest = () => {
   usePreventReload(testInProgress);
 
   useEffect(() => {
-    if (!location.state?.modules) {
+    if (!location.state?.modules.length) {
       navigate("/spell-check");
       return;
     }
@@ -42,7 +44,7 @@ export const useSpellTest = () => {
       dispatch({
         type: "HANDLE_ANSWER",
         payload: {
-          collectionLength: collection.length,
+          testLength: collection.length,
           userAnswer,
           correctAnswer,
           isCorrect,

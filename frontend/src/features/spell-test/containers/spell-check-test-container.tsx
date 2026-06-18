@@ -5,12 +5,8 @@ import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
 import { useSpellTest } from "../lib";
 import { Loader } from "@shared/ui/loader";
-import {
-  SpellTestDescription,
-  SpellTestMainContent,
-  SpellTestResultModal,
-} from "../ui";
-import { TestOptionsMenu } from "@widgets/test-options-menu";
+import { SpellTestDescription, SpellTestMainContent } from "../ui";
+import { TestOptionsMenu, TestResultModal } from "@widgets/user-tests";
 
 export const SpellCheckTestContainer = () => {
   const {
@@ -67,8 +63,10 @@ export const SpellCheckTestContainer = () => {
           playSound={play}
         />
         {isSummaryOpen && (
-          <SpellTestResultModal
-            totalCards={collection.length}
+          <TestResultModal
+            testType="spell"
+            navigateBackTo="/spell-check"
+            totalItems={collection.length}
             rightAnswers={rightAnswersCount}
             userMistakes={userMistakes}
             reset={resetTest}

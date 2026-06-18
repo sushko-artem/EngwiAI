@@ -16,7 +16,7 @@ export const TestResultReportContainer = () => {
     }),
     [handleBack],
   );
-  if (!testReport) return <Navigate to="/spell-check" replace />;
+  if (!testReport) return <Navigate to="/dashboard" replace />;
   const { totalTerms, progress, totalMistakes, mistakesReport } = testReport;
 
   return (

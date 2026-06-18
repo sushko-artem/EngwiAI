@@ -17,7 +17,7 @@ export const useTestReport = () => {
     if (location.state?.testReport.testType === "spell") {
       navigate("/spell-check");
     } else {
-      navigate("/dashboard"); // while haven't grammar feature
+      navigate("/grammar-check");
     }
   }, [navigate, location.state]);
 

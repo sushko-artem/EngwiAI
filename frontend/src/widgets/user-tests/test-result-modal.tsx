@@ -2,22 +2,26 @@ import { ModalAction } from "@shared/ui/modal-action";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-type SpellTestResultModalPropType = {
-  totalCards: number;
+type TestResultModalPropType = {
+  totalItems: number;
   rightAnswers: number;
+  testType: "spell" | "grammar";
+  navigateBackTo: string;
   userMistakes: Record<string, string>;
   reset(): void;
 };
 
-export const SpellTestResultModal = ({
-  totalCards,
+export const TestResultModal = ({
+  totalItems,
   rightAnswers,
   userMistakes,
+  navigateBackTo,
+  testType,
   reset,
-}: SpellTestResultModalPropType) => {
+}: TestResultModalPropType) => {
   const navigate = useNavigate();
   const mistakes = Object.values(userMistakes);
-  const progress = Math.floor((rightAnswers / totalCards) * 100);
+  const progress = Math.floor((rightAnswers / totalItems) * 100);
 
   const getEvaluation = useMemo(() => {
     if (progress === 100) {
@@ -53,16 +57,16 @@ export const SpellTestResultModal = ({
     }
   }, [progress]);
 
-  const backToSpellCheck = () => {
-    navigate("/spell-check");
+  const back = () => {
+    navigate(navigateBackTo);
   };
 
   const showTestReport = () => {
     const testReport = {
-      testType: "spell",
-      totalTerms: totalCards,
+      testType,
+      totalTerms: totalItems,
       progress,
-      totalMistakes: totalCards - rightAnswers,
+      totalMistakes: totalItems - rightAnswers,
       mistakesReport: userMistakes,
     };
     navigate("/test-report", { state: { testReport } });
@@ -93,7 +97,7 @@ export const SpellTestResultModal = ({
             <ModalAction content="Отчёт об ошибках" onClick={showTestReport} />
           )}
           <ModalAction content="Пройти заново" onClick={reset} />
-          <ModalAction content="Завершить" onClick={backToSpellCheck} />
+          <ModalAction content="Завершить" onClick={back} />
         </div>
       </section>
     </div>

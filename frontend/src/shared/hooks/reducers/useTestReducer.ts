@@ -1,4 +1,4 @@
-type SpellTestStateType = {
+type TestStateType = {
   index: number;
   rightAnswersCounter: number;
   mistakesMadeIn: Record<string, string>;
@@ -7,11 +7,11 @@ type SpellTestStateType = {
   inProgress: boolean;
 };
 
-type SpellTestActionsType =
+type TestActionsType =
   | {
       type: "HANDLE_ANSWER";
       payload: {
-        collectionLength: number;
+        testLength: number;
         userAnswer: string;
         correctAnswer: string;
         isCorrect: boolean;
@@ -21,7 +21,7 @@ type SpellTestActionsType =
   | { type: "TOGGLE_MENU" }
   | { type: "CLOSE_MENU" };
 
-export const initialState: SpellTestStateType = {
+export const initialState: TestStateType = {
   index: 0,
   rightAnswersCounter: 0,
   mistakesMadeIn: {},
@@ -30,14 +30,14 @@ export const initialState: SpellTestStateType = {
   inProgress: true,
 };
 
-export function spellTestReducer(
-  state: SpellTestStateType,
-  action: SpellTestActionsType,
-): SpellTestStateType {
+export function testReducer(
+  state: TestStateType,
+  action: TestActionsType,
+): TestStateType {
   switch (action.type) {
     case "HANDLE_ANSWER": {
       const {
-        collectionLength: length,
+        testLength: length,
         userAnswer,
         correctAnswer,
         isCorrect,

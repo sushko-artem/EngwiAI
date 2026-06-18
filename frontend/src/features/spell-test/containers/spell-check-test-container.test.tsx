@@ -123,7 +123,7 @@ describe("SpellCheckTestContainer", () => {
     );
     render(<SpellCheckTestContainer />);
     fireEvent.click(screen.getByTestId("switch-sound"));
-    expect(mockToggleGroup).toHaveBeenCalledWith("spellTest");
+    expect(mockToggleGroup).toHaveBeenCalledWith("TestGroup");
   });
 
   it("should reset test when options menu is open and clicking on reset button", () => {
