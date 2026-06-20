@@ -41,8 +41,8 @@ const createMockedProps = (overrides = {}) => ({
   isMenuOptionsOpen: false,
   handleAnswer: mockHandleAnswer,
   resetTest: mockResetTest,
-  options: mockOptions,
-  closeMenuOptions: mockCloseMenuOptions,
+  toggleMenu: mockOptions,
+  closeMenu: mockCloseMenuOptions,
   play: mockPlay,
   toggleGroup: mockToggleGroup,
   isGroupMuted: vi.fn(),
@@ -88,7 +88,12 @@ describe("SpellCheckTestContainer", () => {
     );
     render(<SpellCheckTestContainer />);
     fireEvent.click(screen.getByTestId("spell-test-answer-button"));
-    expect(mockHandleAnswer).toHaveBeenCalledWith("", "Зеленый", false);
+    expect(mockHandleAnswer).toHaveBeenCalledWith({
+      correctAnswer: "Зеленый",
+      isCorrect: false,
+      testLength: 2,
+      userAnswer: "",
+    });
     expect(mockPlay).toHaveBeenCalledWith("incorrect");
   });
 

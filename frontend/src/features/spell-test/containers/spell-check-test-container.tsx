@@ -21,9 +21,9 @@ export const SpellCheckTestContainer = () => {
     userMistakes,
     resetTest,
     inProgress,
-    options,
+    toggleMenu,
     isMenuOptionsOpen,
-    closeMenuOptions,
+    closeMenu,
     play,
     isGroupMuted,
     toggleGroup,
@@ -38,13 +38,13 @@ export const SpellCheckTestContainer = () => {
     () => ({
       leftIconTitle: "вернуться к выбору модулей",
       rightIconTitle: "настройки",
-      rightIconAction: options,
+      rightIconAction: toggleMenu,
       leftIconAction: handleBack,
       leftIcon: backArrow,
       rightIcon: option,
       title: "Тест орфографии",
     }),
-    [handleBack, options],
+    [handleBack, toggleMenu],
   );
 
   const renderContent = () => {
@@ -76,7 +76,7 @@ export const SpellCheckTestContainer = () => {
           <TestOptionsMenu
             soundGroup="TestGroup"
             isMenuOpen={isMenuOptionsOpen}
-            onClose={closeMenuOptions}
+            onClose={closeMenu}
             reset={resetTest}
             isGroupMuted={isGroupMuted}
             toggleGroup={toggleGroup}

@@ -10,7 +10,12 @@ type SpellTestMainContentPropType = {
   inProgress: boolean;
   visibleSide: "word" | "translation";
   playSound(type: "correct" | "incorrect"): void;
-  onAnswer(answer: string, originalValue: string, isCorrect: boolean): void;
+  onAnswer(payload: {
+    testLength: number;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }): void;
 };
 
 export const SpellTestMainContent = memo(
@@ -40,7 +45,12 @@ export const SpellTestMainContent = memo(
       const status = isCorrect ? "correct" : "incorrect";
       setAnswerStatus(status);
       playSound(status);
-      onAnswer(userAnswer, correctAnswer, isCorrect);
+      onAnswer({
+        testLength: collection.length,
+        userAnswer,
+        correctAnswer,
+        isCorrect,
+      });
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

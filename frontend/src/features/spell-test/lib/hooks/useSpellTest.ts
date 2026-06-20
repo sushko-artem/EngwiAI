@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
 import {
   useNavigationGuard,
   usePreventReload,
   useSound,
-  initialState,
-  testReducer,
+  useTestReducer,
 } from "@shared/hooks";
 
 export const useSpellTest = () => {
@@ -14,7 +13,8 @@ export const useSpellTest = () => {
   const location = useLocation();
   const [getCards, { data: collection, isLoading, error }] =
     useGetCardsFromCollectionsMutation();
-  const [state, dispatch] = useReducer(testReducer, initialState);
+  const { state, handleAnswer, toggleMenu, closeMenu, resetTest } =
+    useTestReducer();
   const { play, toggleGroup, isGroupMuted } = useSound();
   const index = useRef(state.index);
   index.current = state.index;
@@ -38,34 +38,6 @@ export const useSpellTest = () => {
     });
   }, [navigate, location.state?.modules, getCards]);
 
-  const handleAnswer = useCallback(
-    (userAnswer: string, correctAnswer: string, isCorrect: boolean) => {
-      if (!collection) return;
-      dispatch({
-        type: "HANDLE_ANSWER",
-        payload: {
-          testLength: collection.length,
-          userAnswer,
-          correctAnswer,
-          isCorrect,
-        },
-      });
-    },
-    [collection],
-  );
-
-  const options = useCallback(() => {
-    dispatch({ type: "TOGGLE_MENU" });
-  }, []);
-
-  const closeMenuOptions = useCallback(() => {
-    dispatch({ type: "CLOSE_MENU" });
-  }, []);
-
-  const resetTest = useCallback(() => {
-    dispatch({ type: "RESET_TEST" });
-  }, []);
-
   return {
     error,
     collection,
@@ -79,8 +51,8 @@ export const useSpellTest = () => {
     isMenuOptionsOpen: state.isMenuOptionsOpen,
     handleAnswer,
     resetTest,
-    options,
-    closeMenuOptions,
+    toggleMenu,
+    closeMenu,
     play,
     toggleGroup,
     isGroupMuted,
