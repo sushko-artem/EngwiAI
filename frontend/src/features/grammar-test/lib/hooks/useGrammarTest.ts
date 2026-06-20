@@ -1,5 +1,7 @@
-import { useGenerateSentencesMutation } from "@features/grammar-test/api/ai-api";
 import { useEffect, useMemo } from "react";
+import backArrow from "@assets/images/arrow-left.svg";
+import option from "@assets/images/options.png";
+import { useGenerateSentencesMutation } from "@features/grammar-test/api/ai-api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { transformDataForTest } from "../helpers";
 import { useNavigationGuard, useSound, useTestReducer } from "@shared/hooks";
@@ -39,6 +41,18 @@ export const useGrammarTest = () => {
     });
   }, [location.state, navigate, generateSentences]);
 
+  const headerProps = useMemo(
+    () => ({
+      title: "Грамматический тест",
+      leftIcon: backArrow,
+      leftIconTitle: "Вернуться на главную",
+      rightIcon: option,
+      leftIconAction: () => navigate("/grammar-check"),
+      rightIconAction: toggleMenu,
+    }),
+    [navigate, toggleMenu],
+  );
+
   useNavigationGuard({
     shouldBlock: testInProgress,
     confirmMessage:
@@ -51,6 +65,7 @@ export const useGrammarTest = () => {
   }, [data]);
 
   return {
+    headerProps,
     sentences: processedSentences,
     isLoading,
     error,
@@ -58,7 +73,6 @@ export const useGrammarTest = () => {
     toggleGroup,
     isGroupMuted,
     handleAnswer,
-    toggleMenu,
     closeMenu,
     resetTest,
     isSummaryOpen: state.isSummaryModalOpen,

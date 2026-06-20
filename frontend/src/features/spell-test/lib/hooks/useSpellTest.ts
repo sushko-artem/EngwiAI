@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import backArrow from "@assets/images/arrow-left.svg";
+import option from "@assets/images/options.png";
 import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
 import {
   useNavigationGuard,
@@ -23,6 +25,19 @@ export const useSpellTest = () => {
   } = useTestReducer();
   const { play, toggleGroup, isGroupMuted } = useSound();
 
+  const headerProps = useMemo(
+    () => ({
+      leftIconTitle: "вернуться к выбору модулей",
+      rightIconTitle: "настройки",
+      rightIconAction: toggleMenu,
+      leftIconAction: () => navigate("/spell-check"),
+      leftIcon: backArrow,
+      rightIcon: option,
+      title: "Тест орфографии",
+    }),
+    [navigate, toggleMenu],
+  );
+
   useNavigationGuard({
     shouldBlock: testInProgress,
     confirmMessage:
@@ -42,6 +57,7 @@ export const useSpellTest = () => {
   }, [navigate, location.state?.modules, getCards]);
 
   return {
+    headerProps,
     error,
     collection,
     isLoading,

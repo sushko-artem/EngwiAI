@@ -1,7 +1,3 @@
-import { useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import backArrow from "@assets/images/arrow-left.svg";
-import option from "@assets/images/options.png";
 import { Header } from "@widgets/header";
 import { useSpellTest } from "../lib";
 import { Loader } from "@shared/ui/loader";
@@ -10,6 +6,7 @@ import { TestOptionsMenu, TestResultModal } from "@widgets/user-tests";
 
 export const SpellCheckTestContainer = () => {
   const {
+    headerProps,
     collection,
     isLoading,
     error,
@@ -21,31 +18,12 @@ export const SpellCheckTestContainer = () => {
     userMistakes,
     resetTest,
     inProgress,
-    toggleMenu,
     isMenuOptionsOpen,
     closeMenu,
     play,
     isGroupMuted,
     toggleGroup,
   } = useSpellTest();
-  const navigate = useNavigate();
-
-  const handleBack = useCallback(() => {
-    navigate("/spell-check");
-  }, [navigate]);
-
-  const headerProps = useMemo(
-    () => ({
-      leftIconTitle: "вернуться к выбору модулей",
-      rightIconTitle: "настройки",
-      rightIconAction: toggleMenu,
-      leftIconAction: handleBack,
-      leftIcon: backArrow,
-      rightIcon: option,
-      title: "Тест орфографии",
-    }),
-    [handleBack, toggleMenu],
-  );
 
   const renderContent = () => {
     if (isLoading || !collection) return <Loader />;
