@@ -37,5 +37,6 @@ export const useTestReducer = () => {
     toggleMenu,
     closeMenu,
     resetTest,
+    testInProgress: state.index > 0 && state.inProgress,
   };
 };

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
 import {
@@ -13,12 +13,15 @@ export const useSpellTest = () => {
   const location = useLocation();
   const [getCards, { data: collection, isLoading, error }] =
     useGetCardsFromCollectionsMutation();
-  const { state, handleAnswer, toggleMenu, closeMenu, resetTest } =
-    useTestReducer();
+  const {
+    state,
+    handleAnswer,
+    toggleMenu,
+    closeMenu,
+    resetTest,
+    testInProgress,
+  } = useTestReducer();
   const { play, toggleGroup, isGroupMuted } = useSound();
-  const index = useRef(state.index);
-  index.current = state.index;
-  const testInProgress = index.current > 0 && state.inProgress;
 
   useNavigationGuard({
     shouldBlock: testInProgress,

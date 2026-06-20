@@ -51,6 +51,9 @@ export const SpellTestMainContent = memo(
         correctAnswer,
         isCorrect,
       });
+      if (answerRef.current) {
+        answerRef.current.value = "";
+      }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -92,7 +95,6 @@ export const SpellTestMainContent = memo(
             disabled={!inProgress}
             autoFocus
             onKeyDown={handleKeyDown}
-            key={index}
             ref={answerRef}
             className={`p-2 border-1 rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl transition-colors duration-300 ${borderColorClass}`}
             style={{
