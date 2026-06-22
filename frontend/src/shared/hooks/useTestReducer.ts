@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { initialState, testReducer } from "./reducers/testReducer";
-import { useSound } from "./useSound";
 import { compareUserAnswer } from "@shared/helpers";
+import type { SoundNameType } from "shared/constants/sounds";
 
-export const useTestReducer = (testLength: number | undefined) => {
+export const useTestReducer = (
+  testLength: number | undefined,
+  play: (status: SoundNameType) => void,
+) => {
   const [state, dispatch] = useReducer(testReducer, initialState);
-  const { play } = useSound();
 
   useEffect(() => {
     if (testLength) dispatch({ type: "SET_LENGTH", payload: { testLength } });

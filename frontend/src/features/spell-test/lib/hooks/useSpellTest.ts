@@ -15,6 +15,7 @@ export const useSpellTest = () => {
   const location = useLocation();
   const [getCards, { data: collection, isLoading, error }] =
     useGetCardsFromCollectionsMutation();
+  const { toggleGroup, isGroupMuted, play } = useSound();
   const {
     state,
     toggleMenu,
@@ -22,8 +23,7 @@ export const useSpellTest = () => {
     resetTest,
     testInProgress,
     handleAnswer,
-  } = useTestReducer(collection?.length);
-  const { toggleGroup, isGroupMuted } = useSound();
+  } = useTestReducer(collection?.length, play);
 
   const headerProps = useMemo(
     () => ({
