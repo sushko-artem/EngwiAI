@@ -20,7 +20,6 @@ export const SpellCheckTestContainer = () => {
     inProgress,
     isMenuOptionsOpen,
     closeMenu,
-    play,
     isGroupMuted,
     toggleGroup,
   } = useSpellTest();
@@ -38,7 +37,6 @@ export const SpellCheckTestContainer = () => {
           index={index}
           inProgress={inProgress}
           onAnswer={handleAnswer}
-          playSound={play}
         />
         {isSummaryOpen && (
           <TestResultModal

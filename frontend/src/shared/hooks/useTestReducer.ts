@@ -1,22 +1,29 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { initialState, testReducer } from "./reducers/testReducer";
+import { useSound } from "./useSound";
+import { compareUserAnswer } from "@shared/helpers";
 
-export const useTestReducer = () => {
+export const useTestReducer = (testLength: number | undefined) => {
   const [state, dispatch] = useReducer(testReducer, initialState);
+  const { play } = useSound();
+
+  useEffect(() => {
+    if (testLength) dispatch({ type: "SET_LENGTH", payload: { testLength } });
+  }, [dispatch, testLength]);
 
   const handleAnswer = useCallback(
-    (payload: {
-      testLength: number;
-      userAnswer: string;
-      correctAnswer: string;
-      isCorrect: boolean;
-    }) => {
+    (userAnswer: string, correctAnswer: string) => {
+      const status = compareUserAnswer(userAnswer, correctAnswer);
+      play(status);
+      const isCorrect = status === "correct";
+      const payload = { userAnswer, correctAnswer, isCorrect };
       dispatch({
         type: "HANDLE_ANSWER",
         payload,
       });
+      return status;
     },
-    [],
+    [dispatch, play],
   );
 
   const toggleMenu = useCallback(() => {

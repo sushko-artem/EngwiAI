@@ -2,20 +2,14 @@ import type { ICard } from "@shared/api";
 import { Progress } from "@shared/ui/progress";
 import { memo, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { compareUserAnswer } from "@shared/helpers";
+import type { SoundNameType } from "shared/constants/sounds";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
   inProgress: boolean;
   visibleSide: "word" | "translation";
-  playSound(type: "correct" | "incorrect"): void;
-  onAnswer(payload: {
-    testLength: number;
-    userAnswer: string;
-    correctAnswer: string;
-    isCorrect: boolean;
-  }): void;
+  onAnswer(userAnswer: string, correctAnswer: string): SoundNameType;
 };
 
 export const SpellTestMainContent = memo(
@@ -25,35 +19,20 @@ export const SpellTestMainContent = memo(
     onAnswer,
     visibleSide,
     inProgress,
-    playSound,
   }: SpellTestMainContentPropType) => {
     const answerRef = useRef<HTMLTextAreaElement>(null);
-    const [answerStatus, setAnswerStatus] = useState<
-      "correct" | "incorrect" | null
-    >(null);
+    const [borderType, setBorderType] = useState<SoundNameType | null>(null);
+    const originalValue = visibleSide === "word" ? "translation" : "word";
 
     useEffect(() => {
-      setAnswerStatus(null);
+      setBorderType(null);
     }, [index]);
-
-    const originalValue = visibleSide === "word" ? "translation" : "word";
 
     const handleAnswer = () => {
       const userAnswer = answerRef.current?.value || "";
       const correctAnswer = collection[index][originalValue]!;
-      const isCorrect = compareUserAnswer(userAnswer, correctAnswer);
-      const status = isCorrect ? "correct" : "incorrect";
-      setAnswerStatus(status);
-      playSound(status);
-      onAnswer({
-        testLength: collection.length,
-        userAnswer,
-        correctAnswer,
-        isCorrect,
-      });
-      if (answerRef.current) {
-        answerRef.current.value = "";
-      }
+      const status = onAnswer(userAnswer, correctAnswer);
+      setBorderType(status);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -64,9 +43,9 @@ export const SpellTestMainContent = memo(
     };
 
     const borderColorClass =
-      answerStatus === "correct"
+      borderType === "correct"
         ? "border-green-500 focus:border-green-600"
-        : answerStatus === "incorrect"
+        : borderType === "incorrect"
           ? "border-red-500 focus:border-red-600"
           : "border-[#e5e7eb] focus:border-[#e5e7eb]";
 
@@ -91,6 +70,7 @@ export const SpellTestMainContent = memo(
           <span className="font-jost text-fuchsia-700">Ваш ответ:</span>
 
           <TextareaAutosize
+            key={index}
             data-testid="user-answer-textarea"
             disabled={!inProgress}
             autoFocus

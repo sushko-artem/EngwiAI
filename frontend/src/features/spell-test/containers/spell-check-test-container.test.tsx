@@ -12,9 +12,18 @@ const mockHandleAnswer = vi.hoisted(() => vi.fn());
 const mockResetTest = vi.hoisted(() => vi.fn());
 const mockOptions = vi.hoisted(() => vi.fn());
 const mockCloseMenuOptions = vi.hoisted(() => vi.fn());
-const mockPlay = vi.hoisted(() => vi.fn());
 const mockToggleGroup = vi.hoisted(() => vi.fn());
 const mockNavigate = vi.hoisted(() => vi.fn());
+
+const headerProps = {
+  leftIconTitle: "IconTitle",
+  rightIconTitle: "IconTitle",
+  rightIconAction: mockOptions,
+  leftIconAction: () => mockNavigate("/spell-check"),
+  leftIcon: "backArrow",
+  rightIcon: "option",
+  title: "Title",
+};
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -29,6 +38,7 @@ vi.mock("../lib", () => ({
 }));
 
 const createMockedProps = (overrides = {}) => ({
+  headerProps,
   error: null,
   collection: [],
   isLoading: false,
@@ -43,7 +53,6 @@ const createMockedProps = (overrides = {}) => ({
   resetTest: mockResetTest,
   toggleMenu: mockOptions,
   closeMenu: mockCloseMenuOptions,
-  play: mockPlay,
   toggleGroup: mockToggleGroup,
   isGroupMuted: vi.fn(),
   ...overrides,
@@ -88,13 +97,7 @@ describe("SpellCheckTestContainer", () => {
     );
     render(<SpellCheckTestContainer />);
     fireEvent.click(screen.getByTestId("spell-test-answer-button"));
-    expect(mockHandleAnswer).toHaveBeenCalledWith({
-      correctAnswer: "Зеленый",
-      isCorrect: false,
-      testLength: 2,
-      userAnswer: "",
-    });
-    expect(mockPlay).toHaveBeenCalledWith("incorrect");
+    expect(mockHandleAnswer).toHaveBeenCalledWith("", "Зеленый");
   });
 
   it("should show summary modal after test completed", () => {

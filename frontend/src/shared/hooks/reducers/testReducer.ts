@@ -1,4 +1,5 @@
 type TestStateType = {
+  testLength: number;
   index: number;
   rightAnswersCounter: number;
   mistakesMadeIn: Record<string, string>;
@@ -8,10 +9,10 @@ type TestStateType = {
 };
 
 type TestActionsType =
+  | { type: "SET_LENGTH"; payload: { testLength: number } }
   | {
       type: "HANDLE_ANSWER";
       payload: {
-        testLength: number;
         userAnswer: string;
         correctAnswer: string;
         isCorrect: boolean;
@@ -22,6 +23,7 @@ type TestActionsType =
   | { type: "CLOSE_MENU" };
 
 export const initialState: TestStateType = {
+  testLength: 0,
   index: 0,
   rightAnswersCounter: 0,
   mistakesMadeIn: {},
@@ -35,13 +37,11 @@ export function testReducer(
   action: TestActionsType,
 ): TestStateType {
   switch (action.type) {
+    case "SET_LENGTH": {
+      return { ...state, testLength: action.payload.testLength };
+    }
     case "HANDLE_ANSWER": {
-      const {
-        testLength: length,
-        userAnswer,
-        correctAnswer,
-        isCorrect,
-      } = action.payload;
+      const { userAnswer, correctAnswer, isCorrect } = action.payload;
 
       const newState = { ...state };
 
@@ -54,7 +54,7 @@ export function testReducer(
         newState.rightAnswersCounter += 1;
       }
 
-      if (newState.index === length - 1) {
+      if (newState.index === newState.testLength - 1) {
         newState.isSummaryModalOpen = true;
         newState.inProgress = false;
       } else {

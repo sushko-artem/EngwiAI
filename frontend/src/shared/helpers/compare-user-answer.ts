@@ -8,6 +8,8 @@ const normalizeString = (str: string) => {
 export const compareUserAnswer = (
   userAnswer: string,
   correctAnswer: string,
-): boolean => {
-  return normalizeString(userAnswer) === normalizeString(correctAnswer);
+): "correct" | "incorrect" => {
+  return normalizeString(userAnswer) === normalizeString(correctAnswer)
+    ? "correct"
+    : "incorrect";
 };

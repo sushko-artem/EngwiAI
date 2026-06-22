@@ -106,12 +106,7 @@ describe("useSpellTest", () => {
     expect(result.current.index).toBe(0);
 
     act(() => {
-      result.current.handleAnswer({
-        testLength: 2,
-        userAnswer: "hello",
-        correctAnswer: "hello",
-        isCorrect: true,
-      });
+      result.current.handleAnswer("hello", "hello");
     });
 
     rerender();
@@ -133,12 +128,7 @@ describe("useSpellTest", () => {
     });
 
     act(() => {
-      result.current.handleAnswer({
-        testLength: 2,
-        userAnswer: "hello",
-        correctAnswer: "hello",
-        isCorrect: true,
-      });
+      result.current.handleAnswer("hello", "hello");
     });
 
     act(() => {

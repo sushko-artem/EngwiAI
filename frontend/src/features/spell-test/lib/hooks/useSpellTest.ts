@@ -17,13 +17,13 @@ export const useSpellTest = () => {
     useGetCardsFromCollectionsMutation();
   const {
     state,
-    handleAnswer,
     toggleMenu,
     closeMenu,
     resetTest,
     testInProgress,
-  } = useTestReducer();
-  const { play, toggleGroup, isGroupMuted } = useSound();
+    handleAnswer,
+  } = useTestReducer(collection?.length);
+  const { toggleGroup, isGroupMuted } = useSound();
 
   const headerProps = useMemo(
     () => ({
@@ -72,7 +72,6 @@ export const useSpellTest = () => {
     resetTest,
     toggleMenu,
     closeMenu,
-    play,
     toggleGroup,
     isGroupMuted,
   };
