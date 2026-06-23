@@ -4,13 +4,21 @@ import option from "@assets/images/options.png";
 import { useGenerateSentencesMutation } from "@features/grammar-test/api/ai-api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { transformDataForTest } from "../helpers";
-import { useNavigationGuard, useSound, useTestReducer } from "@shared/hooks";
+import {
+  useNavigationGuard,
+  usePreventReload,
+  useSound,
+  useTestReducer,
+} from "@shared/hooks";
 
 export const useGrammarTest = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [generateSentences, { data, isLoading, error }] =
     useGenerateSentencesMutation();
+  const { play, toggleGroup, isGroupMuted } = useSound();
+
+  const testLength = data?.sentences.length;
   const {
     state,
     handleAnswer,
@@ -18,14 +26,14 @@ export const useGrammarTest = () => {
     closeMenu,
     resetTest,
     testInProgress,
-  } = useTestReducer();
-  const { play, toggleGroup, isGroupMuted } = useSound();
+  } = useTestReducer(testLength, play);
 
   useEffect(() => {
-    if (!location.state?.chosenId) {
+    if (!location.state) {
       navigate("/grammar-check");
       return;
     }
+
     const {
       chosenId: id,
       difficulty,
@@ -58,6 +66,8 @@ export const useGrammarTest = () => {
     confirmMessage:
       "Тест не окончен! Вы действительно хотите покинуть страницу?",
   });
+
+  usePreventReload(testInProgress);
 
   const processedSentences = useMemo(() => {
     if (!data?.sentences) return null;

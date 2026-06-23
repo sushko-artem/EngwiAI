@@ -1,28 +1,65 @@
 import { Header } from "@widgets/header";
 import { Loader } from "@shared/ui/loader";
-import { GenerationError, GrammarTestDescription } from "../ui";
+import {
+  GenerationError,
+  GrammarTestContent,
+  GrammarTestDescription,
+} from "../ui";
 import { useGrammarTest } from "../lib";
+import { TestOptionsMenu, TestResultModal } from "@widgets/user-tests";
 
 export const GrammarTestContainer = () => {
-  const { headerProps, sentences, isLoading, error } = useGrammarTest();
+  const {
+    headerProps,
+    sentences,
+    isLoading,
+    error,
+    index,
+    handleAnswer,
+    isSummaryOpen,
+    rightAnswersCount,
+    userMistakes,
+    resetTest,
+    isMenuOptionsOpen,
+    closeMenu,
+    isGroupMuted,
+    toggleGroup,
+  } = useGrammarTest();
 
   const renderContent = () => {
-    if ((isLoading || !sentences) && !error) return <Loader />;
+    if (isLoading) return <Loader />;
     if (error) return <GenerationError error={error} />;
+    if (!sentences?.translations?.length) {
+      return <GenerationError error="Ошибка генерации ИИ" />;
+    }
     return (
       <>
         <GrammarTestDescription />
-        <div>{sentences?.translations[0]}</div>
-        <div>
-          {sentences?.splitedSentences[0].map((word, index) => (
-            <div key={index}>{word}</div>
-          ))}
-        </div>
-        <div>
-          {sentences?.shuffledSentences[0].map((word, index) => (
-            <div key={index}>{word}</div>
-          ))}
-        </div>
+        <GrammarTestContent
+          sentences={sentences}
+          onAnswer={handleAnswer}
+          index={index}
+        />
+        {isSummaryOpen && (
+          <TestResultModal
+            testType="grammar"
+            navigateBackTo="/grammar-check"
+            totalItems={sentences?.translations.length}
+            rightAnswers={rightAnswersCount}
+            userMistakes={userMistakes}
+            reset={resetTest}
+          />
+        )}
+        {isMenuOptionsOpen && (
+          <TestOptionsMenu
+            soundGroup="TestGroup"
+            isMenuOpen={isMenuOptionsOpen}
+            onClose={closeMenu}
+            reset={resetTest}
+            isGroupMuted={isGroupMuted}
+            toggleGroup={toggleGroup}
+          />
+        )}
       </>
     );
   };

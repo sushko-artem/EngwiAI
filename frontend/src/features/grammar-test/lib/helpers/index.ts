@@ -1,1 +1,1 @@
-export { transformDataForTest } from "./transform-data";
+export { transformDataForTest, type GrammarDataType } from "./transform-data";

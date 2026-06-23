@@ -2,15 +2,18 @@ import type { IGenerationResponse } from "@shared/api";
 import { shuffler } from "@shared/helpers";
 
 export const transformDataForTest = (data: IGenerationResponse) => {
-  const splitedSentences = data.sentences.map(
+  const sentences = data.sentences.map(
     (item) => item.sentence.match(/\p{L}+/gu) || [],
   );
+  const joinedSentences = sentences.flatMap((item) => item.join(" "));
   const translations = data.sentences.map((item) => item.translation);
-  const shuffledSentences = splitedSentences.map(shuffler);
+  const shuffledSentences = sentences.map(shuffler);
 
   return {
-    splitedSentences,
+    joinedSentences,
     shuffledSentences,
     translations,
   };
 };
+
+export type GrammarDataType = ReturnType<typeof transformDataForTest>;
