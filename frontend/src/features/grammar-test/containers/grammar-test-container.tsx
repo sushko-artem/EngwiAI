@@ -34,6 +34,7 @@ export const GrammarTestContainer = () => {
     }
     return (
       <>
+        <div>{sentences.translations}</div>
         <GrammarTestDescription />
         <GrammarTestContent
           sentences={sentences}

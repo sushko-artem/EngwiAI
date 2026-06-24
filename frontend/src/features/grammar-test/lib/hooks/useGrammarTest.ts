@@ -17,8 +17,12 @@ export const useGrammarTest = () => {
   const [generateSentences, { data, isLoading, error }] =
     useGenerateSentencesMutation();
   const { play, toggleGroup, isGroupMuted } = useSound();
-
-  const testLength = data?.sentences.length;
+  const getCachedData = () => {
+    const cached = sessionStorage.getItem("grammar_test_cache");
+    return cached ? JSON.parse(cached) : null;
+  };
+  const testLength =
+    data?.sentences.length || getCachedData()?.sentences.length;
   const {
     state,
     handleAnswer,
@@ -33,6 +37,7 @@ export const useGrammarTest = () => {
       navigate("/grammar-check");
       return;
     }
+    if (getCachedData()) return;
 
     const {
       chosenId: id,
@@ -46,7 +51,11 @@ export const useGrammarTest = () => {
       difficulty,
       cardSide,
       count,
-    });
+    })
+      .unwrap()
+      .then((res) => {
+        sessionStorage.setItem("grammar_test_cache", JSON.stringify(res));
+      });
   }, [location.state, navigate, generateSentences]);
 
   const headerProps = useMemo(
@@ -70,8 +79,9 @@ export const useGrammarTest = () => {
   usePreventReload(testInProgress);
 
   const processedSentences = useMemo(() => {
-    if (!data?.sentences) return null;
-    return transformDataForTest(data);
+    const result = getCachedData() || data;
+    if (!result?.sentences) return null;
+    return transformDataForTest(result);
   }, [data]);
 
   return {

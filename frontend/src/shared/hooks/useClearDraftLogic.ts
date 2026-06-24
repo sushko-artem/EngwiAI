@@ -11,9 +11,15 @@ export const useClearDraftLogic = () => {
   useEffect(() => {
     const wasOnEditPage = /\/(edit|create)/.test(prevPathRef.current);
     const isOnEditPage = /\/(edit|create)/.test(location.pathname);
+    const wasOnGrammarTestPage = /\/(grammar-test)/.test(prevPathRef.current);
+    const isOnGrammarTestPage = /\/(grammar-test)/.test(location.pathname);
 
     if (wasOnEditPage && !isOnEditPage) {
       dispatch(clearCollection());
+    }
+
+    if (wasOnGrammarTestPage && !isOnGrammarTestPage) {
+      sessionStorage.removeItem("grammar_test_cache");
     }
 
     prevPathRef.current = location.pathname;
