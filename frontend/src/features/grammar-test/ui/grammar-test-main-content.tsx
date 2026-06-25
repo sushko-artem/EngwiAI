@@ -1,6 +1,9 @@
 import { Progress } from "@shared/ui/progress";
 import type { GrammarDataType } from "../lib/helpers";
 import type { SoundNameType } from "@shared/constants/sounds";
+import { GrammarTestDnD } from "./grammar-test-dnd";
+import { useCallback, useEffect, useState } from "react";
+import type { DragEndEvent } from "@dnd-kit/react";
 
 type GrammarTestContentPropType = {
   index: number;
@@ -13,12 +16,44 @@ export const GrammarTestContent = ({
   sentences,
   onAnswer,
 }: GrammarTestContentPropType) => {
-  const handleAnswer = () => {
-    onAnswer(
-      sentences.shuffledSentences[index].join(" "), // ОТВЕТ ПОЛЬЗОВАТЕЛЯ
-      sentences.joinedSentences[index],
+  const [items, setItems] = useState<Array<{ id: string; text: string }>>([]);
+
+  useEffect(() => {
+    setItems(
+      sentences.shuffledSentences[index].map((word, i) => ({
+        id: `word-${i}-${word}`,
+        text: word,
+      })),
     );
+  }, [sentences, index]);
+
+  const handleAnswer = () => {
+    const userAnswer = items.map((item) => item.text).join(" ");
+    console.log(userAnswer);
+    onAnswer(userAnswer, sentences.joinedSentences[index]);
   };
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { operation } = event;
+
+    if (operation.source && operation.target) {
+      const sourceId = operation.source.id;
+      const targetId = operation.target.id;
+
+      setItems((prevItems) => {
+        const oldIndex = prevItems.findIndex((item) => item.id === sourceId);
+        const newIndex = prevItems.findIndex((item) => item.id === targetId);
+
+        if (oldIndex === -1 || newIndex === -1) return prevItems;
+
+        const newItems = [...prevItems];
+        const [movedItem] = newItems.splice(oldIndex, 1);
+        newItems.splice(newIndex, 0, movedItem);
+
+        return newItems;
+      });
+    }
+  }, []);
+
   return (
     <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
       <div
@@ -40,9 +75,7 @@ export const GrammarTestContent = ({
         <span className="font-jost text-fuchsia-700">
           Составьте предложение из данных слов:
         </span>
-        <div className="p-2 border-1 rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl">
-          {sentences.shuffledSentences[index]}
-        </div>
+        <GrammarTestDnD words={items} handleDragEnd={handleDragEnd} />
       </div>
       <button
         data-testid="grammar-test-answer-button"
