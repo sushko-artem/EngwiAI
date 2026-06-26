@@ -1,5 +1,6 @@
 export { GenerationError } from "./generation-error";
 export { GrammarTestDescription } from "./grammar-test-description";
-export { GrammarTestContent } from "./grammar-test-main-content";
-export { GrammarTestDnD } from "./grammar-test-dnd";
 export { SortableItem } from "./sortable-item";
+export { GrammarTestActionsLayout } from "./grammar-test-actions-layout";
+export { GrammarTestTask } from "./grammar-test-task";
+export { GrammarTestAnswerContainer } from "./grammar-test-answer-container";

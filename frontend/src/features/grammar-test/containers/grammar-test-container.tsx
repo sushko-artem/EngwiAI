@@ -2,8 +2,10 @@ import { Header } from "@widgets/header";
 import { Loader } from "@shared/ui/loader";
 import {
   GenerationError,
-  GrammarTestContent,
   GrammarTestDescription,
+  GrammarTestActionsLayout,
+  GrammarTestTask,
+  GrammarTestAnswerContainer,
 } from "../ui";
 import { useGrammarTest } from "../lib";
 import { TestOptionsMenu, TestResultModal } from "@widgets/user-tests";
@@ -11,11 +13,14 @@ import { TestOptionsMenu, TestResultModal } from "@widgets/user-tests";
 export const GrammarTestContainer = () => {
   const {
     headerProps,
-    sentences,
+    translation,
+    shuffledWords,
     isLoading,
     error,
     index,
-    handleAnswer,
+    handleUserAnswer,
+    handleDragEnd,
+    testLength,
     isSummaryOpen,
     rightAnswersCount,
     userMistakes,
@@ -29,23 +34,29 @@ export const GrammarTestContainer = () => {
   const renderContent = () => {
     if (isLoading) return <Loader />;
     if (error) return <GenerationError error={error} />;
-    if (!sentences?.translations?.length) {
+    if (!testLength) {
       return <GenerationError error="Ошибка генерации ИИ" />;
     }
     return (
       <>
-        <div>{sentences.translations}</div>
         <GrammarTestDescription />
-        <GrammarTestContent
-          sentences={sentences}
-          onAnswer={handleAnswer}
-          index={index}
-        />
+        <GrammarTestActionsLayout>
+          <GrammarTestTask
+            index={index}
+            testLength={testLength}
+            translation={translation}
+          />
+          <GrammarTestAnswerContainer
+            words={shuffledWords}
+            handleAnswer={handleUserAnswer}
+            handleDragEnd={handleDragEnd}
+          />
+        </GrammarTestActionsLayout>
         {isSummaryOpen && (
           <TestResultModal
             testType="grammar"
             navigateBackTo="/grammar-check"
-            totalItems={sentences?.translations.length}
+            totalItems={testLength}
             rightAnswers={rightAnswersCount}
             userMistakes={userMistakes}
             reset={resetTest}

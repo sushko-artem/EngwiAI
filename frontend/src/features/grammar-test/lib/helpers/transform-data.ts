@@ -7,7 +7,12 @@ export const transformDataForTest = (data: IGenerationResponse) => {
   );
   const joinedSentences = sentences.flatMap((item) => item.join(" "));
   const translations = data.sentences.map((item) => item.translation);
-  const shuffledSentences = sentences.map(shuffler);
+  const shuffledSentences = sentences.map(shuffler).map((shuffled) =>
+    shuffled.map((word, i) => ({
+      id: `word-${i}-${word}`,
+      word,
+    })),
+  );
 
   return {
     joinedSentences,
