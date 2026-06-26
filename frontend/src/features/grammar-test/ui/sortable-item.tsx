@@ -11,7 +11,7 @@ export const SortableItem = ({ id, index, word }: SortableItemPropType) => {
   return (
     <div
       ref={ref}
-      className={`border-2 rounded-[5px] p-2 text-center transition-transform ${
+      className={`border-2 rounded-[5px] p-2 text-center transition-transform cursor-grab ${
         isDragging ? "scale-105 opacity-80 shadow-lg" : "scale-100"
       }`}
     >
