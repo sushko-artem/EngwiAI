@@ -133,6 +133,23 @@ export const useGrammarTest = () => {
     }
   }, [handleAnswer, processedSentences, shuffledWords, state.index]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const alertModal = document.querySelector('[data-testId="modal-view"]');
+      if (alertModal || state.isMenuOptionsOpen || state.isSummaryModalOpen)
+        return;
+      if (event.key === "Enter") {
+        handleUserAnswer();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleUserAnswer, state.isMenuOptionsOpen, state.isSummaryModalOpen]);
+
   return {
     headerProps,
     translation: processedSentences?.translations[state.index],
