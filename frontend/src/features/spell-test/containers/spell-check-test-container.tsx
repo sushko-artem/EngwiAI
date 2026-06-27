@@ -11,7 +11,8 @@ export const SpellCheckTestContainer = () => {
     isLoading,
     error,
     index,
-    handleAnswer,
+    handleUserAnswer,
+    borderType,
     visibleSide,
     isSummaryOpen,
     rightAnswersCount,
@@ -36,7 +37,8 @@ export const SpellCheckTestContainer = () => {
           collection={collection}
           index={index}
           inProgress={inProgress}
-          onAnswer={handleAnswer}
+          onAnswer={handleUserAnswer}
+          borderType={borderType}
         />
         {isSummaryOpen && (
           <TestResultModal

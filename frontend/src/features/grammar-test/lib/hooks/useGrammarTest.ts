@@ -13,6 +13,7 @@ import {
 import type { DragEndEvent } from "@dnd-kit/react";
 import type { IGenerationResponse } from "shared/api";
 import { isSortable } from "@dnd-kit/react/sortable";
+import type { SoundNameType } from "@shared/constants/sounds";
 
 export const useGrammarTest = () => {
   const location = useLocation();
@@ -37,6 +38,11 @@ export const useGrammarTest = () => {
   const [shuffledWords, setShuffledWords] = useState<
     Array<{ id: string; word: string }>
   >([]);
+  const [borderType, setBorderType] = useState<SoundNameType | null>(null);
+
+  useEffect(() => {
+    setBorderType(null);
+  }, [state.index]);
 
   useEffect(() => {
     if (!location.state) {
@@ -117,11 +123,13 @@ export const useGrammarTest = () => {
 
   const handleUserAnswer = useCallback(() => {
     const userAnswer = shuffledWords.map((item) => item.word).join(" ");
+    let borderStyleType: SoundNameType;
     if (processedSentences) {
-      handleAnswer(
+      borderStyleType = handleAnswer(
         userAnswer || "",
         processedSentences.joinedSentences[state.index],
       );
+      setBorderType(borderStyleType);
     }
   }, [handleAnswer, processedSentences, shuffledWords, state.index]);
 
@@ -132,6 +140,7 @@ export const useGrammarTest = () => {
     isLoading,
     error,
     testLength,
+    borderType,
     play,
     toggleGroup,
     isGroupMuted,

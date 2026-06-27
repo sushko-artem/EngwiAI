@@ -3,9 +3,11 @@ import { SortableItem } from "./sortable-item";
 import { PointerSensor, PointerActivationConstraints } from "@dnd-kit/dom";
 import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 import { memo, useRef } from "react";
+import type { SoundNameType } from "@shared/constants/sounds";
 
 type GrammarTestAnswerContainerPropType = {
   words: { id: string; word: string }[] | undefined;
+  borderType: SoundNameType | null;
   handleDragEnd(event: DragEndEvent): void;
   handleAnswer(): void;
 };
@@ -15,8 +17,15 @@ export const GrammarTestAnswerContainer = memo(
     words,
     handleDragEnd,
     handleAnswer,
+    borderType,
   }: GrammarTestAnswerContainerPropType) => {
     const containerRef = useRef(null);
+    const borderColorClass =
+      borderType === "correct"
+        ? "border-green-500 focus:border-green-600"
+        : borderType === "incorrect"
+          ? "border-red-500 focus:border-red-600"
+          : "border-[#e5e7eb] focus:border-[#e5e7eb]";
     return (
       <>
         <div className="mt-4 mb-4">
@@ -24,8 +33,7 @@ export const GrammarTestAnswerContainer = memo(
             Составьте предложение из данных слов:
           </h2>
           <DragDropProvider
-            sensors={(defaults) => [
-              ...defaults.filter((sensor) => sensor !== PointerSensor),
+            sensors={[
               PointerSensor.configure({
                 activationConstraints: [
                   new PointerActivationConstraints.Distance({ value: 2 }),
@@ -41,7 +49,7 @@ export const GrammarTestAnswerContainer = memo(
           >
             <div
               ref={containerRef}
-              className="flex gap-1 justify-center flex-wrap text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]"
+              className={`flex gap-1 justify-center flex-wrap text-md lg:text-xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)] ${borderColorClass}`}
             >
               {words &&
                 words.map((item, index) => (

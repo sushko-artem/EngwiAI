@@ -18,6 +18,7 @@ export const GrammarTestContainer = () => {
     isLoading,
     error,
     index,
+    borderType,
     handleUserAnswer,
     handleDragEnd,
     testLength,
@@ -50,6 +51,7 @@ export const GrammarTestContainer = () => {
             words={shuffledWords}
             handleAnswer={handleUserAnswer}
             handleDragEnd={handleDragEnd}
+            borderType={borderType}
           />
         </GrammarTestActionsLayout>
         {isSummaryOpen && (

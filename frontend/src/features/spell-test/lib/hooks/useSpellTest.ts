@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
@@ -9,6 +9,7 @@ import {
   useSound,
   useTestReducer,
 } from "@shared/hooks";
+import type { SoundNameType } from "@shared/constants/sounds";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
@@ -24,6 +25,11 @@ export const useSpellTest = () => {
     testInProgress,
     handleAnswer,
   } = useTestReducer(collection?.length, play);
+  const [borderType, setBorderType] = useState<SoundNameType | null>(null);
+
+  useEffect(() => {
+    setBorderType(null);
+  }, [state.index]);
 
   const headerProps = useMemo(
     () => ({
@@ -56,11 +62,20 @@ export const useSpellTest = () => {
     });
   }, [navigate, location.state?.modules, getCards]);
 
+  const handleUserAnswer = useCallback(
+    (userAnswer: string, correctAnswer: string) => {
+      const borderStyleType = handleAnswer(userAnswer, correctAnswer);
+      setBorderType(borderStyleType);
+    },
+    [handleAnswer],
+  );
+
   return {
     headerProps,
     error,
     collection,
     isLoading,
+    borderType,
     isSummaryOpen: state.isSummaryModalOpen,
     index: state.index,
     visibleSide: location.state?.visibleSide ?? "word",
@@ -68,7 +83,7 @@ export const useSpellTest = () => {
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,
     isMenuOptionsOpen: state.isMenuOptionsOpen,
-    handleAnswer,
+    handleUserAnswer,
     resetTest,
     toggleMenu,
     closeMenu,

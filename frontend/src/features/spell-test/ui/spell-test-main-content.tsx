@@ -1,15 +1,16 @@
 import type { ICard } from "@shared/api";
 import { Progress } from "@shared/ui/progress";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import type { SoundNameType } from "shared/constants/sounds";
+import type { SoundNameType } from "@shared/constants/sounds";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
   inProgress: boolean;
   visibleSide: "word" | "translation";
-  onAnswer(userAnswer: string, correctAnswer: string): SoundNameType;
+  borderType: SoundNameType | null;
+  onAnswer(userAnswer: string, correctAnswer: string): void;
 };
 
 export const SpellTestMainContent = memo(
@@ -19,20 +20,15 @@ export const SpellTestMainContent = memo(
     onAnswer,
     visibleSide,
     inProgress,
+    borderType,
   }: SpellTestMainContentPropType) => {
     const answerRef = useRef<HTMLTextAreaElement>(null);
-    const [borderType, setBorderType] = useState<SoundNameType | null>(null);
     const originalValue = visibleSide === "word" ? "translation" : "word";
-
-    useEffect(() => {
-      setBorderType(null);
-    }, [index]);
 
     const handleAnswer = () => {
       const userAnswer = answerRef.current?.value || "";
       const correctAnswer = collection[index][originalValue]!;
-      const status = onAnswer(userAnswer, correctAnswer);
-      setBorderType(status);
+      onAnswer(userAnswer, correctAnswer);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
