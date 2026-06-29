@@ -11,7 +11,7 @@ import {
   useTestReducer,
 } from "@shared/hooks";
 import type { DragEndEvent } from "@dnd-kit/react";
-import type { IGenerationResponse } from "shared/api";
+import type { IGenerationResponse } from "@shared/api";
 import { isSortable } from "@dnd-kit/react/sortable";
 import type { SoundNameType } from "@shared/constants/sounds";
 
@@ -126,7 +126,7 @@ export const useGrammarTest = () => {
     let borderStyleType: SoundNameType;
     if (processedSentences) {
       borderStyleType = handleAnswer(
-        userAnswer || "",
+        userAnswer,
         processedSentences.joinedSentences[state.index],
       );
       setBorderType(borderStyleType);

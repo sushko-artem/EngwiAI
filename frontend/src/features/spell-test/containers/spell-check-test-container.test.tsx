@@ -44,12 +44,13 @@ const createMockedProps = (overrides = {}) => ({
   isLoading: false,
   isSummaryOpen: false,
   index: 0,
+  borderType: null,
   visibleSide: "word" as "word" | "translation",
   rightAnswersCount: 0,
   userMistakes: {} as Record<string, string>,
   inProgress: false,
   isMenuOptionsOpen: false,
-  handleAnswer: mockHandleAnswer,
+  handleUserAnswer: mockHandleAnswer,
   resetTest: mockResetTest,
   toggleMenu: mockOptions,
   closeMenu: mockCloseMenuOptions,
@@ -108,7 +109,7 @@ describe("SpellCheckTestContainer", () => {
       }),
     );
     render(<SpellCheckTestContainer />);
-    expect(screen.getByTestId("spell-test-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("test-modal")).toBeInTheDocument();
   });
 
   it("shoul call options when clicking on options icon", () => {

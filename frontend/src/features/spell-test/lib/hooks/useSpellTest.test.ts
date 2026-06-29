@@ -106,7 +106,7 @@ describe("useSpellTest", () => {
     expect(result.current.index).toBe(0);
 
     act(() => {
-      result.current.handleAnswer("hello", "hello");
+      result.current.handleUserAnswer("hello", "hello");
     });
 
     rerender();
@@ -128,7 +128,7 @@ describe("useSpellTest", () => {
     });
 
     act(() => {
-      result.current.handleAnswer("hello", "hello");
+      result.current.handleUserAnswer("hello", "hello");
     });
 
     act(() => {
