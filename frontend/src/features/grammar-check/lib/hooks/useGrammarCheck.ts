@@ -1,7 +1,8 @@
 import { useGetCollectionsQuery } from "@entities/collection/api";
 import { useModal } from "@widgets/modal";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import backArrow from "@assets/images/arrow-left.svg";
 
 export const useGrammarCheck = () => {
   const [chosenId, setChosenId] = useState<string>("");
@@ -18,6 +19,16 @@ export const useGrammarCheck = () => {
     navigate("/dashboard");
   }, [navigate]);
 
+  const headerProps = useMemo(
+    () => ({
+      title: "Грамматика",
+      leftIcon: backArrow,
+      leftIconTitle: "Вернуться на главную",
+      leftIconAction: () => navigate("/dashboard"),
+    }),
+    [navigate],
+  );
+
   const startTest = useCallback(() => {
     if (!chosenId) {
       warning("Ни одного модуля не выбрано!");
@@ -30,6 +41,7 @@ export const useGrammarCheck = () => {
   }, [warning, chosenId, cardSide, navigate, difficulty, count]);
 
   return {
+    headerProps,
     chosenId,
     setChosenId,
     cardSide,

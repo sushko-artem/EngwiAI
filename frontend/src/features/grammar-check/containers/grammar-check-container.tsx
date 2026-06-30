@@ -1,6 +1,4 @@
 import { Header } from "@widgets/header";
-import { useMemo } from "react";
-import backArrow from "@assets/images/arrow-left.svg";
 import {
   ChooseCount,
   ChooseDifficultyLevel,
@@ -17,7 +15,7 @@ import { NotASingleCollection } from "@entities/collection/ui";
 export const GrammarCheckContainer = () => {
   const {
     isLoading,
-    handleBack,
+    headerProps,
     startTest,
     collections,
     cardSide,
@@ -29,15 +27,6 @@ export const GrammarCheckContainer = () => {
     count,
     setCount,
   } = useGrammarCheck();
-  const headerProps = useMemo(
-    () => ({
-      title: "Грамматика",
-      leftIcon: backArrow,
-      leftIconTitle: "Вернуться на главную",
-      leftIconAction: handleBack,
-    }),
-    [handleBack],
-  );
 
   const renderContent = () => {
     if (isLoading) return <Loader />;
