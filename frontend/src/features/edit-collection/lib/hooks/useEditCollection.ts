@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import backArrow from "@assets/images/arrow-left.svg";
+import save from "@assets/images/check.png";
 import {
   setExistedCollection,
   selectEditCollectionState,
@@ -15,10 +17,11 @@ import { createUpdateDto, validateCollection } from "@entities/collection/lib";
 import { useModal } from "@widgets/modal";
 import { useNavigationGuard } from "@shared/hooks";
 
-export const useEditCollection = (collectionId: string) => {
+export const useEditCollection = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { warning } = useModal();
+  const { collectionId = "" } = useParams<{ collectionId?: string }>();
   const { editableCollection, deletedCards } = useAppSelector(
     selectEditCollectionState,
   );
@@ -96,10 +99,23 @@ export const useEditCollection = (collectionId: string) => {
     }
   }, [navigate, updateCollection, collectionId, warning, hasChanges]);
 
+  const headerProps = useMemo(
+    () => ({
+      leftIconTitle: "вернуться на главную",
+      rightIconTitle: "сохранить",
+      rightIconAction: saveCollection,
+      leftIconAction: () => navigate("/collections"),
+      leftIcon: backArrow,
+      rightIcon: isSaving || error ? undefined : save,
+      title: isSaving ? "Сохранение..." : "Редактирование",
+    }),
+    [isSaving, error, saveCollection, navigate],
+  );
+
   return {
+    headerProps,
     error,
-    isSaving: isSaving || isLoading,
+    isLoading: isSaving || isLoading,
     editableCollection,
-    saveCollection,
   };
 };

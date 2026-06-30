@@ -43,6 +43,7 @@ vi.mock("@shared/hooks", () => ({
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
   useBlocker: mockUseBlocker,
+  useParams: () => ({ collectionId: "test-id-1234" }),
 }));
 
 vi.mock("@widgets/modal", () => ({
@@ -91,7 +92,7 @@ describe("useEditCollection", () => {
         data: testCollection,
         error: null,
       });
-      renderHook(() => useEditCollection("test-id-1234"));
+      renderHook(() => useEditCollection());
 
       expect(mockUseNavigationGuard).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -113,7 +114,7 @@ describe("useEditCollection", () => {
       };
 
       mockSelectorState(editedCollection, []);
-      renderHook(() => useEditCollection("test-id-1234"));
+      renderHook(() => useEditCollection());
 
       expect(mockUseNavigationGuard).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -138,10 +139,10 @@ describe("useEditCollection", () => {
       };
 
       mockSelectorState(editedCollection, []);
-      const { result } = renderHook(() => useEditCollection("test-id-1234"));
+      const { result } = renderHook(() => useEditCollection());
 
       await act(async () => {
-        result.current.saveCollection();
+        result.current.headerProps.rightIconAction();
       });
 
       expect(mockUseNavigationGuard).toHaveBeenCalledWith(
@@ -157,12 +158,12 @@ describe("useEditCollection", () => {
       data: testCollection,
       error: null,
     });
-    renderHook(() => useEditCollection("test-id-1234"));
+    renderHook(() => useEditCollection());
     expect(mockGetCollectionQuery).toHaveBeenCalledWith("test-id-1234");
   });
 
   it("should store Redux state with loaded collection on mount", () => {
-    renderHook(() => useEditCollection("test-id-1234"));
+    renderHook(() => useEditCollection());
 
     expect(mockDispatch).toHaveBeenCalledWith(
       setExistedCollection(testCollection),
@@ -170,10 +171,10 @@ describe("useEditCollection", () => {
   });
 
   it("should navigate to '/collections' without saving when no changes", async () => {
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+    const { result } = renderHook(() => useEditCollection());
 
     await act(async () => {
-      await result.current.saveCollection();
+      await result.current.headerProps.rightIconAction();
     });
 
     expect(mockNavigate).toHaveBeenCalledWith("/collections");
@@ -184,10 +185,10 @@ describe("useEditCollection", () => {
     const mockEditedCollection = { ...testCollection, name: "firstCollection" };
     mockSelectorState(mockEditedCollection, []);
 
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+    const { result } = renderHook(() => useEditCollection());
 
     await act(async () => {
-      await result.current.saveCollection();
+      await result.current.headerProps.rightIconAction();
     });
 
     expect(mockWarning).toHaveBeenCalledWith(
@@ -207,10 +208,10 @@ describe("useEditCollection", () => {
 
     mockSelectorState(mockEditedCollection, []);
 
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+    const { result } = renderHook(() => useEditCollection());
 
     await act(async () => {
-      await result.current.saveCollection();
+      await result.current.headerProps.rightIconAction();
     });
 
     expect(mockWarning).toHaveBeenCalledWith("Все поля должны быть заполнены!");
@@ -237,10 +238,10 @@ describe("useEditCollection", () => {
 
     mockSelectorState(mockUpdatedCollection, ["2"]);
 
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+    const { result } = renderHook(() => useEditCollection());
 
     await act(async () => {
-      await result.current.saveCollection();
+      await result.current.headerProps.rightIconAction();
     });
 
     expect(mockUpdateCollection).toHaveBeenCalledWith({
@@ -276,10 +277,10 @@ describe("useEditCollection", () => {
 
     mockSelectorState(mockEditedCollection, []);
 
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+    const { result } = renderHook(() => useEditCollection());
 
     await act(async () => {
-      await result.current.saveCollection();
+      await result.current.headerProps.rightIconAction();
     });
 
     expect(mockWarning).toHaveBeenCalledWith("Network error!");
@@ -295,10 +296,10 @@ describe("useEditCollection", () => {
     };
     mockSelectorState(mockEditedCollection, []);
 
-    const { result } = renderHook(() => useEditCollection("test-id-1234"));
+    const { result } = renderHook(() => useEditCollection());
 
     await act(async () => {
-      await result.current.saveCollection();
+      await result.current.headerProps.rightIconAction();
     });
     expect(mockWarning).toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
