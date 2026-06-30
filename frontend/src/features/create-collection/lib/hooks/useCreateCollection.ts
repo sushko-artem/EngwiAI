@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@redux/hooks";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import backArrow from "@assets/images/arrow-left.svg";
+import save from "@assets/images/check.png";
 import {
   initDefaultCollection,
-  type EditableCollectionType,
+  selectEditableCollection,
 } from "@entities/collection/model";
 import {
   useCreateCollectionMutation,
@@ -14,9 +16,8 @@ import { useModal } from "@widgets/modal";
 import { validateCollection } from "@entities/collection/lib";
 import { useNavigationGuard } from "@shared/hooks";
 
-export const useCreateCollection = (
-  collection: EditableCollectionType | null,
-) => {
+export const useCreateCollection = () => {
+  const collection = useAppSelector(selectEditableCollection);
   const [isSaving, setIsSaving] = useState(false);
   const { data: collections } = useGetCollectionsQuery();
   const [createCollection, { isLoading }] = useCreateCollectionMutation();
@@ -86,8 +87,22 @@ export const useCreateCollection = (
     }
   }, [navigate, createCollection, warning]);
 
+  const headerProps = useMemo(
+    () => ({
+      title: isSaving ? "Сохранение..." : "Новая коллекция",
+      leftIconTitle: "вернуться на главную",
+      rightIconTitle: "сохранить",
+      rightIconAction: saveCollection,
+      leftIconAction: () => navigate("/dashboard"),
+      leftIcon: backArrow,
+      rightIcon: isSaving ? undefined : save,
+    }),
+    [isSaving, saveCollection, navigate],
+  );
+
   return {
-    isSaving: isSaving || isLoading,
-    saveCollection,
+    collection,
+    headerProps,
+    isLoading: isSaving || isLoading,
   };
 };

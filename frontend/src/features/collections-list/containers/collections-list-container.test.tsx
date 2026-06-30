@@ -7,7 +7,7 @@ import { MemoryRouter } from "react-router-dom";
 const headerProps = {
   leftIconTitle: "IconTitle",
   rightIconTitle: "IconTitle",
-  leftIconAction: () => mockNavigate("/spell-check"),
+  leftIconAction: () => mockNavigate("/dashboard"),
   leftIcon: "backArrow",
   rightIcon: "option",
   title: "Title",
@@ -126,7 +126,7 @@ describe("CollectionsListContainer", () => {
     );
 
     fireEvent.click(screen.getByTestId("leftIconAction"));
-    expect(mockNavigate).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
 
   it("should call onDelete when delete clicked", () => {
