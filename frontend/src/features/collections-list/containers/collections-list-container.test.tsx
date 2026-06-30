@@ -4,6 +4,15 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { CollectionsListContainer } from "./collections-list-container";
 import { MemoryRouter } from "react-router-dom";
 
+const headerProps = {
+  leftIconTitle: "IconTitle",
+  rightIconTitle: "IconTitle",
+  leftIconAction: () => mockNavigate("/spell-check"),
+  leftIcon: "backArrow",
+  rightIcon: "option",
+  title: "Title",
+};
+
 const mockCollections = [
   {
     name: "FirstCollection",
@@ -15,7 +24,7 @@ const mockCollections = [
   },
 ];
 
-const mockBack = vi.hoisted(() => vi.fn());
+const mockNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("../lib", () => ({
   useCollections: vi.fn(),
@@ -31,7 +40,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      handleBack: mockBack,
+      headerProps,
     });
 
     render(
@@ -49,7 +58,7 @@ describe("CollectionsListContainer", () => {
       error: new Error("Failed to load!"),
       isRefetching: false,
       onDelete: mockOnDelete,
-      handleBack: mockBack,
+      headerProps,
     });
 
     render(
@@ -67,7 +76,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      handleBack: mockBack,
+      headerProps,
     });
 
     render(
@@ -88,7 +97,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      handleBack: mockBack,
+      headerProps,
     });
 
     render(
@@ -107,7 +116,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      handleBack: mockBack,
+      headerProps,
     });
 
     render(
@@ -117,7 +126,7 @@ describe("CollectionsListContainer", () => {
     );
 
     fireEvent.click(screen.getByTestId("leftIconAction"));
-    expect(mockBack).toHaveBeenCalled();
+    expect(mockNavigate).toHaveBeenCalled();
   });
 
   it("should call onDelete when delete clicked", () => {
@@ -127,7 +136,7 @@ describe("CollectionsListContainer", () => {
       error: null,
       isRefetching: false,
       onDelete: mockOnDelete,
-      handleBack: mockBack,
+      headerProps,
     });
 
     render(
