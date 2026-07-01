@@ -1,7 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useGetCollectionsQuery } from "@entities/collection/api";
 import { useModal } from "@widgets/modal";
 import { useNavigate } from "react-router-dom";
+import backArrow from "@assets/images/arrow-left.svg";
 
 export const useSpellCheck = () => {
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
@@ -29,10 +30,6 @@ export const useSpellCheck = () => {
     });
   }, []);
 
-  const handleBack = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
-
   const getChosenModulesIds = useCallback(() => {
     return Array.from(chosenIds);
   }, [chosenIds]);
@@ -46,6 +43,16 @@ export const useSpellCheck = () => {
     }
   }, [getChosenModulesIds, warning, navigate, visibleSide]);
 
+  const headerProps = useMemo(
+    () => ({
+      title: "Орфография",
+      leftIcon: backArrow,
+      leftIconTitle: "Вернуться на главную",
+      leftIconAction: () => navigate("/dashboard"),
+    }),
+    [navigate],
+  );
+
   return {
     collections,
     isLoading,
@@ -56,6 +63,6 @@ export const useSpellCheck = () => {
     visibleSide,
     setVisibleSide,
     startTest,
-    handleBack,
+    headerProps,
   };
 };

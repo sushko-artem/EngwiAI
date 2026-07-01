@@ -52,7 +52,7 @@ describe("useSpellCheck", () => {
   it("should navigate to dashboard when handleBack called", () => {
     const { result } = renderHook(() => useSpellCheck());
     act(() => {
-      result.current.handleBack();
+      result.current.headerProps.leftIconAction();
     });
     expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });

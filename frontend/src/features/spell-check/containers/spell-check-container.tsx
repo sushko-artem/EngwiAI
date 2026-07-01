@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { Loader } from "@shared/ui/loader";
 import { useSpellCheck } from "../lib";
@@ -19,18 +17,8 @@ export const SpellCheckContainer = () => {
     startTest,
     visibleSide,
     setVisibleSide,
-    handleBack,
+    headerProps,
   } = useSpellCheck();
-
-  const headerProps = useMemo(
-    () => ({
-      title: "Орфография",
-      leftIcon: backArrow,
-      leftIconTitle: "Вернуться на главную",
-      leftIconAction: handleBack,
-    }),
-    [handleBack],
-  );
 
   const renderContent = () => {
     if (isLoading) return <Loader />;

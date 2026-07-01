@@ -18,10 +18,17 @@ vi.mock("../hooks", () => ({
   useTestReport: vi.fn(),
 }));
 
+const headerProps = {
+  title: "Title",
+  leftIcon: "backArrow",
+  leftIconTitle: "IconTitle",
+  leftIconAction: mockHandleBack,
+};
+
 describe("TestResultReportContainer", () => {
   it("should render correct props", () => {
     vi.mocked(useTestReport).mockReturnValue({
-      handleBack: mockHandleBack,
+      headerProps,
       testReport: mockTestReport,
     });
     render(<TestResultReportContainer />);
@@ -32,7 +39,7 @@ describe("TestResultReportContainer", () => {
 
   it("should call handleBack when clicking on back arrow button", () => {
     vi.mocked(useTestReport).mockReturnValue({
-      handleBack: mockHandleBack,
+      headerProps,
       testReport: mockTestReport,
     });
     render(<TestResultReportContainer />);
@@ -42,7 +49,7 @@ describe("TestResultReportContainer", () => {
 
   it("should navigate to /dashboard when no report in location.state", () => {
     vi.mocked(useTestReport).mockReturnValue({
-      handleBack: mockHandleBack,
+      headerProps,
       testReport: undefined,
     });
     render(

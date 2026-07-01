@@ -24,6 +24,13 @@ const mockToggle = vi.hoisted(() => vi.fn());
 const mockStartTest = vi.hoisted(() => vi.fn());
 const mockSetSide = vi.hoisted(() => vi.fn());
 
+const headerProps = {
+  title: "Title",
+  leftIcon: "backArrow",
+  leftIconTitle: "IconTitle",
+  leftIconAction: mockBack,
+};
+
 vi.mock("../lib", () => ({
   useSpellCheck: vi.fn(),
 }));
@@ -42,7 +49,7 @@ describe("SpellCheckContainer", () => {
     chosenIds: mockSetIds,
     visibleSide: "word" as "word" | "translation",
     refetch: vi.fn(),
-    handleBack: mockBack,
+    headerProps,
     toggleChoosenModule: mockToggle,
     startTest: mockStartTest,
     setVisibleSide: mockSetSide,
