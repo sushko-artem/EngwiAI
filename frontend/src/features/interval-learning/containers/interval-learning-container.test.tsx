@@ -14,6 +14,13 @@ vi.mock("@widgets/modal", () => ({
   }),
 }));
 
+const headerProps = {
+  title: "Title",
+  leftIcon: "backArrow",
+  leftIconTitle: "IconTitle",
+  leftIconAction: vi.fn(),
+};
+
 describe("IntervalLearningContainer", () => {
   it("should render correctly", () => {
     vi.mocked(useIntervalLearning).mockReturnValue({
@@ -21,6 +28,7 @@ describe("IntervalLearningContainer", () => {
       isRefetching: false,
       activeLength: 17,
       inactiveLength: 31,
+      headerProps,
     });
     render(
       <MemoryRouter>
@@ -37,6 +45,7 @@ describe("IntervalLearningContainer", () => {
       isRefetching: false,
       activeLength: 2,
       inactiveLength: 3,
+      headerProps,
     });
     render(
       <MemoryRouter>
@@ -52,6 +61,7 @@ describe("IntervalLearningContainer", () => {
       isRefetching: false,
       activeLength: 0,
       inactiveLength: 0,
+      headerProps,
     });
     render(
       <MemoryRouter>
@@ -69,6 +79,7 @@ describe("IntervalLearningContainer", () => {
       isRefetching: true,
       activeLength: 22,
       inactiveLength: 37,
+      headerProps,
     });
     render(
       <MemoryRouter>

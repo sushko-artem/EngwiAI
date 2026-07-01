@@ -1,31 +1,13 @@
-import { useCallback, useMemo } from "react";
-import backArrow from "@assets/images/arrow-left.svg";
 import { Header } from "@widgets/header";
 import { Loader } from "@shared/ui/loader";
 import { cn } from "@shared/lib/utils";
-import { useNavigate } from "react-router-dom";
 import { useIntervalLearning } from "../lib";
 import { NotASingleCollection } from "@entities/collection/ui";
 import { IntervalActionsBox, IntervalDescription } from "../ui/";
 
 export const IntervalLearningContainer = () => {
-  const { activeLength, inactiveLength, isLoading, isRefetching } =
+  const { activeLength, inactiveLength, isLoading, isRefetching, headerProps } =
     useIntervalLearning();
-  const navigate = useNavigate();
-
-  const handleBack = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
-
-  const headerProps = useMemo(
-    () => ({
-      title: "Контрольное тестирование",
-      leftIcon: backArrow,
-      leftIconTitle: "Вернуться на главную",
-      leftIconAction: handleBack,
-    }),
-    [handleBack],
-  );
 
   const renderContent = () => {
     if (isLoading) return <Loader />;

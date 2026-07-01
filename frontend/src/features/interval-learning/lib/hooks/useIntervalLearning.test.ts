@@ -50,6 +50,10 @@ const activeCollection = {
 const mockActiveRefetch = vi.hoisted(() => vi.fn());
 const mockInactiveRefetch = vi.hoisted(() => vi.fn());
 
+vi.mock("react-router-dom", () => ({
+  useNavigate: vi.fn(),
+}));
+
 vi.mock("@entities/collection/api", () => ({
   useGetCollectionQuery: vi.fn((collectionType) => {
     if (collectionType === VIRTUAL_COLLECTIONS.ACTIVE) {
