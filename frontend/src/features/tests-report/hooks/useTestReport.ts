@@ -1,13 +1,7 @@
 import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
-
-type TestType = "spell" | "grammar";
-
-const TEST_ROUTES: Record<TestType, string> = {
-  spell: "/spell-check",
-  grammar: "/grammar-check",
-};
+import { TEST_ROUTES, type TestType } from "@widgets/user-tests";
 
 export type TestReportType = {
   testType: TestType;
