@@ -2,8 +2,15 @@ import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
 
+type TestType = "spell" | "grammar";
+
+const TEST_ROUTES: Record<TestType, string> = {
+  spell: "/spell-check",
+  grammar: "/grammar-check",
+};
+
 export type TestReportType = {
-  testType: "spell" | "grammar";
+  testType: TestType;
   totalTerms: number;
   progress: number;
   totalMistakes: number;
@@ -20,14 +27,16 @@ export const useTestReport = () => {
       leftIcon: backArrow,
       leftIconTitle: "Назад",
       leftIconAction: () => {
-        if (location.state?.testReport.testType === "spell") {
-          navigate("/spell-check");
+        const testType = location.state?.testReport?.testType;
+
+        if (testType && testType in TEST_ROUTES) {
+          navigate(TEST_ROUTES[testType as TestType]);
         } else {
-          navigate("/grammar-check");
+          navigate("/dashboard");
         }
       },
     }),
-    [navigate, location.state],
+    [navigate, location.state?.testReport.testType],
   );
 
   return {
