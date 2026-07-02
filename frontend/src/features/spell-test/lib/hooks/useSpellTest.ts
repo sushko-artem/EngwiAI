@@ -10,6 +10,7 @@ import {
   useTestReducer,
 } from "@shared/hooks";
 import type { SoundNameType } from "@shared/constants/sounds";
+import type { SideValueType } from "@widgets/choose-collection";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export const useSpellTest = () => {
     getCards({
       collectionIds: location.state.modules,
     });
-  }, [navigate, location.state?.modules, getCards]);
+  }, [navigate, location.state.modules, getCards]);
 
   const handleUserAnswer = useCallback(
     (userAnswer: string, correctAnswer: string) => {
@@ -78,7 +79,7 @@ export const useSpellTest = () => {
     borderType,
     isSummaryOpen: state.isSummaryModalOpen,
     index: state.index,
-    visibleSide: location.state?.visibleSide ?? "word",
+    visibleSide: location.state.visibleSide as SideValueType,
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,

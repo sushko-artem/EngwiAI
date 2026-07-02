@@ -2,7 +2,7 @@ import { Label } from "@shared/ui/label";
 import { RadioGroup, RadioGroupItem } from "@shared/ui/radio-group";
 import { memo } from "react";
 
-type SideValueType = "word" | "translation";
+export type SideValueType = "word" | "translation";
 
 type CooseVisibleSidePropType = {
   sideValue: SideValueType;

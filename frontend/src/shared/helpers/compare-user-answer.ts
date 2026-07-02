@@ -1,3 +1,5 @@
+import type { SoundNameType } from "shared/constants/sounds";
+
 const normalizeString = (str: string) => {
   return str
     .toLowerCase()
@@ -8,7 +10,7 @@ const normalizeString = (str: string) => {
 export const compareUserAnswer = (
   userAnswer: string,
   correctAnswer: string,
-): "correct" | "incorrect" => {
+): SoundNameType => {
   return normalizeString(userAnswer) === normalizeString(correctAnswer)
     ? "correct"
     : "incorrect";

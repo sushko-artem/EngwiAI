@@ -3,12 +3,13 @@ import { Progress } from "@shared/ui/progress";
 import { memo, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import type { SoundNameType } from "@shared/constants/sounds";
+import type { SideValueType } from "@widgets/choose-collection";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
   inProgress: boolean;
-  visibleSide: "word" | "translation";
+  visibleSide: SideValueType;
   borderType: SoundNameType | null;
   onAnswer(userAnswer: string, correctAnswer: string): void;
 };
