@@ -12,7 +12,7 @@ describe("SpellTestPage - critical", () => {
 
   it("should complete full test with correct answers and see summary", function () {
     cy.answerAllCards(this.animals.cards);
-    cy.get("[data-testid='spell-test-modal']").should("be.visible");
+    cy.get("[data-testid='test-modal']").should("be.visible");
     cy.contains("100%").should("be.visible");
     cy.get("[data-testid='modal-action']").should("have.length", 2);
   });
@@ -24,7 +24,7 @@ describe("SpellTestPage - critical", () => {
     cy.contains(`2/${this.animals.cards.length}`).should("be.visible");
 
     cy.answerAllCards(this.animals.cards.slice(1));
-    cy.get("[data-testid='spell-test-modal']").should("be.visible");
+    cy.get("[data-testid='test-modal']").should("be.visible");
     cy.get("[data-testid='modal-action']").should("have.length", 3);
   });
 

@@ -1,8 +1,8 @@
-import type { ICard } from "@shared/api";
+import type { CardStatusType, ICard } from "@shared/api";
 
 type FlashCardsStateType = {
   unmemTerms: number;
-  actualStatus: { id: string; status: "ACTIVE" | "INACTIVE" }[];
+  actualStatus: { id: string; status: CardStatusType }[];
   isReversed: boolean;
   isModalOpen: boolean;
   isMenuOpen: boolean;

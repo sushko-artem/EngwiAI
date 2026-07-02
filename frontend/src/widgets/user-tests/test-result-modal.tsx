@@ -90,7 +90,7 @@ export const TestResultModal = ({
           </div>
         </div>
         <div
-          data-testid="spell-test-modal-actions-container"
+          data-testid="test-modal-actions-container"
           className="grid gap-2 m-auto mt-4 max-w-[80%]"
         >
           {!!mistakes.length && (
