@@ -18,10 +18,14 @@ const mockConfirm = vi.hoisted(() => vi.fn());
 const mockDeleteCollection = vi.hoisted(() => vi.fn());
 const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
 const mockUpdateCollection = vi.hoisted(() => vi.fn());
+const mockCollectionId = {
+  collectionId: "test-id-123",
+};
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
   useBlocker: mockBlocker,
+  useParams: () => mockCollectionId,
 }));
 
 vi.mock("@widgets/modal", () => ({
@@ -52,17 +56,19 @@ describe("useFlashCards", () => {
     });
   });
   it("should call useGetCollectionQuery with correct id", () => {
-    renderHook(() => useFlashCards("test-id-123"));
+    renderHook(() => useFlashCards());
 
     expect(mockGetCollectionQuery).toHaveBeenCalledWith("test-id-123");
   });
 
   it("should set isVirtual=true if collectionId is 'active' or 'inactive' ", () => {
-    const { result } = renderHook(() => useFlashCards("inactive"));
+    mockCollectionId.collectionId = "inactive";
+    const { result } = renderHook(() => useFlashCards());
     expect(result.current.isVirtual).toBe(true);
   });
 
   it("should shuffle cards order", () => {
+    mockCollectionId.collectionId = "test-id-123";
     const mockCollection = {
       id: "test-123",
       name: "Test Collection",
@@ -87,7 +93,7 @@ describe("useFlashCards", () => {
       isLoading: false,
       error: null,
     });
-    const { result } = renderHook(() => useFlashCards("test-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     const originalOrder = mockCollection.cards.map((card) => card.id);
     const shuffledOrder = result.current.collection?.cards.map(
@@ -106,7 +112,7 @@ describe("useFlashCards", () => {
       error: new Error("Collection not found!"),
     });
 
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     expect(result.current.error).toBeInstanceOf(Error);
 
@@ -116,7 +122,7 @@ describe("useFlashCards", () => {
   });
 
   it("should increase unmemTerms when status is false", () => {
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     act(() => {
       result.current.handleChosenStatus(false);
@@ -126,7 +132,7 @@ describe("useFlashCards", () => {
   });
 
   it("should show next card when status is true", () => {
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     act(() => {
       result.current.handleChosenStatus(true);
@@ -137,7 +143,7 @@ describe("useFlashCards", () => {
   });
 
   it("should show modal on last card", () => {
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     act(() => {
       result.current.handleChosenStatus(true);
@@ -153,7 +159,7 @@ describe("useFlashCards", () => {
   });
 
   it("should toggle isReversed when handleSwitchChange", () => {
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     expect(result.current.isReversed).toBe(false);
 
@@ -165,7 +171,7 @@ describe("useFlashCards", () => {
   });
 
   it("should open/close menu with options()", () => {
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     act(() => {
       result.current.options();
@@ -187,7 +193,7 @@ describe("useFlashCards", () => {
       unwrap: vi.fn().mockResolvedValue({}),
     });
 
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     await act(async () => {
       await result.current.handleDelete();
@@ -204,7 +210,7 @@ describe("useFlashCards", () => {
   it("should NOT delete collection when cancelled", async () => {
     mockConfirm.mockResolvedValue(false);
 
-    const { result } = renderHook(() => useFlashCards("test-id-123"));
+    const { result } = renderHook(() => useFlashCards());
 
     await act(async () => {
       await result.current.handleDelete();
@@ -219,7 +225,7 @@ describe("useFlashCards", () => {
   it("should block browser back button when test in progress", async () => {
     const mockProceed = vi.fn();
     const mockReset = vi.fn();
-    const { result, rerender } = renderHook(() => useFlashCards("test-id-123"));
+    const { result, rerender } = renderHook(() => useFlashCards());
     mockConfirm.mockResolvedValue(true);
     act(() => {
       result.current.handleChosenStatus(true);

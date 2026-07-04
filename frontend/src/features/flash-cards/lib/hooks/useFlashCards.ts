@@ -4,7 +4,7 @@ import {
   useDeleteCollectionMutation,
   useUpdateCollectionMutation,
 } from "@entities/collection/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "@widgets/modal";
 import {
   flashCardsReducer,
@@ -14,7 +14,8 @@ import { useNavigationGuard } from "@shared/hooks";
 import { isVirtualCollection } from "@entities/collection/lib";
 import { shuffler } from "shared/helpers";
 
-export const useFlashCards = (collectionId: string) => {
+export const useFlashCards = () => {
+  const { collectionId = "" } = useParams<{ collectionId?: string }>();
   const {
     data: collection,
     isLoading,

@@ -14,11 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useFlashCards } from "../lib";
 import { NoCollectionError } from "@entities/collection/ui";
 
-export const FlashCardsContainer = ({
-  collectionId,
-}: {
-  collectionId: string;
-}) => {
+export const FlashCardsContainer = () => {
   const {
     options,
     collection,
@@ -29,7 +25,7 @@ export const FlashCardsContainer = ({
     error,
     isLoading,
     ...props
-  } = useFlashCards(collectionId);
+  } = useFlashCards();
   const navigate = useNavigate();
   const isLoadingOrDeleting = props.isDeleting || (isLoading && !collection);
   const isNoCollectionError = !collection && !isLoading && error;

@@ -51,17 +51,11 @@ vi.mock("../lib", () => ({
 }));
 
 describe("FlashCardsContainer", () => {
-  it("should call hook with correct argument of collection id", () => {
-    vi.mocked(useFlashCards).mockReturnValue(createMockedProps());
-    render(<FlashCardsContainer collectionId="testId-123" />);
-    expect(useFlashCards).toHaveBeenCalledWith("testId-123");
-  });
-
   it("should show loader when loading", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ isLoading: true }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
@@ -69,7 +63,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ error: new Error("Failed to load!") }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     expect(screen.getByText("Error: Failed to load!")).toBeInTheDocument();
   });
 
@@ -77,7 +71,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     expect(screen.getByText("Test Name")).toBeInTheDocument();
     expect(screen.getByText("Green")).toBeInTheDocument();
     expect(screen.getByText("Зеленый")).not.toBeVisible();
@@ -87,7 +81,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getAllByTestId("chosen-status-button")[0]);
     expect(mockHandleChosenStatus).toHaveBeenCalledWith(false);
   });
@@ -96,7 +90,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection, isVirtual: true }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByTestId("leftIconAction"));
     expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
   });
@@ -105,7 +99,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByTestId("leftIconAction"));
     expect(mockNavigate).toHaveBeenCalledWith("/collections");
   });
@@ -114,7 +108,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByTestId("rightIconAction"));
     expect(mockOptions).toHaveBeenCalled();
   });
@@ -123,7 +117,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection, isMenuOpen: true }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByRole("switch"));
     expect(mockHandleSwitchChange).toHaveBeenCalled();
   });
@@ -132,7 +126,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection, isMenuOpen: true }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByText("Удалить коллекцию"));
     expect(mockHandleDelete).toHaveBeenCalled();
   });
@@ -141,7 +135,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection, isMenuOpen: true }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByTestId("menu-overlay"));
     expect(mockCloseMenu).toHaveBeenCalled();
   });
@@ -150,7 +144,7 @@ describe("FlashCardsContainer", () => {
     vi.mocked(useFlashCards).mockReturnValue(
       createMockedProps({ collection: mockCollection, isModalOpen: true }),
     );
-    render(<FlashCardsContainer collectionId="testId-123" />);
+    render(<FlashCardsContainer />);
     fireEvent.click(screen.getByText("Пройти заново"));
     expect(mockHandleReset).toHaveBeenCalled();
   });
