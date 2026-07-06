@@ -3,7 +3,7 @@ import {
   sounds,
   type SoundNameType,
   SOUND_GROUP,
-} from "shared/constants/sounds";
+} from "@shared/constants/sounds";
 
 export type SoundGroupType = keyof typeof SOUND_GROUP;
 
