@@ -7,10 +7,12 @@ import {
   ChooseModuleList,
   ChooseVisibleSide,
 } from "@widgets/choose-collection";
+import { QueryCollectionsError } from "@widgets/query-collections-error";
 
 export const SpellCheckContainer = () => {
   const {
     collections,
+    error,
     isLoading,
     chosenIds,
     toggleChoosenModule,
@@ -22,6 +24,7 @@ export const SpellCheckContainer = () => {
 
   const renderContent = () => {
     if (isLoading) return <Loader />;
+    if (error) return <QueryCollectionsError error={error} />;
     if (!collections?.length) return <NotASingleCollection />;
     return (
       <>

@@ -63,6 +63,19 @@ describe("GrammarCheckContainer", () => {
     expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
+  it("should show error page when error", () => {
+    vi.mocked(useGrammarCheck).mockReturnValue(
+      createMockedProps({ error: new Error("Query failed!") }),
+    );
+    render(
+      <MemoryRouter>
+        <GrammarCheckContainer />
+      </MemoryRouter>,
+    );
+    expect(screen.getByTestId("query-collections-error")).toBeInTheDocument();
+    expect(screen.getByText("Error: Query failed!")).toBeInTheDocument();
+  });
+
   it("shoul show default page with proposition to create collection when collections array is empty", () => {
     vi.mocked(useGrammarCheck).mockReturnValue(
       createMockedProps({ collections: [] }),

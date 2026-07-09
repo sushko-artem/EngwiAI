@@ -11,10 +11,12 @@ import {
   ChooseVisibleSide,
 } from "@widgets/choose-collection";
 import { NotASingleCollection } from "@entities/collection/ui";
+import { QueryCollectionsError } from "@widgets/query-collections-error";
 
 export const GrammarCheckContainer = () => {
   const {
     isLoading,
+    error,
     headerProps,
     startTest,
     collections,
@@ -30,6 +32,7 @@ export const GrammarCheckContainer = () => {
 
   const renderContent = () => {
     if (isLoading) return <Loader />;
+    if (error) return <QueryCollectionsError error={error} />;
     if (!collections?.length) return <NotASingleCollection />;
     return (
       <>
