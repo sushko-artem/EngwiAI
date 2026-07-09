@@ -5,12 +5,13 @@ import { deleteCard, updateCard } from "@entities/collection/model";
 import type { ICard } from "@shared/api";
 import { CardInputField } from "./";
 import { DeleteCross } from "@shared/ui/cross-delete";
+import type { CardSideType } from "../types";
 
 export const EditableCard = memo(({ id, word, translation }: ICard) => {
   const dispatch = useAppDispatch();
 
   const handleChange = useCallback(
-    (value: string, field: "word" | "translation") => {
+    (value: string, field: CardSideType) => {
       dispatch(updateCard({ id, value, field }));
     },
     [dispatch, id],

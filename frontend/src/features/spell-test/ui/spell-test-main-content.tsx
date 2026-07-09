@@ -3,13 +3,13 @@ import { Progress } from "@shared/ui/progress";
 import { memo, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import type { SoundNameType } from "@shared/constants/sounds";
-import type { SideValueType } from "@widgets/choose-collection";
+import type { CardSideType } from "@entities/collection/types";
 
 type SpellTestMainContentPropType = {
   collection: ICard[];
   index: number;
   inProgress: boolean;
-  visibleSide: SideValueType;
+  visibleSide: CardSideType;
   borderType: SoundNameType | null;
   onAnswer(userAnswer: string, correctAnswer: string): void;
 };
@@ -24,11 +24,11 @@ export const SpellTestMainContent = memo(
     borderType,
   }: SpellTestMainContentPropType) => {
     const answerRef = useRef<HTMLTextAreaElement>(null);
-    const originalValue = visibleSide === "word" ? "translation" : "word";
+    const side = visibleSide === "word" ? "translation" : "word";
 
     const handleAnswer = () => {
       const userAnswer = answerRef.current?.value || "";
-      const correctAnswer = collection[index][originalValue]!;
+      const correctAnswer = collection[index][side]!;
       onAnswer(userAnswer, correctAnswer);
     };
 

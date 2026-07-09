@@ -10,7 +10,7 @@ import {
   useTestReducer,
 } from "@shared/hooks";
 import type { SoundNameType } from "@shared/constants/sounds";
-import type { SideValueType } from "@widgets/choose-collection";
+import type { CardSideType } from "@entities/collection/types";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ export const useSpellTest = () => {
     borderType,
     isSummaryOpen: state.isSummaryModalOpen,
     index: state.index,
-    visibleSide: location.state.visibleSide as SideValueType,
+    visibleSide: location.state.visibleSide as CardSideType,
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,

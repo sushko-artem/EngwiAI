@@ -3,14 +3,18 @@ import { useModal } from "@widgets/modal";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
+import type { CardSideType } from "@entities/collection/types";
+import type {
+  DifficultyGenerationType,
+  GenerationCountType,
+} from "@shared/api";
 
 export const useGrammarCheck = () => {
   const [chosenId, setChosenId] = useState<string>("");
-  const [cardSide, setCardSide] = useState<"word" | "translation">("word");
-  const [difficulty, setDifficulty] = useState<
-    "beginner" | "intermediate" | "advanced"
-  >("beginner");
-  const [count, setCount] = useState<"5" | "7" | "10">("5");
+  const [cardSide, setCardSide] = useState<CardSideType>("word");
+  const [difficulty, setDifficulty] =
+    useState<DifficultyGenerationType>("beginner");
+  const [count, setCount] = useState<GenerationCountType>("5");
   const { warning } = useModal();
   const navigate = useNavigate();
   const { data: collections, isLoading, error } = useGetCollectionsQuery();

@@ -1,12 +1,11 @@
+import type { CardSideType } from "@entities/collection/types";
 import { Label } from "@shared/ui/label";
 import { RadioGroup, RadioGroupItem } from "@shared/ui/radio-group";
 import { memo } from "react";
 
-export type SideValueType = "word" | "translation";
-
 type CooseVisibleSidePropType = {
-  sideValue: SideValueType;
-  onChange(value: SideValueType): void;
+  sideValue: CardSideType;
+  onChange(value: CardSideType): void;
 };
 
 export const ChooseVisibleSide = memo(

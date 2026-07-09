@@ -1,12 +1,11 @@
 import { memo, useId } from "react";
+import type { GenerationCountType } from "shared/api";
 import { Label } from "shared/ui/label";
 import { RadioGroup, RadioGroupItem } from "shared/ui/radio-group";
 
-type CountType = "5" | "7" | "10";
-
 type ChooseCountPropType = {
-  count: CountType;
-  onChange(count: CountType): void;
+  count: GenerationCountType;
+  onChange(count: GenerationCountType): void;
 };
 
 export const ChooseCount = memo(({ count, onChange }: ChooseCountPropType) => {

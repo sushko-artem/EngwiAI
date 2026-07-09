@@ -3,11 +3,11 @@ import { useGetCollectionsQuery } from "@entities/collection/api";
 import { useModal } from "@widgets/modal";
 import { useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
-import type { SideValueType } from "@widgets/choose-collection";
+import type { CardSideType } from "@entities/collection/types";
 
 export const useSpellCheck = () => {
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
-  const [visibleSide, setVisibleSide] = useState<SideValueType>("word");
+  const [visibleSide, setVisibleSide] = useState<CardSideType>("word");
   const { warning } = useModal();
   const navigate = useNavigate();
   const {

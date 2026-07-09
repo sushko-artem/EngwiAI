@@ -1,12 +1,11 @@
 import { memo, useId } from "react";
-import { Label } from "shared/ui/label";
-import { RadioGroup, RadioGroupItem } from "shared/ui/radio-group";
-
-type DifficultyType = "beginner" | "intermediate" | "advanced";
+import type { DifficultyGenerationType } from "@shared/api";
+import { Label } from "@shared/ui/label";
+import { RadioGroup, RadioGroupItem } from "@shared/ui/radio-group";
 
 type ChooseDifficultyLevelPropType = {
-  level: DifficultyType;
-  onChange(level: DifficultyType): void;
+  level: DifficultyGenerationType;
+  onChange(level: DifficultyGenerationType): void;
 };
 
 export const ChooseDifficultyLevel = memo(
