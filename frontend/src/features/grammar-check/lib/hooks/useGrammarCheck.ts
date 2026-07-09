@@ -15,10 +15,6 @@ export const useGrammarCheck = () => {
   const navigate = useNavigate();
   const { data: collections, isLoading, error } = useGetCollectionsQuery();
 
-  const handleBack = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
-
   const headerProps = useMemo(
     () => ({
       title: "Грамматика",
@@ -49,7 +45,6 @@ export const useGrammarCheck = () => {
     collections,
     isLoading,
     error,
-    handleBack,
     startTest,
     difficulty,
     setDifficulty,

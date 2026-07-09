@@ -4,8 +4,8 @@ import {
   ChooseDifficultyLevel,
   GrammarCheckDescription,
 } from "../ui";
-import { useGrammarCheck } from "../lib/hooks/useGrammarCheck";
-import { Loader } from "shared/ui/loader";
+import { useGrammarCheck } from "../lib";
+import { Loader } from "@shared/ui/loader";
 import {
   ChooseModuleList,
   ChooseVisibleSide,
