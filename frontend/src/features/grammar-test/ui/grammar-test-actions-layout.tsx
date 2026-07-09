@@ -1,5 +1,3 @@
-// import { memo } from "react";
-
 type GrammarTestLayoutPropType = {
   children: React.ReactNode;
 };
