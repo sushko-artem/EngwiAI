@@ -10,8 +10,10 @@ import {
   ChooseModuleList,
   ChooseVisibleSide,
 } from "@widgets/choose-collection";
-import { NotASingleCollection } from "@entities/collection/ui";
-import { QueryCollectionsError } from "@widgets/query-collections-error";
+import {
+  NotASingleCollection,
+  QueryCollectionsError,
+} from "@entities/collection/ui";
 
 export const GrammarCheckContainer = () => {
   const {
