@@ -6,7 +6,7 @@ import { memo, useRef } from "react";
 import type { SoundNameType } from "@shared/constants/sounds";
 
 type GrammarTestAnswerContainerPropType = {
-  words: { id: string; word: string }[] | undefined;
+  words: { id: string; word: string }[];
   borderType: SoundNameType | null;
   handleDragEnd(event: DragEndEvent): void;
   handleAnswer(): void;
@@ -48,18 +48,18 @@ export const GrammarTestAnswerContainer = memo(
             onDragEnd={handleDragEnd}
           >
             <div
+              data-testid="border-answer"
               ref={containerRef}
               className={`flex gap-1 justify-center flex-wrap text-md lg:text-xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)] ${borderColorClass}`}
             >
-              {words &&
-                words.map((item, index) => (
-                  <SortableItem
-                    key={item.id}
-                    id={item.id}
-                    index={index}
-                    word={item.word}
-                  />
-                ))}
+              {words.map((item, index) => (
+                <SortableItem
+                  key={item.id}
+                  id={item.id}
+                  index={index}
+                  word={item.word}
+                />
+              ))}
             </div>
           </DragDropProvider>
         </div>
