@@ -11,6 +11,13 @@ vi.stubGlobal(
   })),
 );
 
+// vi.stubGlobal("sessionStorage", {
+//   getItem: vi.fn(() => null),
+//   setItem: vi.fn(),
+//   removeItem: vi.fn(),
+//   clear: vi.fn(),
+// });
+
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();

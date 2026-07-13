@@ -14,9 +14,11 @@ import type { DragEndEvent } from "@dnd-kit/react";
 import type { IGenerationResponse } from "@shared/api";
 import { isSortable } from "@dnd-kit/react/sortable";
 import type { SoundNameType } from "@shared/constants/sounds";
+import type { GrammarTestNavigationState } from "shared/types";
 
 export const useGrammarTest = () => {
   const location = useLocation();
+  const LocationState = location.state as GrammarTestNavigationState | null;
   const navigate = useNavigate();
   const [generateSentences, { data, isLoading, error }] =
     useGenerateSentencesMutation();
@@ -45,7 +47,7 @@ export const useGrammarTest = () => {
   }, [state.index]);
 
   useEffect(() => {
-    if (!location.state) {
+    if (!LocationState?.chosenId || !LocationState?.difficulty) {
       navigate("/grammar-check");
       return;
     }
@@ -56,7 +58,7 @@ export const useGrammarTest = () => {
       difficulty,
       cardSide,
       numberCount: count,
-    } = location.state;
+    } = LocationState;
 
     generateSentences({
       id,
@@ -68,7 +70,7 @@ export const useGrammarTest = () => {
       .then((res) => {
         sessionStorage.setItem("grammar_test_cache", JSON.stringify(res));
       });
-  }, [location.state, navigate, generateSentences]);
+  }, [LocationState, navigate, generateSentences]);
 
   const headerProps = useMemo(
     () => ({

@@ -8,6 +8,7 @@ import type {
   DifficultyGenerationType,
   GenerationCountType,
 } from "@shared/api";
+import type { GrammarTestNavigationState } from "@shared/types";
 
 export const useGrammarCheck = () => {
   const [chosenId, setChosenId] = useState<string>("");
@@ -35,7 +36,12 @@ export const useGrammarCheck = () => {
     } else {
       const numberCount = Number(count);
       navigate("/grammar-test", {
-        state: { chosenId, cardSide, difficulty, numberCount },
+        state: {
+          chosenId,
+          cardSide,
+          difficulty,
+          numberCount,
+        } satisfies GrammarTestNavigationState,
       });
     }
   }, [warning, chosenId, cardSide, navigate, difficulty, count]);

@@ -4,6 +4,7 @@ import { useModal } from "@widgets/modal";
 import { useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
 import type { CardSideType } from "@entities/collection/types";
+import type { SpellTestNavigationState } from "shared/types";
 
 export const useSpellCheck = () => {
   const [chosenIds, setChosenIds] = useState<Set<string>>(new Set());
@@ -38,7 +39,9 @@ export const useSpellCheck = () => {
     if (!modules.length) {
       warning("Ни одного модуля не выбрано!");
     } else {
-      navigate("/spell-check/test", { state: { modules, visibleSide } });
+      navigate("/spell-check/test", {
+        state: { modules, visibleSide } satisfies SpellTestNavigationState,
+      });
     }
   }, [getChosenModulesIds, warning, navigate, visibleSide]);
 

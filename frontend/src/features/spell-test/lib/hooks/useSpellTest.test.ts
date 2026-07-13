@@ -20,10 +20,14 @@ const mockBlocker = vi.hoisted(() => vi.fn());
 const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
 const mockGetCards = vi.hoisted(() => vi.fn());
 const mockPreventReload = vi.hoisted(() => vi.fn());
-const mockLocationState = { modules: [] as string[], visibleSide: "word" };
+const mockLocationState = {
+  modules: [] as string[] | null,
+  visibleSide: "word",
+};
 
-vi.mock(import("@shared/hooks"), async (importOriginal) => {
-  const actual = await importOriginal();
+vi.mock("@shared/hooks", async () => {
+  const actual =
+    await vi.importActual<typeof import("@shared/hooks")>("@shared/hooks");
   return {
     ...actual,
     useNavigationGuard: mockUseNavigationGuard,
@@ -58,6 +62,7 @@ vi.mock("@entities/collection/api", () => ({
 }));
 describe("useSpellTest", () => {
   it("should navigate to /spell-check when no modules in location state", () => {
+    mockLocationState.modules = null;
     renderHook(() => useSpellTest());
     expect(mockNavigate).toHaveBeenCalledWith("/spell-check");
   });

@@ -10,11 +10,12 @@ import {
   useTestReducer,
 } from "@shared/hooks";
 import type { SoundNameType } from "@shared/constants/sounds";
-import type { CardSideType } from "@entities/collection/types";
+import type { SpellTestNavigationState } from "@shared/types";
 
 export const useSpellTest = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const locationState = location.state as SpellTestNavigationState | null;
   const [getCards, { data: collection, isLoading, error }] =
     useGetCardsFromCollectionsMutation();
   const { toggleGroup, isGroupMuted, play } = useSound();
@@ -54,14 +55,14 @@ export const useSpellTest = () => {
   usePreventReload(testInProgress);
 
   useEffect(() => {
-    if (!location.state?.modules.length) {
+    if (!locationState?.modules || !locationState?.visibleSide) {
       navigate("/spell-check");
       return;
     }
     getCards({
-      collectionIds: location.state.modules,
+      collectionIds: locationState.modules,
     });
-  }, [navigate, location.state.modules, getCards]);
+  }, [navigate, locationState, getCards]);
 
   const handleUserAnswer = useCallback(
     (userAnswer: string, correctAnswer: string) => {
@@ -79,7 +80,7 @@ export const useSpellTest = () => {
     borderType,
     isSummaryOpen: state.isSummaryModalOpen,
     index: state.index,
-    visibleSide: location.state.visibleSide as CardSideType,
+    visibleSide: locationState?.visibleSide,
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,
