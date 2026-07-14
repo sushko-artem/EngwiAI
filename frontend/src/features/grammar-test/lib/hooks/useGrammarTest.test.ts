@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useGrammarTest } from "./useGrammarTest";
+import { act } from "react";
 
 const mockData = {
   sentences: [
@@ -14,6 +16,15 @@ const mockPreventReload = vi.hoisted(() => vi.fn());
 const mockNavigate = vi.hoisted(() => vi.fn());
 const mockGenerateSentences = vi.hoisted(() => vi.fn());
 const mockLocation = vi.hoisted(() => vi.fn());
+const mockHandleAnswer = vi.hoisted(() => vi.fn());
+const mockState = {
+  index: 0,
+  inProgress: false,
+  isMenuOptionsOpen: false,
+  isSummaryModalOpen: false,
+  rightAnswersCounter: 0,
+  mistakesMadeIn: [],
+};
 
 vi.mock("@shared/hooks", async () => {
   const actual =
@@ -29,8 +40,21 @@ vi.mock("@shared/hooks", async () => {
       muteAll: vi.fn(),
       unMuteAll: vi.fn(),
     }),
+    useTestReducer: () => ({
+      state: mockState,
+      handleAnswer: mockHandleAnswer,
+      toggleMenu: vi.fn(),
+      closeMenu: vi.fn(),
+      resetTest: vi.fn(),
+      testInProgress: false,
+    }),
   };
 });
+
+vi.mock("@dnd-kit/react/sortable", () => ({
+  useSortable: () => ({ ref: vi.fn(), isDragging: false }),
+  isSortable: () => true,
+}));
 
 vi.mock("@features/grammar-test/api/ai-api", () => ({
   useGenerateSentencesMutation: () => [
@@ -62,7 +86,21 @@ describe("useGrammarTest", () => {
     mockGenerateSentences.mockReturnValue({
       unwrap: vi.fn().mockResolvedValue(mockData),
     });
+    mockHandleAnswer.mockReturnValue("correct");
   });
+  describe("state transitions", () => {
+    it("should have correct initial state values", () => {
+      const { result } = renderHook(() => useGrammarTest());
+
+      expect(result.current.index).toBe(0);
+      expect(result.current.rightAnswersCount).toBe(0);
+      expect(result.current.userMistakes).toEqual([]);
+      expect(result.current.borderType).toBeNull();
+      expect(result.current.isMenuOptionsOpen).toBe(false);
+      expect(result.current.isSummaryOpen).toBe(false);
+    });
+  });
+
   it("should navigate to 'grammar-check' when no data in location state", () => {
     mockLocation.mockReturnValue({ state: null });
     renderHook(() => useGrammarTest());
@@ -103,14 +141,120 @@ describe("useGrammarTest", () => {
     });
   });
 
-  // it("should handle generation error", async () => {
-  //   mockGenerateSentences.mockReturnValue({
-  //     unwrap: vi.fn().mockRejectedValue(new Error("Generation error!")),
-  //   });
-  //   sessionStorage.getItem = vi.fn(() => null);
-  //   const { result } = renderHook(() => useGrammarTest());
-  //   await waitFor(() => {
-  //     expect(result.current.error).toBe("Generation error!");
-  //   });
-  // });
+  it("should not call generateSentences if cached data in sessionStorage", () => {
+    sessionStorage.setItem("grammar_test_cache", JSON.stringify(mockData));
+    renderHook(() => useGrammarTest());
+    expect(mockGenerateSentences).not.toHaveBeenCalled();
+  });
+
+  it("translation property should be correct", () => {
+    const { result } = renderHook(() => useGrammarTest());
+    expect(result.current.translation).toBe("Привет, Мир!");
+  });
+
+  it("shuffled words contains correct data", () => {
+    const { result } = renderHook(() => useGrammarTest());
+    const words = result.current.shuffledWords.map((w) => w.word).sort();
+    expect(words).toEqual(["Hello", "World"]);
+  });
+
+  it("testLength should have correct data", () => {
+    const { result } = renderHook(() => useGrammarTest());
+    expect(result.current.testLength).toBe(2);
+  });
+
+  describe("handleDragEnd", () => {
+    it("should reorder shuffledWords when item is moved", () => {
+      const { result } = renderHook(() => useGrammarTest());
+      const initOrder = result.current.shuffledWords.map((w) => w.id);
+      act(() => {
+        result.current.handleDragEnd({
+          canceled: false,
+          operation: {
+            source: {
+              type: "sortable",
+              initialIndex: 0,
+              index: 1,
+            },
+          },
+        } as any);
+      });
+      const newOrder = result.current.shuffledWords.map((w) => w.id);
+      expect(newOrder).not.toEqual(initOrder);
+    });
+
+    it("should not change shuffledWords when item dropped in same position", () => {
+      const { result } = renderHook(() => useGrammarTest());
+      const initOrder = [...result.current.shuffledWords];
+      act(() => {
+        result.current.handleDragEnd({
+          canceled: false,
+          operation: {
+            source: {
+              type: "sortable",
+              initialIndex: 0,
+              index: 0,
+            },
+          },
+        } as any);
+      });
+      expect(result.current.shuffledWords).toEqual(initOrder);
+    });
+  });
+
+  describe("handleUserAnswer", () => {
+    it("should update borderType when answer is correct", async () => {
+      const { result } = renderHook(() => useGrammarTest());
+
+      act(() => {
+        result.current.handleUserAnswer();
+      });
+
+      await waitFor(() => {
+        expect(result.current.borderType).toBe("correct");
+      });
+    });
+
+    it("should update borderType to 'incorrect' when answer is wrong", async () => {
+      mockHandleAnswer.mockReturnValue("incorrect");
+      const { result } = renderHook(() => useGrammarTest());
+
+      act(() => {
+        result.current.handleUserAnswer();
+      });
+
+      await waitFor(() => {
+        expect(result.current.borderType).toBe("incorrect");
+      });
+    });
+  });
+
+  it("should call handleUserAnswer when Enter key is pressed", async () => {
+    renderHook(() => useGrammarTest());
+    mockHandleAnswer.mockClear();
+
+    act(() => {
+      const event = new KeyboardEvent("keydown", { key: "Enter" });
+      document.dispatchEvent(event);
+    });
+
+    await waitFor(() => {
+      expect(mockHandleAnswer).toHaveBeenCalled();
+    });
+  });
+
+  it("should NOT call handleUserAnswer when Enter key is pressed and options menu is open", async () => {
+    mockState.isMenuOptionsOpen = true;
+    renderHook(() => useGrammarTest());
+    mockHandleAnswer.mockClear();
+
+    act(() => {
+      const event = new KeyboardEvent("keydown", { key: "Enter" });
+      document.dispatchEvent(event);
+    });
+
+    await waitFor(() => {
+      expect(mockHandleAnswer).not.toHaveBeenCalled();
+    });
+  });
 });
