@@ -6,6 +6,7 @@ describe("GrammarCheckPage - critical", () => {
     cy.createCollection("food");
     cy.fixture("collections/food").as("food");
     cy.fixture("collections/animals").as("animals");
+    cy.fixture("grammar-test-data").as("mockedResponseData");
     cy.visit("/grammar-check");
   });
 
@@ -22,6 +23,11 @@ describe("GrammarCheckPage - critical", () => {
     cy.get("[data-testid='7_tenses']").should("be.visible");
     cy.get("[data-testid='10_tenses']").should("be.visible");
     cy.get("[data-testid='start-test']").should("be.visible");
+  });
+
+  it("should show warning modal when clicking on start test button and no chosen module", function () {
+    cy.get("[data-testid='start-test']").click();
+    cy.get("[data-testid='modal-view']").should("be.visible");
   });
 
   it("should select only one module", function () {
@@ -44,8 +50,16 @@ describe("GrammarCheckPage - critical", () => {
   });
 
   it("should navigate to grammar-test page when clicking on start test button and module is chosen", function () {
+    cy.intercept("POST", "/api/ai/generate-sentences", {
+      statusCode: 200,
+      fixture: "grammar-test-data.json",
+    }).as("generateSentences");
     cy.contains(this.animals.name).click();
     cy.get("[data-testid='start-test']").click();
-    cy.url().should("include", "grammar-test");
+    cy.wait("@generateSentences");
+    cy.url().should("include", "/grammar-test");
+    cy.contains(this.mockedResponseData.sentences[0].translation).should(
+      "be.visible",
+    );
   });
 });

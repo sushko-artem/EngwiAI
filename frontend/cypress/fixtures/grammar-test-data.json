@@ -1,0 +1,29 @@
+{
+  "sentences": [
+    {
+      "terms": "",
+      "sentence": "Hello, World!",
+      "translation": "Привет, Мир!"
+    },
+    {
+      "terms": "",
+      "sentence": "How are you?",
+      "translation": "Как дела?"
+    },
+    {
+      "terms": "",
+      "sentence": "Good morning!",
+      "translation": "Доброе утро!"
+    },
+    {
+      "terms": "",
+      "sentence": "One, two, three.",
+      "translation": "Раз, два, три."
+    },
+    {
+      "terms": "",
+      "sentence": "Where are you from?",
+      "translation": "Откуда ты?"
+    }
+  ]
+}

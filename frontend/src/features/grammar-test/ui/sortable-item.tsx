@@ -10,6 +10,7 @@ export const SortableItem = ({ id, index, word }: SortableItemPropType) => {
   const { ref, isDragging } = useSortable({ id, index });
   return (
     <div
+      data-testid="sortable-item"
       ref={ref}
       className={`border-2 border-gray-400 bg-[rgba(255,241,228,1)] rounded-[5px] p-2 text-center transition-transform cursor-grab ${
         isDragging
