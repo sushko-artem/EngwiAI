@@ -80,7 +80,7 @@ export const useSpellTest = () => {
     borderType,
     isSummaryOpen: state.isSummaryModalOpen,
     index: state.index,
-    visibleSide: locationState?.visibleSide,
+    visibleSide: locationState?.visibleSide || "word",
     rightAnswersCount: state.rightAnswersCounter,
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,
