@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { SpellTestMainContent } from "./spell-test-main-content";
-import type { SideValueType } from "@widgets/choose-collection";
 import userEvent from "@testing-library/user-event";
+import type { CardSideType } from "@entities/collection/types";
 
 const collection = [
   { id: "1", word: "Green", translation: "Зеленый" },
@@ -14,7 +14,7 @@ describe("spell-test-main-content", () => {
     collection,
     index: 0,
     onAnswer: vi.fn(),
-    visibleSide: "word" as SideValueType,
+    visibleSide: "word" as CardSideType,
     inProgress: true,
     borderType: null,
   };
