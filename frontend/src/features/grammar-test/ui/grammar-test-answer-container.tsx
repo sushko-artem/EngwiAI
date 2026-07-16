@@ -30,7 +30,7 @@ export const GrammarTestAnswerContainer = memo(
       <>
         <div className="mt-4 mb-4">
           <h2 className="font-jost text-fuchsia-700">
-            Составьте предложение из данных слов:
+            Расставьте слова в правильном порядке:
           </h2>
           <DragDropProvider
             sensors={[
