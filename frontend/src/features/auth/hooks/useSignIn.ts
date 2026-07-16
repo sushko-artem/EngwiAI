@@ -20,9 +20,21 @@ export const useSignIn = () => {
         if (isFetchBaseQueryError(error) && error.status === 401) {
           const errorData = error.data as {
             message: string;
-            error: string;
+            error?: string;
+            statusCode: number;
           };
-          formik.setErrors({ [errorData.error]: errorData.message });
+          if (errorData.error) {
+            formik.setErrors({ [errorData.error]: errorData.message });
+          } else {
+            const message = errorData.message || "";
+            if (message.includes("email")) {
+              formik.setErrors({ email: message });
+            } else if (message.includes("пароль")) {
+              formik.setErrors({ password: message });
+            } else {
+              formik.setStatus({ backendError: message });
+            }
+          }
         } else {
           formik.setStatus({
             backendError: getErrorMessage(error),

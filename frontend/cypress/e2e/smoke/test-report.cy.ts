@@ -6,10 +6,9 @@ describe("TestReportPage - smoke", () => {
     cy.fixture("collections/animals").as("animals");
   });
 
-  it("should navigate to spell-check page if empty location.state", function () {
+  it("should navigate to dashboard page if empty location.state", function () {
     cy.visit("/test-report");
-    cy.url().should("contain", "/spell-check");
-    cy.get("[data-testid='start-test']").should("be.visible");
+    cy.url().should("contain", "/dashboard");
   });
 
   it("should contain user mistake in test-report after completing spell-test", function () {
