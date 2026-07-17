@@ -48,9 +48,17 @@ export const useGrammarTest = () => {
 
   useEffect(() => {
     if (!LocationState?.chosenId || !LocationState?.difficulty) {
-      navigate("/grammar-check");
+      navigate("/grammar-check", { replace: true });
       return;
     }
+
+    const wasCompleted = sessionStorage.getItem("grammar_test_completed");
+    if (wasCompleted) {
+      sessionStorage.removeItem("grammar_test_completed");
+      navigate("/grammar-check", { replace: true });
+      return;
+    }
+
     if (getCachedData()) return;
 
     const {
@@ -70,7 +78,7 @@ export const useGrammarTest = () => {
       .then((res) => {
         sessionStorage.setItem("grammar_test_cache", JSON.stringify(res));
       });
-  }, [LocationState, navigate, generateSentences]);
+  }, [LocationState, navigate, generateSentences, location.pathname]);
 
   const headerProps = useMemo(
     () => ({
@@ -78,7 +86,7 @@ export const useGrammarTest = () => {
       leftIcon: backArrow,
       leftIconTitle: "Вернуться на главную",
       rightIcon: option,
-      leftIconAction: () => navigate("/grammar-check"),
+      leftIconAction: () => navigate("/grammar-check", { replace: true }),
       rightIconAction: toggleMenu,
     }),
     [navigate, toggleMenu],

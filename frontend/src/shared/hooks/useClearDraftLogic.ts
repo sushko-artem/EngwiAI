@@ -20,6 +20,7 @@ export const useClearDraftLogic = () => {
 
     if (wasOnGrammarTestPage && !isOnGrammarTestPage) {
       sessionStorage.removeItem("grammar_test_cache");
+      sessionStorage.setItem("grammar_test_completed", "true");
     }
 
     prevPathRef.current = location.pathname;

@@ -34,6 +34,7 @@ export const useGrammarCheck = () => {
     if (!chosenId) {
       warning("Ни одного модуля не выбрано!");
     } else {
+      sessionStorage.removeItem("grammar_test_completed");
       const numberCount = Number(count);
       navigate("/grammar-test", {
         state: {
