@@ -104,7 +104,9 @@ describe("useGrammarTest", () => {
   it("should navigate to 'grammar-check' when no data in location state", () => {
     mockLocation.mockReturnValue({ state: null });
     renderHook(() => useGrammarTest());
-    expect(mockNavigate).toHaveBeenCalledWith("/grammar-check");
+    expect(mockNavigate).toHaveBeenCalledWith("/grammar-check", {
+      replace: true,
+    });
   });
 
   it("should pass correct params to useNavigationGuard", () => {

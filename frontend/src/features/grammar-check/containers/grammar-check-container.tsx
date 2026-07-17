@@ -14,6 +14,7 @@ import {
   NotASingleCollection,
   QueryCollectionsError,
 } from "@entities/collection/ui";
+import { StartTestButtonContainer } from "../ui/button-container";
 
 export const GrammarCheckContainer = () => {
   const {
@@ -47,15 +48,7 @@ export const GrammarCheckContainer = () => {
         <ChooseVisibleSide sideValue={cardSide} onChange={setCardSide} />
         <ChooseDifficultyLevel level={difficulty} onChange={setDifficulty} />
         <ChooseCount count={count} onChange={setCount} />
-        <div className="text-center">
-          <button
-            data-testid="start-test"
-            onClick={startTest}
-            className="border-zinc-500 rounded-[5px] cursor-pointer border-2 p-2 mt-4 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all"
-          >
-            Начать тест
-          </button>
-        </div>
+        <StartTestButtonContainer handleClick={startTest} />
       </>
     );
   };
