@@ -62,4 +62,19 @@ describe("GrammarCheckPage - critical", () => {
       "be.visible",
     );
   });
+
+  it("should block start button and restore timer on return", function () {
+    cy.intercept("POST", "/api/ai/generate-sentences", {
+      statusCode: 200,
+      fixture: "grammar-test-data.json",
+    }).as("generateSentences");
+    cy.contains(this.animals.name).click();
+    cy.get("[data-testid='start-test']").click();
+    cy.wait("@generateSentences");
+    cy.url().should("include", "/grammar-test");
+    cy.go("back");
+    cy.url().should("include", "/grammar-check");
+    cy.get("[data-testid='start-test']").should("be.disabled");
+    cy.contains(/Следующая попытка через/).should("be.visible");
+  });
 });
