@@ -4,8 +4,8 @@ type ButtonContainerPropType = {
   handleClick(): void;
 };
 
-const RATE_LIMIT_KEY = "grammar_test_button_disabled";
-const RATE_LIMIT_TIME_KEY = "grammar_test_button_time";
+export const RATE_LIMIT_KEY = "grammar_test_button_disabled";
+export const RATE_LIMIT_TIME_KEY = "grammar_test_button_time";
 
 export const StartTestButtonContainer = memo(
   ({ handleClick }: ButtonContainerPropType) => {
@@ -22,6 +22,8 @@ export const StartTestButtonContainer = memo(
     const onClick = () => {
       sessionStorage.setItem(RATE_LIMIT_KEY, "true");
       sessionStorage.setItem(RATE_LIMIT_TIME_KEY, String(Date.now()));
+      setDisabled(true);
+      setSecondsLeft(60);
       handleClick();
     };
 
@@ -53,7 +55,10 @@ export const StartTestButtonContainer = memo(
           Начать тест
         </button>
         {disabled && (
-          <div className="flex items-center justify-center gap-2 mt-2 animate-pulse">
+          <div
+            data-testid="rate-limit-timer"
+            className="flex items-center justify-center gap-2 mt-2 animate-pulse"
+          >
             <span className="w-2 h-2 bg-fuchsia-800 rounded-full" />
             <span className="text-xs text-fuchsia-800 font-medium">
               Следующая попытка через {secondsLeft} сек.

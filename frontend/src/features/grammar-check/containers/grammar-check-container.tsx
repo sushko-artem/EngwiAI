@@ -3,6 +3,7 @@ import {
   ChooseCount,
   ChooseDifficultyLevel,
   GrammarCheckDescription,
+  StartTestButtonContainer,
 } from "../ui";
 import { useGrammarCheck } from "../lib";
 import { Loader } from "@shared/ui/loader";
@@ -14,7 +15,6 @@ import {
   NotASingleCollection,
   QueryCollectionsError,
 } from "@entities/collection/ui";
-import { StartTestButtonContainer } from "../ui/button-container";
 
 export const GrammarCheckContainer = () => {
   const {

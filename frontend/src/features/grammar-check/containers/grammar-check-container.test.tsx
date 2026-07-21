@@ -3,6 +3,8 @@ import { useGrammarCheck } from "../lib";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { GrammarCheckContainer } from "./grammar-check-container";
 import { MemoryRouter } from "react-router-dom";
+import type { CardSideType } from "@entities/collection/types";
+import type { DifficultyGenerationType, GenerationCountType } from "shared/api";
 
 const mockCollections = [
   {
@@ -39,13 +41,13 @@ const createMockedProps = (overrides = {}) => ({
   error: null,
   startTest: mockStartTest,
   collections: undefined,
-  cardSide: "word" as "word" | "translation",
+  cardSide: "word" as CardSideType,
   setCardSide: mockSetSide,
   setChosenId: mockSetChosenCollection,
   chosenId: "",
-  difficulty: "beginner" as "beginner" | "intermediate" | "advanced",
+  difficulty: "beginner" as DifficultyGenerationType,
   setDifficulty: mockSetDifficulty,
-  count: "5" as "5" | "7" | "10",
+  count: "5" as GenerationCountType,
   setCount: mockSetCount,
   ...overrides,
 });
