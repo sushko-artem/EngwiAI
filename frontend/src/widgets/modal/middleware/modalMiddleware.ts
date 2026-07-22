@@ -5,42 +5,22 @@ import {
   confirmModalAction,
   cancelModalAction,
 } from "../actions";
-
-export const modalPromises = new Map<
-  string,
-  {
-    resolve: (result: boolean) => void;
-    timeoutId: ReturnType<typeof setTimeout>;
-  }
->();
-
-export const MODAL_TIMEOUT = 5 * 60 * 1000;
+import { modalPromises } from "../services";
 
 export const modalMiddleware: Middleware = (store) => (next) => (action) => {
   if (openModalWithPromise.match(action)) {
-    return new Promise<boolean>((resolve) => {
-      const modalId = nanoid();
-      //Clear if the modal is dangling
-      const timeoutId = setTimeout(() => {
-        if (modalPromises.has(modalId)) {
-          resolve(false);
-          modalPromises.delete(modalId);
-          store.dispatch(closeModal());
-        }
-      }, MODAL_TIMEOUT);
-      modalPromises.set(modalId, { resolve, timeoutId });
-      store.dispatch(openModal({ ...action.payload, modalId }));
-    });
+    const modalId = nanoid();
+    store.dispatch(openModal({ ...action.payload, modalId }));
+    return modalPromises.create(modalId, undefined, () =>
+      store.dispatch(closeModal()),
+    );
   }
 
   if (confirmModalAction.match(action) || cancelModalAction.match(action)) {
     const modalId = store.getState().modal.modalId;
-    if (modalId && modalPromises.has(modalId)) {
-      const { resolve, timeoutId } = modalPromises.get(modalId)!;
-      clearTimeout(timeoutId);
+    if (modalId) {
       const result = action.type === confirmModalAction.type;
-      resolve(result);
-      modalPromises.delete(modalId);
+      modalPromises.action(modalId, result);
     }
     store.dispatch(closeModal());
     return;

@@ -1,8 +1,10 @@
-import { useCallback } from "react";
+import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import backArrow from "@assets/images/arrow-left.svg";
+import { TEST_ROUTES, type TestType } from "@widgets/user-tests";
 
 export type TestReportType = {
-  testType: "spell" | "grammar";
+  testType: TestType;
   totalTerms: number;
   progress: number;
   totalMistakes: number;
@@ -13,16 +15,26 @@ export const useTestReport = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleBack = useCallback(() => {
-    if (location.state?.testReport.testType === "spell") {
-      navigate("/spell-check");
-    } else {
-      navigate("/dashboard"); // while haven't grammar feature
-    }
-  }, [navigate, location.state]);
+  const headerProps = useMemo(
+    () => ({
+      title: "Результаты теста",
+      leftIcon: backArrow,
+      leftIconTitle: "Назад",
+      leftIconAction: () => {
+        const testType = location.state?.testReport?.testType;
+
+        if (testType && testType in TEST_ROUTES) {
+          navigate(TEST_ROUTES[testType as TestType]);
+        } else {
+          navigate("/dashboard");
+        }
+      },
+    }),
+    [navigate, location.state?.testReport.testType],
+  );
 
   return {
     testReport: location.state?.testReport as TestReportType | undefined,
-    handleBack,
+    headerProps,
   };
 };

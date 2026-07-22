@@ -20,5 +20,5 @@ export const InputField = memo(
         {...props}
       />
     </div>
-  )
+  ),
 );

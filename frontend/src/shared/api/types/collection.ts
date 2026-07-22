@@ -1,6 +1,7 @@
+export type CardStatusType = "ACTIVE" | "INACTIVE";
 export interface ICard {
   id: string;
-  status?: "ACTIVE" | "INACTIVE";
+  status?: CardStatusType;
   word?: string;
   translation?: string;
 }

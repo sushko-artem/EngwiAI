@@ -22,6 +22,8 @@ export const SignInFormContainer = ({
     isSubmitting,
   } = formik;
 
+  console.log(errors.email);
+
   return (
     <form onSubmit={handleSubmit}>
       <InputField

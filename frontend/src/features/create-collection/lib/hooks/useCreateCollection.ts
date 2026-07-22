@@ -1,0 +1,108 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import backArrow from "@assets/images/arrow-left.svg";
+import save from "@assets/images/check.png";
+import {
+  initDefaultCollection,
+  selectEditableCollection,
+} from "@entities/collection/model";
+import {
+  useCreateCollectionMutation,
+  useGetCollectionsQuery,
+} from "@entities/collection/api";
+import { getErrorMessage } from "@shared/api";
+import { useModal } from "@widgets/modal";
+import { validateCollection } from "@entities/collection/lib";
+import { useNavigationGuard } from "@shared/hooks";
+
+export const useCreateCollection = () => {
+  const collection = useAppSelector(selectEditableCollection);
+  const [isSaving, setIsSaving] = useState(false);
+  const { data: collections } = useGetCollectionsQuery();
+  const [createCollection, { isLoading }] = useCreateCollectionMutation();
+  const { warning } = useModal();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const collectionRef = useRef(collection);
+  const existedNamesRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    collectionRef.current = collection;
+  }, [collection]);
+
+  useEffect(() => {
+    dispatch(initDefaultCollection());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (collections) {
+      existedNamesRef.current = collections.map(
+        (collection) => collection.name,
+      );
+    }
+  }, [collections]);
+
+  const hasAnyChanges = useMemo(() => {
+    if (!collection) return false;
+
+    const hasName = !!collection.name.trim();
+    const hasCard = !!collection.cards.find(
+      (card) => card.word?.trim() || card.translation?.trim(),
+    );
+
+    return hasName || hasCard;
+  }, [collection]);
+
+  useNavigationGuard({
+    shouldBlock: hasAnyChanges,
+    skipGuard: isSaving,
+    confirmMessage: "Все несохраненные данные будут потеряны!",
+  });
+
+  const saveCollection = useCallback(async () => {
+    const validate = validateCollection(
+      collectionRef.current,
+      existedNamesRef.current,
+    );
+    if (!validate.isValid) {
+      if (validate.errorMessage) {
+        warning(validate.errorMessage);
+      }
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const cards = collectionRef.current!.cards.map((card) => ({
+        id: card.id,
+        word: card.word?.trim(),
+        translation: card.translation?.trim(),
+      }));
+      const name = collectionRef.current!.name.trim();
+      await createCollection({ name, cards }).unwrap();
+      navigate("/collections", { replace: true, state: { refetch: true } });
+    } catch (error) {
+      warning(getErrorMessage(error));
+      setIsSaving(false);
+    }
+  }, [navigate, createCollection, warning]);
+
+  const headerProps = useMemo(
+    () => ({
+      title: isSaving ? "Сохранение..." : "Новая коллекция",
+      leftIconTitle: "вернуться на главную",
+      rightIconTitle: "сохранить",
+      rightIconAction: saveCollection,
+      leftIconAction: () => navigate("/dashboard"),
+      leftIcon: backArrow,
+      rightIcon: isSaving ? undefined : save,
+    }),
+    [isSaving, saveCollection, navigate],
+  );
+
+  return {
+    collection,
+    headerProps,
+    isLoading: isSaving || isLoading,
+  };
+};

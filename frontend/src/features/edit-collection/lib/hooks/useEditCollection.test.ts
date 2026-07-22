@@ -1,0 +1,307 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { act, renderHook } from "@testing-library/react";
+import {
+  setExistedCollection,
+  type EditableCollectionType,
+} from "@entities/collection/model";
+import { useEditCollection } from "./useEditCollection";
+
+const testCollection: EditableCollectionType = {
+  name: "Test Collection",
+  cards: [
+    { id: "1", word: "hello", translation: "привет" },
+    { id: "2", word: "world", translation: "мир" },
+  ],
+};
+
+const getCollectionsQueryResult = {
+  data: [
+    {
+      id: "1",
+      name: "firstCollection",
+    },
+    {
+      id: "2",
+      name: "secondCollection",
+    },
+  ],
+};
+
+const mockNavigate = vi.hoisted(() => vi.fn());
+const mockDispatch = vi.hoisted(() => vi.fn());
+const mockSelector = vi.hoisted(() => vi.fn());
+const mockWarning = vi.hoisted(() => vi.fn());
+const mockUpdateCollection = vi.hoisted(() => vi.fn());
+const mockGetCollectionQuery = vi.hoisted(() => vi.fn());
+const mockUseBlocker = vi.hoisted(() => vi.fn());
+const mockUseNavigationGuard = vi.hoisted(() => vi.fn());
+
+vi.mock("@shared/hooks", () => ({
+  useNavigationGuard: mockUseNavigationGuard,
+}));
+
+vi.mock("react-router-dom", () => ({
+  useNavigate: () => mockNavigate,
+  useBlocker: mockUseBlocker,
+  useParams: () => ({ collectionId: "test-id-1234" }),
+}));
+
+vi.mock("@widgets/modal", () => ({
+  useModal: () => ({
+    warning: mockWarning,
+  }),
+}));
+
+vi.mock("@redux/hooks", () => ({
+  useAppDispatch: () => mockDispatch,
+  useAppSelector: mockSelector,
+}));
+
+vi.mock("@entities/collection/api", () => ({
+  useGetCollectionQuery: mockGetCollectionQuery,
+  useGetCollectionsQuery: () => getCollectionsQueryResult,
+  useUpdateCollectionMutation: () => [
+    mockUpdateCollection,
+    { isLoading: false },
+  ],
+}));
+
+const mockSelectorState = (
+  editableCollection: EditableCollectionType | undefined,
+  deletedCards: string[] = [],
+) => {
+  mockSelector.mockReturnValue({
+    editableCollection,
+    deletedCards,
+  });
+};
+
+describe("useEditCollection", () => {
+  beforeEach(() => {
+    mockUseBlocker.mockReturnValue({
+      state: "unblocked",
+      proceed: vi.fn(),
+      reset: vi.fn(),
+    });
+    mockSelectorState(testCollection, []);
+  });
+
+  describe("useEditCollection - useNavigationGuard integration", () => {
+    it("shouldBlock & skipGuard should be false initially", () => {
+      mockGetCollectionQuery.mockReturnValue({
+        data: testCollection,
+        error: null,
+      });
+      renderHook(() => useEditCollection());
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shouldBlock: false,
+          skipGuard: false,
+        }),
+      );
+    });
+
+    it("shouldBlock should be true when has changes", () => {
+      mockGetCollectionQuery.mockReturnValue({
+        data: testCollection,
+        error: null,
+      });
+
+      const editedCollection = {
+        ...testCollection,
+        name: "editName",
+      };
+
+      mockSelectorState(editedCollection, []);
+      renderHook(() => useEditCollection());
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          shouldBlock: true,
+        }),
+      );
+    });
+
+    it("skipGuard should be true while correctly saving", async () => {
+      mockGetCollectionQuery.mockReturnValue({
+        data: testCollection,
+        error: null,
+      });
+
+      mockUpdateCollection.mockReturnValue({
+        unwrap: vi.fn().mockResolvedValue({}),
+      });
+
+      const editedCollection = {
+        ...testCollection,
+        name: "New Name",
+      };
+
+      mockSelectorState(editedCollection, []);
+      const { result } = renderHook(() => useEditCollection());
+
+      await act(async () => {
+        result.current.headerProps.rightIconAction();
+      });
+
+      expect(mockUseNavigationGuard).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skipGuard: true,
+        }),
+      );
+    });
+  });
+
+  it("should call useGetCollectionQuery with right id", async () => {
+    mockGetCollectionQuery.mockReturnValue({
+      data: testCollection,
+      error: null,
+    });
+    renderHook(() => useEditCollection());
+    expect(mockGetCollectionQuery).toHaveBeenCalledWith("test-id-1234");
+  });
+
+  it("should store Redux state with loaded collection on mount", () => {
+    renderHook(() => useEditCollection());
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      setExistedCollection(testCollection),
+    );
+  });
+
+  it("should navigate to '/collections' without saving when no changes", async () => {
+    const { result } = renderHook(() => useEditCollection());
+
+    await act(async () => {
+      await result.current.headerProps.rightIconAction();
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
+    expect(mockUpdateCollection).not.toHaveBeenCalled();
+  });
+
+  it("should prevent saving with duplicate name", async () => {
+    const mockEditedCollection = { ...testCollection, name: "firstCollection" };
+    mockSelectorState(mockEditedCollection, []);
+
+    const { result } = renderHook(() => useEditCollection());
+
+    await act(async () => {
+      await result.current.headerProps.rightIconAction();
+    });
+
+    expect(mockWarning).toHaveBeenCalledWith(
+      "Коллекция с таким именем уже существует!",
+    );
+    expect(mockUpdateCollection).not.toHaveBeenCalled();
+  });
+
+  it("should prevent saving with empty fields (card or name)", async () => {
+    const mockEditedCollection = {
+      name: "Test Collection",
+      cards: [
+        { id: "1", word: "", translation: "привет", isUpdated: true },
+        { id: "2", word: "world", translation: "мир" },
+      ],
+    };
+
+    mockSelectorState(mockEditedCollection, []);
+
+    const { result } = renderHook(() => useEditCollection());
+
+    await act(async () => {
+      await result.current.headerProps.rightIconAction();
+    });
+
+    expect(mockWarning).toHaveBeenCalledWith("Все поля должны быть заполнены!");
+    expect(mockUpdateCollection).not.toHaveBeenCalled();
+  });
+
+  it("should update collection and navigate to '/collections'", async () => {
+    mockGetCollectionQuery.mockReturnValue({
+      data: testCollection,
+      error: null,
+    });
+
+    mockUpdateCollection.mockReturnValue({
+      unwrap: vi.fn().mockResolvedValue({}),
+    });
+
+    const mockUpdatedCollection = {
+      name: "Updated Collection",
+      cards: [
+        { id: "1", word: "Hello", translation: "привет", isUpdated: true },
+        { id: "3", word: "fish", translation: "рыба", isNew: true },
+      ],
+    };
+
+    mockSelectorState(mockUpdatedCollection, ["2"]);
+
+    const { result } = renderHook(() => useEditCollection());
+
+    await act(async () => {
+      await result.current.headerProps.rightIconAction();
+    });
+
+    expect(mockUpdateCollection).toHaveBeenCalledWith({
+      id: "test-id-1234",
+      dto: {
+        newName: "Updated Collection",
+        updatedCards: [
+          { id: "1", word: "Hello", translation: "привет", isUpdated: true },
+        ],
+        newCards: [{ id: "3", word: "fish", translation: "рыба", isNew: true }],
+        deletedCards: ["2"],
+      },
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/collections", {
+      replace: true,
+      state: { refetch: true },
+    });
+  });
+
+  it("should show warning modal with generic errors when updating rejected", async () => {
+    const mockEditedCollection = {
+      name: "Test Collection",
+      cards: [
+        { id: "1", word: "hello", translation: "привет", isUpdated: true },
+        { id: "2", word: "world", translation: "мир" },
+      ],
+    };
+
+    mockUpdateCollection.mockReturnValue({
+      unwrap: vi.fn().mockRejectedValue(new Error("Network error!")),
+    });
+
+    mockSelectorState(mockEditedCollection, []);
+
+    const { result } = renderHook(() => useEditCollection());
+
+    await act(async () => {
+      await result.current.headerProps.rightIconAction();
+    });
+
+    expect(mockWarning).toHaveBeenCalledWith("Network error!");
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("should reset isSaving flag when update fails", async () => {
+    const mockEditedCollection = {
+      name: "Test Collection",
+      cards: [
+        { id: "1", word: "hello", translation: "привет", isUpdated: true },
+      ],
+    };
+    mockSelectorState(mockEditedCollection, []);
+
+    const { result } = renderHook(() => useEditCollection());
+
+    await act(async () => {
+      await result.current.headerProps.rightIconAction();
+    });
+    expect(mockWarning).toHaveBeenCalled();
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+});

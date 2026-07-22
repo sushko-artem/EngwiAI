@@ -16,5 +16,5 @@ export const sounds = {
 export type SoundNameType = keyof typeof sounds;
 
 export const SOUND_GROUP = {
-  spellTest: ["correct", "incorrect"] as SoundNameType[],
+  TestGroup: ["correct", "incorrect"] as SoundNameType[],
 };

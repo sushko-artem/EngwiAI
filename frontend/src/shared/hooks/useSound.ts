@@ -3,9 +3,9 @@ import {
   sounds,
   type SoundNameType,
   SOUND_GROUP,
-} from "shared/constants/sounds";
+} from "@shared/constants/sounds";
 
-type SoundGroupType = keyof typeof SOUND_GROUP;
+export type SoundGroupType = keyof typeof SOUND_GROUP;
 
 export const useSound = () => {
   const [mutedGroup, setMutedGroup] = useState<Set<SoundGroupType>>(new Set());

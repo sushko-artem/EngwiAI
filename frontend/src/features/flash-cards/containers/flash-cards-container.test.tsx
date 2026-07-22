@@ -1,0 +1,151 @@
+import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { useFlashCards } from "../lib";
+import { FlashCardsContainer } from "./flash-cards-container";
+
+const mockCollection = {
+  id: "testId-123",
+  name: "Test Name",
+  cards: [
+    { id: "1", word: "Green", translation: "Зеленый" },
+    { id: "2", word: "Black", translation: "Черный" },
+  ],
+};
+
+const mockNavigate = vi.hoisted(() => vi.fn());
+const mockOptions = vi.hoisted(() => vi.fn());
+const mockHandleReset = vi.hoisted(() => vi.fn());
+const mockHandleChosenStatus = vi.hoisted(() => vi.fn());
+const mockHandleSwitchChange = vi.hoisted(() => vi.fn());
+const mockHandleDelete = vi.hoisted(() => vi.fn());
+const mockCloseMenu = vi.hoisted(() => vi.fn());
+const mockUpdateStatus = vi.hoisted(() => vi.fn());
+
+const createMockedProps = (overrides = {}) => ({
+  error: null,
+  collection: undefined,
+  isLoading: false,
+  unmemTerms: 0,
+  isReversed: false,
+  isMenuOpen: false,
+  isModalOpen: false,
+  isVirtual: false,
+  index: 0,
+  isDeleting: false,
+  options: mockOptions,
+  handleReset: mockHandleReset,
+  handleChosenStatus: mockHandleChosenStatus,
+  handleSwitchChange: mockHandleSwitchChange,
+  handleDelete: mockHandleDelete,
+  closeMenu: mockCloseMenu,
+  updateStatus: mockUpdateStatus,
+  ...overrides,
+});
+
+vi.mock("react-router-dom", () => ({
+  useNavigate: () => mockNavigate,
+}));
+
+vi.mock("../lib", () => ({
+  useFlashCards: vi.fn(),
+}));
+
+describe("FlashCardsContainer", () => {
+  it("should show loader when loading", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ isLoading: true }),
+    );
+    render(<FlashCardsContainer />);
+    expect(screen.getByTestId("loader")).toBeInTheDocument();
+  });
+
+  it("should show error when no collection and error exist", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ error: new Error("Failed to load!") }),
+    );
+    render(<FlashCardsContainer />);
+    expect(screen.getByText("Error: Failed to load!")).toBeInTheDocument();
+  });
+
+  it("should render collection", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection }),
+    );
+    render(<FlashCardsContainer />);
+    expect(screen.getByText("Test Name")).toBeInTheDocument();
+    expect(screen.getByText("Green")).toBeInTheDocument();
+    expect(screen.getByText("Зеленый")).not.toBeVisible();
+  });
+
+  it("should call handleChosenStatus when clicking on chosenStatus button", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getAllByTestId("chosen-status-button")[0]);
+    expect(mockHandleChosenStatus).toHaveBeenCalledWith(false);
+  });
+
+  it("should navigate to '/dashboard' page when collection is virtual", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection, isVirtual: true }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByTestId("leftIconAction"));
+    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("should navigate to '/collections' page when regular collection", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByTestId("leftIconAction"));
+    expect(mockNavigate).toHaveBeenCalledWith("/collections");
+  });
+
+  it("should call options when clicking on options icon", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByTestId("rightIconAction"));
+    expect(mockOptions).toHaveBeenCalled();
+  });
+
+  it("should call handleSwitchChange when menu options is open and clicking on switch", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection, isMenuOpen: true }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByRole("switch"));
+    expect(mockHandleSwitchChange).toHaveBeenCalled();
+  });
+
+  it("should call handleDelet when menu options is open and clicking on delete Button", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection, isMenuOpen: true }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByText("Удалить коллекцию"));
+    expect(mockHandleDelete).toHaveBeenCalled();
+  });
+
+  it("should close menu options when clicking outside", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection, isMenuOpen: true }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByTestId("menu-overlay"));
+    expect(mockCloseMenu).toHaveBeenCalled();
+  });
+
+  it("should call reset when modal is open and clicking on reset-module option", () => {
+    vi.mocked(useFlashCards).mockReturnValue(
+      createMockedProps({ collection: mockCollection, isModalOpen: true }),
+    );
+    render(<FlashCardsContainer />);
+    fireEvent.click(screen.getByText("Пройти заново"));
+    expect(mockHandleReset).toHaveBeenCalled();
+  });
+});

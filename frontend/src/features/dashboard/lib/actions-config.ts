@@ -12,6 +12,10 @@ export const actions = [
     url: "/spell-check",
   },
   {
+    title: "Грамматика",
+    url: "/grammar-check",
+  },
+  {
     title: "Весь материал",
     url: "/interval-learning",
   },

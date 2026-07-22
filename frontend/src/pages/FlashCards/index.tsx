@@ -1,8 +1,3 @@
-import { useParams } from "react-router-dom";
-import { FlashCardsContainer } from "@features/collections";
+import { FlashCardsContainer } from "@features/flash-cards";
 
-export const FlashCardsPage = () => {
-  const { collectionId = "" } = useParams<{ collectionId?: string }>();
-
-  return <FlashCardsContainer collectionId={collectionId} />;
-};
+export const FlashCardsPage = () => <FlashCardsContainer />;

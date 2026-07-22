@@ -35,9 +35,23 @@ describe("useTestReport", () => {
     const { result } = renderHook(() => useTestReport());
 
     act(() => {
-      result.current.handleBack();
+      result.current.headerProps.leftIconAction();
     });
 
     expect(mockNavigate).toHaveBeenCalledWith("/spell-check");
+  });
+
+  it("should navigate to /grammar-check page when clicking back and testType is grammar", () => {
+    mockTestReport.state = {
+      testReport: { ...report, testType: "grammar" } as TestReportType,
+    };
+
+    const { result } = renderHook(() => useTestReport());
+
+    act(() => {
+      result.current.headerProps.leftIconAction();
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/grammar-check");
   });
 });

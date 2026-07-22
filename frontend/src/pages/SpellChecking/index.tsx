@@ -1,3 +1,3 @@
-import { SpellCheckContainer } from "@features/collections";
+import { SpellCheckContainer } from "@features/spell-check";
 
 export const SpellCheckingPage = () => <SpellCheckContainer />;

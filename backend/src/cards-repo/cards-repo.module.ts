@@ -7,5 +7,6 @@ import { CacheModule } from '@nestjs/cache-manager';
   imports: [CacheModule.register()],
   controllers: [CardsRepoController],
   providers: [CardsRepoService],
+  exports: [CardsRepoService],
 })
 export class CardsRepoModule {}
