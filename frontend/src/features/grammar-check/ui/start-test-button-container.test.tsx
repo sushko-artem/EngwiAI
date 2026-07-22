@@ -22,10 +22,18 @@ describe("StartTestButtonContainer", () => {
   });
 
   it("should disable button after click", () => {
+    mockHandleClick.mockReturnValueOnce(true);
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
     fireEvent.click(screen.getByTestId("start-test"));
     expect(screen.getByTestId("start-test")).toBeDisabled();
     expect(screen.getByTestId("rate-limit-timer")).toBeInTheDocument();
+  });
+
+  it("should not disable button when no module choosen", () => {
+    mockHandleClick.mockReturnValueOnce(false);
+    render(<StartTestButtonContainer handleClick={mockHandleClick} />);
+    fireEvent.click(screen.getByTestId("start-test"));
+    expect(screen.getByTestId("start-test")).not.toBeDisabled();
   });
 
   it("should restore disabled state from sessionStorage", () => {
@@ -37,6 +45,7 @@ describe("StartTestButtonContainer", () => {
   });
 
   it("should countdown and re-enable button", () => {
+    mockHandleClick.mockReturnValueOnce(true);
     vi.useFakeTimers();
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
     fireEvent.click(screen.getByTestId("start-test"));

@@ -33,6 +33,7 @@ export const useGrammarCheck = () => {
   const startTest = useCallback(() => {
     if (!chosenId) {
       warning("Ни одного модуля не выбрано!");
+      return false;
     } else {
       sessionStorage.removeItem("grammar_test_completed");
       const numberCount = Number(count);
@@ -44,6 +45,7 @@ export const useGrammarCheck = () => {
           numberCount,
         } satisfies GrammarTestNavigationState,
       });
+      return true;
     }
   }, [warning, chosenId, cardSide, navigate, difficulty, count]);
 

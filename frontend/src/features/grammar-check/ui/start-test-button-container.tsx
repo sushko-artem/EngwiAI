@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 
 type ButtonContainerPropType = {
-  handleClick(): void;
+  handleClick(): boolean;
 };
 
 export const RATE_LIMIT_KEY = "grammar_test_button_disabled";
@@ -22,9 +22,10 @@ export const StartTestButtonContainer = memo(
     const onClick = () => {
       sessionStorage.setItem(RATE_LIMIT_KEY, "true");
       sessionStorage.setItem(RATE_LIMIT_TIME_KEY, String(Date.now()));
+      const shouldDisable = handleClick();
+      if (!shouldDisable) return;
       setDisabled(true);
       setSecondsLeft(60);
-      handleClick();
     };
 
     useEffect(() => {
