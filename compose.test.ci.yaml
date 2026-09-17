@@ -51,7 +51,7 @@ services:
       frontend_test:
         condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
       interval: 10s
       timeout: 30s
       retries: 3

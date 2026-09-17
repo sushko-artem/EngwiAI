@@ -1,8 +1,15 @@
 node_modules
 .git
-.env
+.gitignore
+.env.example
 .env.local
-.env.production
+.env.test
 *.log
 dist
 build
+
+cypress
+cypress.config.ts
+vercel.json
+eslint.config.ts
+components.json
