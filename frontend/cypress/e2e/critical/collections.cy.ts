@@ -10,9 +10,7 @@ describe("Collections Page - critical", () => {
     cy.createCollection("food").then((collection) => {
       collectionsIds.push(collection.id);
     });
-    cy.intercept("GET", "/api/collections/list").as("getCollections");
     cy.visit("/collections");
-    cy.wait("@getCollections");
   });
 
   afterEach(() => {
@@ -20,6 +18,7 @@ describe("Collections Page - critical", () => {
   });
 
   it("should display list of user collections", () => {
+    cy.contains("Мои модули", { timeout: 10000 }).should("be.visible");
     cy.fixture("collections/animals").then((animals) => {
       cy.contains(`${animals.name}`).should("be.visible");
     });
