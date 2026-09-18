@@ -20,6 +20,15 @@ export default defineConfig({
       protocol: "ws",
     },
   },
+  optimizeDeps: {
+    include: [
+      "@reduxjs/toolkit",
+      "@reduxjs/toolkit/query",
+      "@reduxjs/toolkit/query/react",
+      "react-redux",
+      "react-router-dom",
+    ],
+  },
   test: {
     globals: true,
     environment: "jsdom",

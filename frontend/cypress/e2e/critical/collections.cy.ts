@@ -18,7 +18,7 @@ describe("Collections Page - critical", () => {
   });
 
   it("should display list of user collections", () => {
-    cy.contains("Мои модули").should("be.visible");
+    cy.contains("Мои модули", { timeout: 10000 }).should("be.visible");
     cy.fixture("collections/animals").then((animals) => {
       cy.contains(`${animals.name}`).should("be.visible");
     });
