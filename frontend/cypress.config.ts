@@ -9,6 +9,7 @@ export default defineConfig({
     viewportWidth: 600,
     viewportHeight: 800,
     supportFile: "cypress/support/commands.ts",
+    specPattern: "cypress/e2e/**/*.cy.ts",
     setupNodeEvents(on) {
       const options = {
         webpackOptions: {

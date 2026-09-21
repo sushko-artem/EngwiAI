@@ -2,9 +2,6 @@
 # Development stage
 FROM node:20-alpine AS development
 
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
-
 WORKDIR /app
 
 COPY package*.json ./
@@ -16,7 +13,7 @@ RUN apk add --no-cache curl
 
 RUN npm install
 
-RUN npx prisma generate
+RUN DATABASE_URL="postgresql://stub:stub@localhost:5432/stub" npx prisma generate
 
 COPY . .
 
