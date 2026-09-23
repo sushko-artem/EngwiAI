@@ -1,7 +1,6 @@
 services:
   postgres_test:
     image: postgres:17
-    container_name: postgres_test
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -16,7 +15,8 @@ services:
     build:
       context: ./backend
       target: development
-    container_name: backend_test
+      args:
+        NODE_VERSION: ${NODE_VERSION}
     command: sh -c "npx prisma migrate deploy && npm run start:dev"
     volumes:
       - ./backend:/app
@@ -33,13 +33,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-      start_period: 15s
+      start_period: 30s
 
   frontend_test:
     build:
       context: ./frontend
       target: development
-    container_name: frontend_test
+      args:
+        NODE_VERSION: ${NODE_VERSION}
     volumes:
       - ./frontend:/app
       - frontend_test_node_modules:/app/node_modules
@@ -49,9 +50,8 @@ services:
       backend_test:
         condition: service_healthy
 
-  nginx_test:
+  nginx-test:
     image: nginx:alpine
-    container_name: nginx_test
     ports:
       - "8080:80"
     volumes:
@@ -62,31 +62,39 @@ services:
       frontend_test:
         condition: service_started
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
-      interval: 10s
-      timeout: 30s
-      retries: 3
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   cypress:
     image: cypress/included:cypress-15.10.0-node-24.13.1-chrome-144.0.7559.132-1-ff-147.0.3-edge-144.0.3719.115-1
-    container_name: cypress
-    network_mode: host
     entrypoint:
-      ["cypress", "run", "--spec", "${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}"]
+      [
+        "sh",
+        "-c",
+        "npm ci && npx cypress run --spec ${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}",
+      ]
     depends_on:
-      - nginx_test
-      - frontend_test
-      - backend_test
+      nginx-test:
+        condition: service_healthy
+      frontend_test:
+        condition: service_started
+      backend_test:
+        condition: service_healthy
     environment:
-      CYPRESS_BASE_URL: http://localhost:8080
+      CYPRESS_BASE_URL: http://nginx-test:80
     volumes:
       - ./frontend/cypress:/e2e/cypress
       - ./frontend/cypress.config.ts:/e2e/cypress.config.ts
-      - ./frontend/node_modules:/e2e/node_modules
       - ./frontend/package.json:/e2e/package.json
+      - ./frontend/package-lock.json:/e2e/package-lock.json
       - ./frontend/src:/e2e/src
+      - cypress_node_modules:/e2e/node_modules
     working_dir: /e2e
 
 volumes:
   backend_test_node_modules:
   frontend_test_node_modules:
+  cypress_node_modules:
