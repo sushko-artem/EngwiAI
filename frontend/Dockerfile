@@ -1,5 +1,6 @@
 # Development stage
-FROM node:20-alpine AS development
+ARG NODE_VERSION=22.14.0
+FROM node:${NODE_VERSION}-alpine AS development
 
 WORKDIR /app
 
