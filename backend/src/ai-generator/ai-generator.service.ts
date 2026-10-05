@@ -3,8 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { GenerateSentencesDto } from './DTO/generate-sentences.dto';
 import { CardsRepoService } from '../cards-repo/cards-repo.service';
 import { AIGenerationResult } from './types/ai.types';
-import { GroqResponse } from './types/groq.types';
+import { AIResponse } from './types/ai.model.types';
 import { AIGenerationException } from './exceptions/ai-generation.exception';
+import { mockSentences } from './mock';
 
 @Injectable()
 export class AIService {
@@ -13,19 +14,37 @@ export class AIService {
   private readonly model: string;
   private readonly maxTokens: number;
   private readonly apiUrl: string;
+  private readonly isMockMode: boolean;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly cardsRepoService: CardsRepoService,
   ) {
-    this.apiKey = this.configService.getOrThrow<string>('AI_API_KEY');
-    this.model = this.configService.getOrThrow<string>('AI_MODEL');
-    this.maxTokens = Number(this.configService.getOrThrow<string>('AI_MAX_TOKENS'));
-    this.apiUrl = this.configService.getOrThrow<string>('AI_API_URL');
+    const nodeEnv = this.configService.get<string>('NODE_ENV');
+    const isDev = nodeEnv === 'development';
+    this.apiKey = this.configService.get<string>('AI_API_KEY') ?? '';
+    this.model = this.configService.get<string>('AI_MODEL') ?? 'mock';
+    this.maxTokens = Number(this.configService.get<string>('AI_MAX_TOKENS') ?? 2000);
+    this.apiUrl = this.configService.get<string>('AI_API_URL') ?? '';
+    this.isMockMode = !this.apiKey || !this.apiUrl;
+
+    if (this.isMockMode && !isDev) {
+      throw new Error('AI_API_KEY и AI_API_URL обязательны в production-режиме.');
+    }
+
+    if (this.isMockMode) {
+      this.logger.warn(
+        'AI_API_KEY или AI_API_URL не заданы - AIService работает в mock-режиме (development). Генерация предложений будет возвращать заглушку.',
+      );
+    }
   }
 
   async generateSentences(userId: string, dto: GenerateSentencesDto): Promise<AIGenerationResult> {
     const { id, difficulty, cardSide, count } = dto;
+
+    if (this.isMockMode) {
+      return this.buildMockResult(dto);
+    }
 
     this.logger.log(`Generating ${count} sentences`);
 
@@ -81,6 +100,8 @@ export class AIService {
             `Слишком много запросов. Пожалуйста, подождите минуту и попробуйте снова.`,
             HttpStatus.TOO_MANY_REQUESTS,
           );
+        } else if (response.status === 402) {
+          throw new AIGenerationException(`Лимит токенов закончился. Необходимо пополнить баланс.`, 402);
         }
         throw new AIGenerationException(
           `Не удалось сгенерировать предложения. Попробуйте позже или выберите другую коллекцию`,
@@ -88,7 +109,7 @@ export class AIService {
         );
       }
 
-      const data = (await response.json()) as GroqResponse;
+      const data = (await response.json()) as AIResponse;
       const content = data.choices[0].message.content;
 
       this.logger.log(`Generated successfully, tokens used: ${data.usage.total_tokens}`);
@@ -126,6 +147,13 @@ export class AIService {
     if (ratio < 0.4) return false;
 
     return true;
+  }
+
+  private buildMockResult(dto: GenerateSentencesDto): AIGenerationResult {
+    const { count } = dto;
+    return {
+      sentences: Array.from({ length: count }, (_, i) => mockSentences[i % mockSentences.length]),
+    };
   }
 
   private buildSystemPrompt(difficulty: string): string {

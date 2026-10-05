@@ -1,25 +1,25 @@
-export interface GroqMessage {
+export interface AIMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
-export interface GroqChoice {
+export interface AIChoice {
   index: number;
-  message: GroqMessage;
+  message: AIMessage;
   finish_reason: string;
 }
 
-export interface GroqUsage {
+export interface AIUsage {
   prompt_tokens: number;
   completion_tokens: number;
   total_tokens: number;
 }
 
-export interface GroqResponse {
+export interface AIResponse {
   id: string;
   object: string;
   created: number;
   model: string;
-  choices: GroqChoice[];
-  usage: GroqUsage;
+  choices: AIChoice[];
+  usage: AIUsage;
 }
