@@ -1,7 +1,6 @@
 services:
   postgres_test:
     image: postgres:17
-    container_name: postgres_test
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -14,7 +13,6 @@ services:
 
   backend_test:
     image: backend_test:latest
-    container_name: backend_test
     command: sh -c "npx prisma migrate deploy && npm run start:dev"
     depends_on:
       postgres_test:
@@ -32,15 +30,14 @@ services:
 
   frontend_test:
     image: frontend_test:latest
-    container_name: frontend_test
     env_file:
       - ./frontend/.env.test
     depends_on:
-      - backend_test
+      backend_test:
+        condition: service_healthy
 
-  nginx_test:
+  nginx-test:
     image: nginx:alpine
-    container_name: nginx_test
     ports:
       - "8080:80"
     volumes:
@@ -51,27 +48,28 @@ services:
       frontend_test:
         condition: service_started
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1"]
       interval: 10s
       timeout: 30s
       retries: 3
 
   cypress:
     image: cypress/included:cypress-15.10.0-node-24.13.1-chrome-144.0.7559.132-1-ff-147.0.3-edge-144.0.3719.115-1
-    container_name: cypress
-    network_mode: host
     entrypoint:
       [
         "sh",
         "-c",
-        "cd /e2e && npm ci && cypress run --spec ${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}",
+        "cd /e2e && npm ci && npx cypress run --spec ${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}",
       ]
     depends_on:
-      - nginx_test
-      - frontend_test
-      - backend_test
+      nginx-test:
+        condition: service_healthy
+      frontend_test:
+        condition: service_started
+      backend_test:
+        condition: service_healthy
     environment:
-      CYPRESS_BASE_URL: http://localhost:8080
+      CYPRESS_BASE_URL: http://nginx-test:80
     volumes:
       - ./frontend/package.json:/e2e/package.json
       - ./frontend/package-lock.json:/e2e/package-lock.json
