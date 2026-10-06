@@ -29,6 +29,7 @@
   },
   "include": [
     "src/**/*",
+    "prisma/seed.ts",
     "prisma/generated/prisma/**/*",
     "prisma.config.ts",
     "@types/ms.d.ts",
