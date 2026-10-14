@@ -30,8 +30,8 @@ services:
 
   frontend_test:
     image: frontend_test:latest
-    env_file:
-      - ./frontend/.env.test
+    environment:
+      NODE_ENV: "test"
     depends_on:
       backend_test:
         condition: service_healthy

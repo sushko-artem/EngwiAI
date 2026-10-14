@@ -14,6 +14,7 @@ describe("StartTestButtonContainer", () => {
   });
 
   it("should call handleClick and set sessionStorage on click", async () => {
+    mockHandleClick.mockReturnValueOnce(true);
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
     fireEvent.click(screen.getByTestId("start-test"));
     expect(mockHandleClick).toHaveBeenCalled();

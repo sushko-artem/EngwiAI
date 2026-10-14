@@ -27,6 +27,15 @@ export class AuthController {
     return { status: 'OK', timestamp: new Date().toISOString() };
   }
 
+  @Get('provider')
+  getProvider() {
+    const isProvider =
+      !!this.configService.get<string>('GOOGLE_CLIENT_ID') && !!this.configService.get<string>('GOOGLE_CLIENT_SECRET');
+    return {
+      google: isProvider,
+    };
+  }
+
   @Get('me')
   async getMe(@Cookie('refreshToken') refreshToken: string) {
     if (!refreshToken) {

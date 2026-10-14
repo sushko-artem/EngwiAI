@@ -2,9 +2,11 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage, isFetchBaseQueryError } from "@shared/api";
 import { AuthSchema, useLoginMutation } from "@features/auth";
+import { useGetProviderQuery } from "../api/auth-api";
 
 export const useSignIn = () => {
   const [login, { isLoading }] = useLoginMutation();
+  const { data: provider } = useGetProviderQuery();
   const navigate = useNavigate();
   const formik = useFormik<AuthSchema>({
     initialValues: {
@@ -43,9 +45,11 @@ export const useSignIn = () => {
       }
     },
   });
+  console.log(provider);
 
   return {
     isLoading,
     formik,
+    provider: provider?.google ?? true,
   };
 };

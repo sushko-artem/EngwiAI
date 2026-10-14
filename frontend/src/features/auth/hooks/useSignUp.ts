@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useRegisterMutation, RegisterSchema } from "@features/auth";
 import { getErrorMessage, isFetchBaseQueryError } from "@shared/api";
+import { useGetProviderQuery } from "../api/auth-api";
 
 export const useSignUp = () => {
   const [register, { isLoading }] = useRegisterMutation();
+  const { data: provider } = useGetProviderQuery();
   const navigate = useNavigate();
   const formik = useFormik<RegisterSchema>({
     initialValues: {
@@ -37,5 +39,6 @@ export const useSignUp = () => {
   return {
     formik,
     isLoading,
+    provider: provider?.google ?? true,
   };
 };

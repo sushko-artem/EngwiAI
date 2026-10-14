@@ -3,6 +3,12 @@ export interface AIMessage {
   content: string;
 }
 
+export interface AIChatOptions {
+  maxTokens?: number;
+  temperature?: number;
+  jsonMode?: boolean;
+}
+
 export interface AIChoice {
   index: number;
   message: AIMessage;

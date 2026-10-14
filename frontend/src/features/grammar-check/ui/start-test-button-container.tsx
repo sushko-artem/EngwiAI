@@ -20,10 +20,10 @@ export const StartTestButtonContainer = memo(
     });
 
     const onClick = () => {
-      sessionStorage.setItem(RATE_LIMIT_KEY, "true");
-      sessionStorage.setItem(RATE_LIMIT_TIME_KEY, String(Date.now()));
       const shouldDisable = handleClick();
       if (!shouldDisable) return;
+      sessionStorage.setItem(RATE_LIMIT_KEY, "true");
+      sessionStorage.setItem(RATE_LIMIT_TIME_KEY, String(Date.now()));
       setDisabled(true);
       setSecondsLeft(60);
     };
@@ -51,7 +51,7 @@ export const StartTestButtonContainer = memo(
           data-testid="start-test"
           disabled={disabled}
           onClick={onClick}
-          className="m-auto min-w-[120px] max-w-fit border-zinc-500 rounded-[5px] cursor-pointer border-2 mt-1 p-2 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all disabled:bg-[rgb(168,145,124)] disabled:cursor-default disabled:blur-[4px]"
+          className="m-auto min-w-30 max-w-fit border-zinc-500 rounded-[5px] cursor-pointer border-2 mt-1 p-2 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all disabled:bg-[rgb(168,145,124)] disabled:cursor-default disabled:blur-xs"
         >
           Начать тест
         </button>

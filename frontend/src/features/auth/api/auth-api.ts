@@ -9,6 +9,9 @@ import {
 
 const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    getProvider: builder.query<{ google: boolean }, void>({
+      query: () => AUTH_ENDPOINTS.PROVIDER,
+    }),
     getMe: builder.query<IUser, void>({
       query: () => AUTH_ENDPOINTS.ME,
       providesTags: ["User"],
@@ -40,4 +43,5 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useLogOutMutation,
+  useGetProviderQuery,
 } = authApi;

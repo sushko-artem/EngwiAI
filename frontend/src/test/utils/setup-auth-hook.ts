@@ -27,7 +27,7 @@ type HookReturnType = ReturnType<typeof useSignIn | typeof useSignUp>;
 
 export const setupAuthHook = <T extends HookReturnType>(
   useHook: () => T,
-  overrides: AuthHookOverridesType = {}
+  overrides: AuthHookOverridesType = {},
 ): AuthHookSetupResult<T> => {
   const mockAction = vi.fn();
   const mockNavigate = vi.fn();

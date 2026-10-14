@@ -5,6 +5,7 @@ import { act } from "react";
 
 const mockNavigate = vi.hoisted(() => vi.fn());
 const mockWarning = vi.hoisted(() => vi.fn());
+const mockMode = { isMockMode: false };
 
 vi.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
@@ -14,6 +15,10 @@ vi.mock("@widgets/modal", () => ({
   useModal: () => ({
     warning: mockWarning,
   }),
+}));
+
+vi.mock("@entities/ai/api/ai-api", () => ({
+  useGetModeQuery: () => mockMode,
 }));
 
 vi.mock("@entities/collection/api", () => ({

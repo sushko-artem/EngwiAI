@@ -15,10 +15,10 @@ const envFilePath =
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, envFilePath }),
     UserModule,
     PrismaModule,
     AuthModule,
-    ConfigModule.forRoot({ isGlobal: true, envFilePath }),
     TokensModule,
     CardsRepoModule,
     TestModule,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
-import { useGenerateSentencesMutation } from "@features/grammar-test/api/ai-api";
+import { useGenerateSentencesMutation } from "@entities/ai/api/ai-api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { transformDataForTest } from "../helpers";
 import {
