@@ -55,6 +55,7 @@ jobs:
           push: true
           build-args: |
             NODE_VERSION=${{ steps.node_version.outputs.version }}
+            VITE_API_URL=/api
           tags: |
             ghcr.io/${{ steps.repo.outputs.name }}/frontend:latest
             ghcr.io/${{ steps.repo.outputs.name }}/frontend:${{ github.sha }}
