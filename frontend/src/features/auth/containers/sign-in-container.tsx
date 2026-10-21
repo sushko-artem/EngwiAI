@@ -4,7 +4,7 @@ import { SignInFormContainer } from "../ui/sign-in-form-container";
 import { useSignIn } from "../hooks/useSignIn";
 
 export const SignInContainer = () => {
-  const { formik, isLoading } = useSignIn();
+  const { formik, isLoading, provider } = useSignIn();
 
   return (
     <>
@@ -18,6 +18,7 @@ export const SignInContainer = () => {
             url="/sign-up"
             linkText="Пройти регистрацию"
             buttonText="Войти с Google"
+            provider={provider}
           />
         }
       />

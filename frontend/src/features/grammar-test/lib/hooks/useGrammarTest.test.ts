@@ -56,7 +56,7 @@ vi.mock("@dnd-kit/react/sortable", () => ({
   isSortable: () => true,
 }));
 
-vi.mock("@features/grammar-test/api/ai-api", () => ({
+vi.mock("@entities/ai/api/ai-api", () => ({
   useGenerateSentencesMutation: () => [
     mockGenerateSentences,
     {

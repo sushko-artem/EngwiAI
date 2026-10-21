@@ -1,5 +1,5 @@
 export interface GeneratedSentence {
-  term: string;
+  terms: string;
   sentence: string;
   translation: string;
 }

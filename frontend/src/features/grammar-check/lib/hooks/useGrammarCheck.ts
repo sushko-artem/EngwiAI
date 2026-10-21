@@ -9,6 +9,7 @@ import type {
   GenerationCountType,
 } from "@shared/api";
 import type { GrammarTestNavigationState } from "@shared/types";
+import { useGetModeQuery } from "@entities/ai/api/ai-api";
 
 export const useGrammarCheck = () => {
   const [chosenId, setChosenId] = useState<string>("");
@@ -19,6 +20,7 @@ export const useGrammarCheck = () => {
   const { warning } = useModal();
   const navigate = useNavigate();
   const { data: collections, isLoading, error } = useGetCollectionsQuery();
+  const { data: mode } = useGetModeQuery();
 
   const headerProps = useMemo(
     () => ({
@@ -34,20 +36,19 @@ export const useGrammarCheck = () => {
     if (!chosenId) {
       warning("Ни одного модуля не выбрано!");
       return false;
-    } else {
-      sessionStorage.removeItem("grammar_test_completed");
-      const numberCount = Number(count);
-      navigate("/grammar-test", {
-        state: {
-          chosenId,
-          cardSide,
-          difficulty,
-          numberCount,
-        } satisfies GrammarTestNavigationState,
-      });
-      return true;
     }
-  }, [warning, chosenId, cardSide, navigate, difficulty, count]);
+    sessionStorage.removeItem("grammar_test_completed");
+    const numberCount = Number(count);
+    navigate("/grammar-test", {
+      state: {
+        chosenId,
+        cardSide,
+        difficulty,
+        numberCount,
+      } satisfies GrammarTestNavigationState,
+    });
+    return !mode?.isMockMode;
+  }, [warning, chosenId, cardSide, navigate, difficulty, count, mode]);
 
   return {
     headerProps,

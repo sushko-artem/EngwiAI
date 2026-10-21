@@ -13,7 +13,7 @@ export const GrammarTestTask = memo(
       <>
         <div
           data-testid="test-translation"
-          className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]"
+          className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-xl border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]"
         >
           {translation || ""}
         </div>

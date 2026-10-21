@@ -74,14 +74,14 @@ jobs:
           outputs: type=docker,dest=/tmp/frontend.tar
 
       - name: Upload backend image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: image-backend
           path: /tmp/backend.tar
           retention-days: 7
 
       - name: Upload frontend image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: image-frontend
           path: /tmp/frontend.tar
@@ -116,7 +116,7 @@ jobs:
 
       - name: Upload Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cypress-screenshots-${{matrix.suite}}
           path: frontend/cypress/screenshots/

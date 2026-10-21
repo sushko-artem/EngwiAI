@@ -16,8 +16,11 @@ export default defineConfig({
           resolve: {
             extensions: [".ts", ".js"],
             alias: {
-              "@shared/*": path.resolve(__dirname, "src/shared/*"),
-              "@features/*": path.resolve(__dirname, "src/features/*"),
+              "@shared/*": path.resolve(import.meta.dirname, "src/shared/*"),
+              "@features/*": path.resolve(
+                import.meta.dirname,
+                "src/features/*",
+              ),
             },
           },
           module: {
@@ -31,7 +34,7 @@ export default defineConfig({
                     options: {
                       transpileOnly: true,
                       configFile: path.resolve(
-                        __dirname,
+                        import.meta.dirname,
                         "cypress/tsconfig.json",
                       ),
                     },

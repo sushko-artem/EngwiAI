@@ -24,8 +24,8 @@ export const AuthFormLayout = memo(
       delay: 200,
     });
     return (
-      <animated.div style={springs} className="flex h-[100vh] justify-center">
-        <Card className="m-auto w-full max-w-md bg-[image:var(--auth-form-background)]">
+      <animated.div style={springs} className="flex h-screen justify-center">
+        <Card className="m-auto w-full max-w-md bg-(image:--auth-form-background)">
           <CardHeader className="text-center font-roboto">
             <CardTitle className="font-bold text-xl">{title}</CardTitle>
             {description && <CardDescription>{description}</CardDescription>}
@@ -35,5 +35,5 @@ export const AuthFormLayout = memo(
         </Card>
       </animated.div>
     );
-  }
+  },
 );

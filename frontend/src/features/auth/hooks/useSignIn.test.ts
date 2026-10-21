@@ -5,7 +5,17 @@ import { setupAuthHook } from "@test/utils";
 
 vi.mock("formik");
 vi.mock("react-router-dom");
-vi.mock("@features/auth");
+vi.mock("@features/auth", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@features/auth")>();
+  return {
+    ...actual,
+    useLoginMutation: vi.fn(),
+    useRegisterMutation: vi.fn(),
+  };
+});
+vi.mock("../api/auth-api", () => ({
+  useGetProviderQuery: () => ({ data: { google: true } }),
+}));
 
 describe("useSignIn", () => {
   it("should init with empty form", () => {
