@@ -8,20 +8,15 @@
 
 1. В корне проекта создать файл `.env` и скопировать туда содержимое файла `.env.example`
 
-## Настройка фронтенда и бэкенда
-
-2. В каждой из папок создать файлы `.env.local`:
-   - `frontend/.env.local` - скопировать содержимое `frontend/.env.example`
-   - `backend/.env.local` - скопировать содержимое `backend/.env.example`
-     \*Если в блоке **AI sentences generation** переменным оставить пустые значения (удалить), для генерации предложений будут использованы моковые данные. Либо использовать собственные AI API.
+2. В папке backend/ создать `.env.local`. Скопировать содержимое `backend/.env.example`
 
 ## Разработка (команды выполнять в корне проекта)
 
 - `npm run dev:up` - запустить приложение
   В ходе сборки проекта будет создан "User" (с коллекциями).
   Учетные данные для входа в приложение, используя учетную запись "User":
-  _email_: **dev@example.com**
-  _password_: **qwerty**
+  - _email_: **dev@example.com**
+  - _password_: **qwerty**
 - `npm run dev:down` - остановить работу приложения (docker compose down)
 - `npm run dev:rebuild` - пересобрать
 - `npm run dev:frontend` - пересобрать только фронт
@@ -32,16 +27,16 @@
 
 ## Приложение будет доступно по адресу:
 
-- localhost:${APP_EXTERNAL_PORT} из корневого **.env**
+- localhost:${APP_EXTERNAL_PORT} из **.env**
 
-## Фронтенд:
+## Только фронтенд:
 
-- localhost:${FRONTEND_EXTERNAL_PORT} из корневого **.env**
+- localhost:${FRONTEND_EXTERNAL_PORT} из **.env**
 
-## Бэкенд:
+## Только бэкенд:
 
-- localhost:${BACKEND_EXTERNAL_PORT} из корневого **.env**
+- localhost:${BACKEND_EXTERNAL_PORT} из **.env**
 
-## База данных pgAdmin:
+## pgAdmin(БД):
 
-- localhost:${PGADMIN_EXTERNAL_PORT} из корневого **.env**
+- localhost:${PGADMIN_EXTERNAL_PORT} из **.env**

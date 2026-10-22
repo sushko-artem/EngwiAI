@@ -97,7 +97,7 @@ jobs:
           exit 1
 
       - name: Notify Telegram
-        uses: proDreams/actions-telegram-notifier@main
+        uses: proDreams/actions-telegram-notifier@v3.0.0
         if: always()
         with:
           title: "Deploy EngwiAI"
