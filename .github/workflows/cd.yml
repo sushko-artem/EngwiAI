@@ -61,3 +61,47 @@ jobs:
             ghcr.io/${{ steps.repo.outputs.name }}/frontend:${{ github.sha }}
           cache-from: type=gha,scope=frontend-prod
           cache-to: type=gha,mode=max,scope=frontend-prod
+
+  deploy:
+    needs: publish-images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: IMAGE_TAG
+          script: |
+            set -e
+            cd /opt/engwi
+            BACKEND_TAG=$IMAGE_TAG FRONTEND_TAG=$IMAGE_TAG docker compose pull
+            BACKEND_TAG=$IMAGE_TAG FRONTEND_TAG=$IMAGE_TAG docker compose up -d
+      - name: Smoke test
+        run: |
+          URL="https://engwi.site/api/auth/health"
+          echo "Waiting for app to be ready..."
+          for i in {1..10}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL" || true)
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ Smoke test passed (status: $STATUS)"
+              exit 0
+            fi
+            echo "Attempt $i: status $STATUS, retrying in 5s..."
+            sleep 5
+          done
+          echo "❌ Smoke test failed after 10 attempts"
+          exit 1
+
+      - name: Notify Telegram
+        uses: proDreams/actions-telegram-notifier@main
+        if: always()
+        with:
+          title: "Deploy EngwiAI"
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          status: ${{ job.status }}
+          notify_fields: "actor,repository,workflow,commit"
