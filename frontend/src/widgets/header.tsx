@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { cn } from "@shared/lib/utils";
 
 export type HeaderPropType = {
-  title: string;
+  title: string | React.ReactNode;
   rightIcon?: string;
   rightIconTitle?: string;
   leftIconTitle: string;
@@ -23,6 +23,7 @@ export const Header = memo(
   }: HeaderPropType) => {
     const [isVisible, setIsVisible] = useState(true);
     const lastScrollY = useRef(0);
+    const isTitle = useRef(leftIconTitle === "EngwiAI");
 
     useEffect(() => {
       const handleScroll = () => {
@@ -46,13 +47,26 @@ export const Header = memo(
           !isVisible && "-translate-y-full",
         )}
       >
-        <header className="flex justify-between py-4">
+        <header
+          className={cn(
+            !isTitle.current ? "py-4" : "py-4 xs:py-0",
+            "flex justify-between",
+          )}
+        >
           <button
             data-testid="leftIconAction"
-            className="w-[30px] md:w-[50px] cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]"
+            className={cn(
+              isTitle.current ? "w-15 " : "w-7.5",
+              "xs:w-auto cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]",
+            )}
             onClick={leftIconAction}
           >
-            <img src={leftIcon} alt="icon" title={leftIconTitle} width={100} />
+            <img
+              src={leftIcon}
+              alt="icon"
+              title={leftIconTitle}
+              width={isTitle.current ? 100 : "60px"}
+            />
           </button>
           <h1 className="my-auto text-center font-comic text-2xl md:text-4xl">
             {title}
@@ -61,7 +75,7 @@ export const Header = memo(
             data-testid="rightIconAction"
             onClick={rightIconAction ? rightIconAction : undefined}
             className={cn(
-              "w-[30px] md:w-[50px] ",
+              "w-7.5 xs:w-auto",
               rightIcon &&
                 "cursor-pointer hover:scale-[1.1] transition-all hover:drop-shadow-[4px_4px_2px_rgba(0,0,0,0.7)]",
             )}
@@ -71,7 +85,7 @@ export const Header = memo(
                 src={rightIcon}
                 alt="icon"
                 title={rightIconTitle}
-                width={100}
+                width={60}
               />
             )}
           </button>

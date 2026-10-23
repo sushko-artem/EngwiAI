@@ -10,7 +10,7 @@ export const AddCardButton = memo(({ onAdd }: AddCardButtonPropType) => {
       <button
         data-testid="add-card-button"
         onClick={onAdd}
-        className="flex justify-center items-center text-2xl rounded-[50%] text-white bg-blue-400 w-[50px] h-[50px] cursor-pointer hover:bg-blue-500 transition-all shadow-lg"
+        className="flex justify-center items-center text-2xl rounded-[50%] text-white bg-blue-400 w-12.5 h-12.5 cursor-pointer hover:bg-blue-500 transition-all shadow-lg"
       >
         +
       </button>

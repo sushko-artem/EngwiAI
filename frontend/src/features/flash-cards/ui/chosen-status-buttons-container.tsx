@@ -1,5 +1,5 @@
 import cross from "@assets/images/cross.webp";
-import check from "@assets/images/modalConfirm.png";
+import check from "@assets/images/confirm.png";
 import { ChosenStatusButton } from "./chosen-status-button";
 import { memo } from "react";
 
@@ -32,5 +32,5 @@ export const ChosenStatusButtonContainer = memo(
         </ChosenStatusButton>
       </div>
     );
-  }
+  },
 );

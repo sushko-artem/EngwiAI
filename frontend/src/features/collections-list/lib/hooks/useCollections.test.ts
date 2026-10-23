@@ -72,7 +72,9 @@ describe("useCollections", () => {
       await result.current.onDelete("1");
     });
 
-    expect(mockConfirm).toHaveBeenCalledWith("Удалить коллекцию Collection 1?");
+    expect(mockConfirm).toHaveBeenCalledWith(
+      'Удалить коллекцию "Collection 1"?',
+    );
     expect(mockDelete).toHaveBeenCalledWith("1");
   });
 });
