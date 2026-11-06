@@ -9,7 +9,7 @@ import { ProtectedRoute } from "@shared/protected-route";
 import { EditCollectionPage } from "@pages/EditCollection";
 import { IntervalLearningPage } from "@pages/IntervalLearning";
 import { SpellCheckingPage } from "@pages/SpellChecking";
-import { AppLayout } from "./components/app-layout";
+import { AppLayout } from "./components/App-layout";
 import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 import { TestReportPage } from "@pages/TestReport";
 import { NotFoundPage } from "@widgets/not-found-page";
