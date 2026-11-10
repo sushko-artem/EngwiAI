@@ -228,3 +228,19 @@ td {
   border: 1px solid rgb(160 160 160);
   padding: 5px 8px;
 }
+
+.os-theme-custom {
+  /* Размер полосы прокрутки */
+  --os-size: 10px;
+
+  /* Дорожка (track) */
+  --os-track-bg: transparent;
+  --os-track-bg-hover: transparent;
+  --os-track-bg-active: transparent;
+
+  /* Ползунок (handle)  */
+  --os-handle-bg: rgba(0, 0, 0, 0.2);
+  --os-handle-bg-hover: rgba(0, 0, 0, 0.4);
+  --os-handle-bg-active: rgba(0, 0, 0, 0.5);
+  --os-handle-border-radius: 5px;
+}

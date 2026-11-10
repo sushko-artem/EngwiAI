@@ -24,15 +24,26 @@ export const AuthFormLayout = memo(
       delay: 200,
     });
     return (
-      <animated.div style={springs} className="flex h-screen justify-center">
-        <Card className="m-auto w-full max-w-md bg-(image:--auth-form-background)">
+      <animated.div
+        style={springs}
+        className="flex flex-col justify-center text-center h-screen"
+      >
+        <Card className="w-full mx-auto max-w-md bg-(image:--auth-form-background)">
           <CardHeader className="text-center font-roboto">
-            <CardTitle className="font-bold text-xl">{title}</CardTitle>
+            <CardTitle className="font-bold text-xl">
+              <h1>{title}</h1>
+            </CardTitle>
             {description && <CardDescription>{description}</CardDescription>}
           </CardHeader>
           <CardContent className="text-center">{form}</CardContent>
           <CardFooter>{bottomLayout}</CardFooter>
         </Card>
+
+        <span className="text-xs mt-4 max-w-md mx-auto text-gray-500">
+          <b className="underline text-gray-600">EngwiAI</b> — приложение для
+          запоминания слов и терминов по карточкам. Создавайте коллекции,
+          тренируйте перевод, проверяйте орфографию и грамматику с помощью ИИ.
+        </span>
       </animated.div>
     );
   },

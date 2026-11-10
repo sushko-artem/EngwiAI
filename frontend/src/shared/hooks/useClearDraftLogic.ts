@@ -3,26 +3,26 @@ import { useAppDispatch } from "@redux/hooks";
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
+const isCollectionsDraftPath = (s: string) => /\/(edit|create)/.test(s);
+const isGrammarDraftPath = (s: string) => /\/grammar-test/.test(s);
+
 export const useClearDraftLogic = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const prevPathRef = useRef(location.pathname);
+  const { pathname } = useLocation();
+  const prevPathRef = useRef(pathname);
 
   useEffect(() => {
-    const wasOnEditPage = /\/(edit|create)/.test(prevPathRef.current);
-    const isOnEditPage = /\/(edit|create)/.test(location.pathname);
-    const wasOnGrammarTestPage = /\/(grammar-test)/.test(prevPathRef.current);
-    const isOnGrammarTestPage = /\/(grammar-test)/.test(location.pathname);
+    const prev = prevPathRef.current;
+    const next = pathname;
+    prevPathRef.current = pathname;
 
-    if (wasOnEditPage && !isOnEditPage) {
+    if (isCollectionsDraftPath(prev) && !isCollectionsDraftPath(next)) {
       dispatch(clearCollection());
     }
 
-    if (wasOnGrammarTestPage && !isOnGrammarTestPage) {
+    if (isGrammarDraftPath(prev) && !isGrammarDraftPath(next)) {
       sessionStorage.removeItem("grammar_test_cache");
       sessionStorage.setItem("grammar_test_completed", "true");
     }
-
-    prevPathRef.current = location.pathname;
-  }, [location.pathname, dispatch]);
+  }, [pathname, dispatch]);
 };

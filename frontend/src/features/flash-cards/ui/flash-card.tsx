@@ -20,7 +20,7 @@ export const FlashCard = ({ card, isReversed }: CardPropsType) => {
         <div
           data-testid="flash-card"
           onClick={() => setFlipped((state) => !state)}
-          className="relative w-[350px] h-[200px] md:w-[500px] md:h-[300px]"
+          className="relative w-87.5 h-50 md:w-125 md:h-75"
         >
           <animated.div
             data-testid="word-side"

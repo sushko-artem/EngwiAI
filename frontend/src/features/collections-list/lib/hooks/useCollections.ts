@@ -46,10 +46,10 @@ export const useCollections = () => {
   const onDelete = useCallback(
     async (id: string) => {
       const isDelete = await confirm(
-        `Удалить коллекцию ${
+        `Удалить коллекцию "${
           collectionsRef.current?.find((collection) => collection.id === id)
             ?.name
-        }?`,
+        }"?`,
       );
       if (isDelete) {
         try {
