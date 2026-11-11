@@ -20,7 +20,7 @@ export const EditableCollection = memo(
     return (
       <div
         data-testid="editable-collection"
-        className="m-auto text-center grid gap-0.5 max-w-125 w-[70%] sm:w-[60%] md:w-[50%]"
+        className="mx-auto text-center grid gap-0.5 max-w-125 w-[70%] sm:w-[60%] md:w-[50%]"
       >
         <CollectionName name={name} onChange={handleNameChange} />
         <CardsList collection={collection} />

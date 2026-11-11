@@ -6,7 +6,7 @@ export const GrammarTestActionsLayout = ({
   children,
 }: GrammarTestLayoutPropType) => {
   return (
-    <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
+    <div className="mx-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
       {children}
     </div>
   );

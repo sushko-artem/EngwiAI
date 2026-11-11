@@ -45,7 +45,6 @@ export const useSignIn = () => {
       }
     },
   });
-  console.log(provider);
 
   return {
     isLoading,
