@@ -1,43 +1,26 @@
 import { memo, useEffect, useState } from "react";
+import { rateLimit } from "@shared/lib";
 
 type ButtonContainerPropType = {
   handleClick(): boolean;
 };
 
-export const RATE_LIMIT_KEY = "grammar_test_button_disabled";
-export const RATE_LIMIT_TIME_KEY = "grammar_test_button_time";
-
 export const StartTestButtonContainer = memo(
   ({ handleClick }: ButtonContainerPropType) => {
-    const [disabled, setDisabled] = useState(() => {
-      return sessionStorage.getItem(RATE_LIMIT_KEY) === "true";
-    });
-    const [secondsLeft, setSecondsLeft] = useState(() => {
-      const savedTime = sessionStorage.getItem(RATE_LIMIT_TIME_KEY);
-      if (!savedTime) return 60;
-      const elapsed = Math.floor((Date.now() - Number(savedTime)) / 1000);
-      return Math.max(0, 60 - elapsed);
-    });
-
-    const onClick = () => {
-      const shouldDisable = handleClick();
-      if (!shouldDisable) return;
-      sessionStorage.setItem(RATE_LIMIT_KEY, "true");
-      sessionStorage.setItem(RATE_LIMIT_TIME_KEY, String(Date.now()));
-      setDisabled(true);
-      setSecondsLeft(60);
-    };
+    const [disabled, setDisabled] = useState(() => rateLimit.isBlocked());
+    const [secondsLeft, setSecondsLeft] = useState(() =>
+      rateLimit.getSecondsLeft(),
+    );
 
     useEffect(() => {
       if (!disabled) return;
       const timer = setInterval(() => {
         setSecondsLeft((prev) => {
           if (prev <= 1) {
-            sessionStorage.removeItem(RATE_LIMIT_KEY);
-            sessionStorage.removeItem(RATE_LIMIT_TIME_KEY);
+            rateLimit.clear();
             setDisabled(false);
             clearInterval(timer);
-            return 60;
+            return rateLimit.duration;
           }
           return prev - 1;
         });
@@ -50,7 +33,7 @@ export const StartTestButtonContainer = memo(
         <button
           data-testid="start-test"
           disabled={disabled}
-          onClick={onClick}
+          onClick={handleClick}
           className="m-auto min-w-30 max-w-fit border-zinc-500 rounded-[5px] cursor-pointer border-2 mt-1 p-2 font-comic font-bold text-cyan-900 bg-[rgb(168,145,124)] active:bg-[rgb(184,157,133)] transition-all disabled:bg-[rgb(168,145,124)] disabled:cursor-default disabled:blur-xs"
         >
           Начать тест
