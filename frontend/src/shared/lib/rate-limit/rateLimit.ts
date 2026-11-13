@@ -1,5 +1,5 @@
-const RATE_LIMIT_KEY = "grammar_test_button_disabled";
-const RATE_LIMIT_TIME_KEY = "grammar_test_button_time";
+export const RATE_LIMIT_KEY = "grammar_test_button_disabled";
+export const RATE_LIMIT_TIME_KEY = "grammar_test_button_time";
 const RATE_LIMIT_DURATION = 60;
 
 export const rateLimit = {

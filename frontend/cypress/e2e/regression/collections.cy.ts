@@ -19,7 +19,7 @@ describe("Collections - regression", () => {
 
   it("should delete collection after confirmation", () => {
     cy.get("[data-testid='deleteCross']").eq(0).click();
-    cy.contains("Удалить коллекцию Животные?").should("be.visible");
+    cy.contains('Удалить коллекцию "Животные"?').should("be.visible");
     cy.get("img[alt='confirm']").click();
     cy.fixture("collections/animals").then((animals) => {
       cy.contains(`${animals.name}`).should("not.exist");
@@ -31,7 +31,7 @@ describe("Collections - regression", () => {
 
   it("should cancel deletion", () => {
     cy.get("[data-testid='deleteCross']").eq(1).click();
-    cy.contains("Удалить коллекцию Еда?").should("be.visible");
+    cy.contains('Удалить коллекцию "Еда"?').should("be.visible");
     cy.get("img[alt='close']").click();
     cy.fixture("collections/animals").then((animals) => {
       cy.contains(`${animals.name}`).should("be.visible");
