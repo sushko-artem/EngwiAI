@@ -17,10 +17,7 @@ export const aiApi = api.injectEndpoints({
         body: dto,
       }),
     }),
-    getMode: builder.query<{ isMockMode: boolean }, void>({
-      query: () => AI_ENDPOINTS.MODE,
-    }),
   }),
 });
 
-export const { useGenerateSentencesMutation, useGetModeQuery } = aiApi;
+export const { useGenerateSentencesMutation } = aiApi;

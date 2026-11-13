@@ -9,7 +9,6 @@ import type {
   GenerationCountType,
 } from "@shared/api";
 import type { GrammarTestNavigationState } from "@shared/types";
-// import { useGetModeQuery } from "@entities/ai/api/ai-api";
 
 export const useGrammarCheck = () => {
   const [chosenId, setChosenId] = useState<string>("");
@@ -20,7 +19,6 @@ export const useGrammarCheck = () => {
   const { warning } = useModal();
   const navigate = useNavigate();
   const { data: collections, isLoading, error } = useGetCollectionsQuery();
-  // const { data: mode } = useGetModeQuery();
 
   const headerProps = useMemo(
     () => ({
