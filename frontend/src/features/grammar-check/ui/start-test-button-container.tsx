@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { rateLimit } from "@shared/lib";
 
 type ButtonContainerPropType = {
-  handleClick(): boolean;
+  handleClick(): void;
 };
 
 export const StartTestButtonContainer = memo(
