@@ -47,10 +47,10 @@ export const SpellTestMainContent = memo(
           : "border-[#e5e7eb] focus:border-[#e5e7eb]";
 
     return (
-      <div className="m-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
+      <div className="mx-auto text-center w-[80%] md:w-[60%] lg:w-[50%]">
         <div
           data-testid="test-termin"
-          className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-[8px] border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]"
+          className="text-xl lg:text-2xl font-roboto text-cyan-900 border-2 p-2 m-auto rounded-xl border-[#e5e7eb] bg-[rgba(255,241,228,0.8)]"
         >
           {collection[index][visibleSide]}
         </div>
@@ -73,7 +73,7 @@ export const SpellTestMainContent = memo(
             autoFocus
             onKeyDown={handleKeyDown}
             ref={answerRef}
-            className={`p-2 border-1 rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl transition-colors duration-300 ${borderColorClass}`}
+            className={`p-2 border rounded-[5px] outline-0 text-center focus:border-2 font-roboto w-full resize-none overflow-y-auto bg-[rgba(255,241,228,0.8)] lg:text-xl transition-colors duration-300 ${borderColorClass}`}
             style={{
               scrollbarWidth: "thin",
               scrollbarColor: "rgba(233,220,230,0.2) transparent",

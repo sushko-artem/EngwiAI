@@ -15,6 +15,7 @@ import type { IGenerationResponse } from "@shared/api";
 import { isSortable } from "@dnd-kit/react/sortable";
 import type { SoundNameType } from "@shared/constants/sounds";
 import type { GrammarTestNavigationState } from "shared/types";
+import { rateLimit } from "shared/lib";
 
 export const useGrammarTest = () => {
   const location = useLocation();
@@ -61,11 +62,6 @@ export const useGrammarTest = () => {
 
     if (getCachedData()) return;
 
-    if (import.meta.env.DEV) {
-      if (sessionStorage.getItem("grammar_test_pending")) return;
-      sessionStorage.setItem("grammar_test_pending", "1");
-    }
-
     const {
       chosenId: id,
       difficulty,
@@ -81,15 +77,11 @@ export const useGrammarTest = () => {
     })
       .unwrap()
       .then((res) => {
+        rateLimit.start();
         sessionStorage.setItem("grammar_test_cache", JSON.stringify(res));
-        if (import.meta.env.DEV) {
-          sessionStorage.removeItem("grammar_test_pending");
-        }
       })
       .catch(() => {
-        if (import.meta.env.DEV) {
-          sessionStorage.removeItem("grammar_test_pending");
-        }
+        rateLimit.clear();
       });
   }, [LocationState, navigate, generateSentences, location.pathname]);
 

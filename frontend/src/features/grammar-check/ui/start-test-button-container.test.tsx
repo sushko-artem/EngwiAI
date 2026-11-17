@@ -1,60 +1,59 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  RATE_LIMIT_KEY,
-  RATE_LIMIT_TIME_KEY,
-  StartTestButtonContainer,
-} from "./start-test-button-container";
+import { StartTestButtonContainer } from "./start-test-button-container";
 
 const mockHandleClick = vi.hoisted(() => vi.fn());
+const mockRateLimit = vi.hoisted(() => ({
+  isBlocked: vi.fn(),
+  getSecondsLeft: vi.fn(),
+  clear: vi.fn(),
+  duration: 60,
+}));
+
+vi.mock("@shared/lib", () => ({
+  rateLimit: mockRateLimit,
+}));
 
 describe("StartTestButtonContainer", () => {
   beforeEach(() => {
     sessionStorage.clear();
   });
 
-  it("should call handleClick and set sessionStorage on click", async () => {
-    mockHandleClick.mockReturnValueOnce(true);
+  it("should call handleClick on click", async () => {
+    mockRateLimit.isBlocked.mockReturnValue(false);
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
     fireEvent.click(screen.getByTestId("start-test"));
     expect(mockHandleClick).toHaveBeenCalled();
-    expect(sessionStorage.getItem(RATE_LIMIT_KEY)).toBe("true");
-    expect(sessionStorage.getItem(RATE_LIMIT_TIME_KEY)).toBeTruthy();
   });
 
-  it("should disable button after click", () => {
-    mockHandleClick.mockReturnValueOnce(true);
+  it("should render enabled", () => {
+    mockRateLimit.isBlocked.mockReturnValue(false);
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
-    fireEvent.click(screen.getByTestId("start-test"));
-    expect(screen.getByTestId("start-test")).toBeDisabled();
-    expect(screen.getByTestId("rate-limit-timer")).toBeInTheDocument();
+    expect(screen.getByTestId("start-test")).toBeEnabled();
+    expect(screen.queryByText("Следующая попытка")).not.toBeInTheDocument();
   });
 
-  it("should not disable button when no module choosen", () => {
-    mockHandleClick.mockReturnValueOnce(false);
-    render(<StartTestButtonContainer handleClick={mockHandleClick} />);
-    fireEvent.click(screen.getByTestId("start-test"));
-    expect(screen.getByTestId("start-test")).not.toBeDisabled();
-  });
-
-  it("should restore disabled state from sessionStorage", () => {
-    sessionStorage.setItem(RATE_LIMIT_KEY, "true");
-    sessionStorage.setItem(RATE_LIMIT_TIME_KEY, String(Date.now() - 5000));
+  it("should render disabled", () => {
+    mockRateLimit.isBlocked.mockReturnValue(true);
+    mockRateLimit.getSecondsLeft.mockReturnValue(22);
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
     expect(screen.getByTestId("start-test")).toBeDisabled();
-    expect(screen.getByText("Следующая попытка через 55 сек."));
+    expect(
+      screen.getByText("Следующая попытка через 22 сек."),
+    ).toBeInTheDocument();
   });
 
   it("should countdown and re-enable button", () => {
-    mockHandleClick.mockReturnValueOnce(true);
+    mockRateLimit.isBlocked.mockReturnValue(true);
+    mockRateLimit.getSecondsLeft.mockReturnValue(22);
     vi.useFakeTimers();
     render(<StartTestButtonContainer handleClick={mockHandleClick} />);
-    fireEvent.click(screen.getByTestId("start-test"));
-    expect(screen.getByTestId("start-test")).toBeDisabled();
     act(() => {
-      vi.advanceTimersByTime(59000);
+      vi.advanceTimersByTime(21000);
     });
-    expect(screen.getByText("Следующая попытка через 1 сек."));
+    expect(
+      screen.getByText("Следующая попытка через 1 сек."),
+    ).toBeInTheDocument();
     act(() => {
       vi.advanceTimersByTime(1000);
     });

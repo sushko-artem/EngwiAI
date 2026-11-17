@@ -13,7 +13,7 @@ export const ChooseModuleList = ({
   chosenIds,
 }: ChooseModuleListPropType) => {
   return (
-    <div className="m-auto mt-6 mb-4 p-4 flex flex-col text-center border-zinc-400 border-2 rounded-[5px] md:w-[60%] lg:w-[40%] w-[80%] max-h-[50vh] overflow-y-auto">
+    <div className="mx-auto mt-2 mb-4 p-4 flex flex-col text-center border-zinc-400 border-2 rounded-[5px] md:w-[60%] lg:w-[40%] w-[80%] max-h-[50vh] overflow-y-auto">
       {collectionsList.map((collection) => (
         <ChooseModuleAction
           key={collection.id}

@@ -26,7 +26,7 @@ export const AuthFormLayout = memo(
     return (
       <animated.div
         style={springs}
-        className="flex flex-col justify-center text-center h-screen"
+        className="flex flex-col justify-center text-center flex-1"
       >
         <Card className="w-full mx-auto max-w-md bg-(image:--auth-form-background)">
           <CardHeader className="text-center font-roboto">

@@ -9,7 +9,7 @@ import { ProtectedRoute } from "@shared/protected-route";
 import { EditCollectionPage } from "@pages/EditCollection";
 import { IntervalLearningPage } from "@pages/IntervalLearning";
 import { SpellCheckingPage } from "@pages/SpellChecking";
-import { AppLayout } from "./components/App-layout";
+import { AppLayout, AuthLayout } from "./layouts";
 import { SpellCheckTestPage } from "@pages/SpellCheckTest";
 import { TestReportPage } from "@pages/TestReport";
 import { NotFoundPage } from "@widgets/not-found-page";
@@ -75,12 +75,11 @@ const routes = [
         element: <AnimationPage />,
       },
       {
-        path: "/sign-up",
-        element: <SignUpPage />,
-      },
-      {
-        path: "/sign-in",
-        element: <SignInPage />,
+        element: <AuthLayout />,
+        children: [
+          { path: "/sign-in", element: <SignInPage /> },
+          { path: "/sign-up", element: <SignUpPage /> },
+        ],
       },
       ...protectedRoutes,
       {

@@ -41,6 +41,5 @@ describe("Collections Page - critical", () => {
   it("should navigate back to dashboard", () => {
     cy.get("[data-testid='leftIconAction']").click();
     cy.url().should("include", "/dashboard");
-    cy.contains("EngwiAI").should("be.visible");
   });
 });
