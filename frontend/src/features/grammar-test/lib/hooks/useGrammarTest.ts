@@ -62,6 +62,11 @@ export const useGrammarTest = () => {
 
     if (getCachedData()) return;
 
+    if (import.meta.env.DEV) {
+      if (sessionStorage.getItem("grammar_test_pending")) return;
+      sessionStorage.setItem("grammar_test_pending", "1");
+    }
+
     const {
       chosenId: id,
       difficulty,
@@ -79,8 +84,14 @@ export const useGrammarTest = () => {
       .then((res) => {
         rateLimit.start();
         sessionStorage.setItem("grammar_test_cache", JSON.stringify(res));
+        if (import.meta.env.DEV) {
+          sessionStorage.removeItem("grammar_test_pending");
+        }
       })
       .catch(() => {
+        if (import.meta.env.DEV) {
+          sessionStorage.removeItem("grammar_test_pending");
+        }
         rateLimit.clear();
       });
   }, [LocationState, navigate, generateSentences, location.pathname]);
