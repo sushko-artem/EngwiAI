@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import backArrow from "@assets/images/arrow-left.svg";
 import option from "@assets/images/options.png";
@@ -6,10 +6,8 @@ import { useGetCardsFromCollectionsMutation } from "@entities/collection/api";
 import {
   useNavigationGuard,
   usePreventReload,
-  useSound,
   useTestReducer,
 } from "@shared/hooks";
-import type { SoundNameType } from "@shared/constants/sounds";
 import type { SpellTestNavigationState } from "@shared/types";
 
 export const useSpellTest = () => {
@@ -18,20 +16,17 @@ export const useSpellTest = () => {
   const locationState = location.state as SpellTestNavigationState | null;
   const [getCards, { data: collection, isLoading, error }] =
     useGetCardsFromCollectionsMutation();
-  const { toggleGroup, isGroupMuted, play } = useSound();
   const {
     state,
+    borderType,
     toggleMenu,
+    toggleGroup,
+    isGroupMuted,
     closeMenu,
     resetTest,
     testInProgress,
     handleAnswer,
-  } = useTestReducer(collection?.length, play);
-  const [borderType, setBorderType] = useState<SoundNameType | null>(null);
-
-  useEffect(() => {
-    setBorderType(null);
-  }, [state.index]);
+  } = useTestReducer(collection?.length);
 
   const headerProps = useMemo(
     () => ({
@@ -64,14 +59,6 @@ export const useSpellTest = () => {
     });
   }, [navigate, locationState, getCards]);
 
-  const handleUserAnswer = useCallback(
-    (userAnswer: string, correctAnswer: string) => {
-      const borderStyleType = handleAnswer(userAnswer, correctAnswer);
-      setBorderType(borderStyleType);
-    },
-    [handleAnswer],
-  );
-
   return {
     headerProps,
     error,
@@ -85,7 +72,7 @@ export const useSpellTest = () => {
     userMistakes: state.mistakesMadeIn,
     inProgress: state.inProgress,
     isMenuOptionsOpen: state.isMenuOptionsOpen,
-    handleUserAnswer,
+    handleAnswer,
     resetTest,
     toggleMenu,
     closeMenu,
