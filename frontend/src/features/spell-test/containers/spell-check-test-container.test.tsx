@@ -50,7 +50,7 @@ const createMockedProps = (overrides = {}) => ({
   userMistakes: {} as Record<string, string>,
   inProgress: false,
   isMenuOptionsOpen: false,
-  handleUserAnswer: mockHandleAnswer,
+  handleAnswer: mockHandleAnswer,
   resetTest: mockResetTest,
   toggleMenu: mockOptions,
   closeMenu: mockCloseMenuOptions,

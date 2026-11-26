@@ -7,13 +7,11 @@ import { transformDataForTest } from "../helpers";
 import {
   useNavigationGuard,
   usePreventReload,
-  useSound,
   useTestReducer,
 } from "@shared/hooks";
 import type { DragEndEvent } from "@dnd-kit/react";
 import type { IGenerationResponse } from "@shared/api";
 import { isSortable } from "@dnd-kit/react/sortable";
-import type { SoundNameType } from "@shared/constants/sounds";
 import type { GrammarTestNavigationState } from "shared/types";
 import { rateLimit } from "shared/lib";
 
@@ -23,7 +21,6 @@ export const useGrammarTest = () => {
   const navigate = useNavigate();
   const [generateSentences, { data, isLoading, error }] =
     useGenerateSentencesMutation();
-  const { play, toggleGroup, isGroupMuted } = useSound();
   const getCachedData = () => {
     const cached = sessionStorage.getItem("grammar_test_cache");
     return cached ? (JSON.parse(cached) as IGenerationResponse) : null;
@@ -32,20 +29,18 @@ export const useGrammarTest = () => {
     data?.sentences.length ?? getCachedData()?.sentences.length ?? 0;
   const {
     state,
+    borderType,
     handleAnswer,
     toggleMenu,
+    toggleGroup,
+    isGroupMuted,
     closeMenu,
     resetTest,
     testInProgress,
-  } = useTestReducer(testLength, play);
+  } = useTestReducer(testLength);
   const [shuffledWords, setShuffledWords] = useState<
     Array<{ id: string; word: string }>
   >([]);
-  const [borderType, setBorderType] = useState<SoundNameType | null>(null);
-
-  useEffect(() => {
-    setBorderType(null);
-  }, [state.index]);
 
   useEffect(() => {
     if (!LocationState?.chosenId || !LocationState?.difficulty) {
@@ -61,6 +56,11 @@ export const useGrammarTest = () => {
     }
 
     if (getCachedData()) return;
+
+    if (import.meta.env.DEV) {
+      if (sessionStorage.getItem("grammar_test_pending")) return;
+      sessionStorage.setItem("grammar_test_pending", "1");
+    }
 
     const {
       chosenId: id,
@@ -79,8 +79,14 @@ export const useGrammarTest = () => {
       .then((res) => {
         rateLimit.start();
         sessionStorage.setItem("grammar_test_cache", JSON.stringify(res));
+        if (import.meta.env.DEV) {
+          sessionStorage.removeItem("grammar_test_pending");
+        }
       })
       .catch(() => {
+        if (import.meta.env.DEV) {
+          sessionStorage.removeItem("grammar_test_pending");
+        }
         rateLimit.clear();
       });
   }, [LocationState, navigate, generateSentences, location.pathname]);
@@ -138,13 +144,8 @@ export const useGrammarTest = () => {
 
   const handleUserAnswer = useCallback(() => {
     const userAnswer = shuffledWords.map((item) => item.word).join(" ");
-    let borderStyleType: SoundNameType;
     if (processedSentences) {
-      borderStyleType = handleAnswer(
-        userAnswer,
-        processedSentences.joinedSentences[state.index],
-      );
-      setBorderType(borderStyleType);
+      handleAnswer(userAnswer, processedSentences.joinedSentences[state.index]);
     }
   }, [handleAnswer, processedSentences, shuffledWords, state.index]);
 
@@ -173,7 +174,6 @@ export const useGrammarTest = () => {
     error,
     testLength,
     borderType,
-    play,
     toggleGroup,
     isGroupMuted,
     handleUserAnswer,

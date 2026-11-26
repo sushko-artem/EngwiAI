@@ -17,6 +17,7 @@ const mockNavigate = vi.hoisted(() => vi.fn());
 const mockGenerateSentences = vi.hoisted(() => vi.fn());
 const mockLocation = vi.hoisted(() => vi.fn());
 const mockHandleAnswer = vi.hoisted(() => vi.fn());
+const mockBorder: { type: "correct" | "incorrect" | null } = { type: null };
 const mockState = {
   index: 0,
   inProgress: false,
@@ -33,15 +34,9 @@ vi.mock("@shared/hooks", async () => {
     ...actual,
     useNavigationGuard: mockUseNavigationGuard,
     usePreventReload: mockPreventReload,
-    useSound: () => ({
-      play: vi.fn(),
-      toggleGroup: vi.fn(),
-      isGroupMuted: vi.fn(),
-      muteAll: vi.fn(),
-      unMuteAll: vi.fn(),
-    }),
     useTestReducer: () => ({
       state: mockState,
+      borderType: mockBorder.type,
       handleAnswer: mockHandleAnswer,
       toggleMenu: vi.fn(),
       closeMenu: vi.fn(),
@@ -206,6 +201,7 @@ describe("useGrammarTest", () => {
 
   describe("handleUserAnswer", () => {
     it("should update borderType when answer is correct", async () => {
+      mockBorder.type = "correct";
       const { result } = renderHook(() => useGrammarTest());
 
       act(() => {
@@ -218,7 +214,7 @@ describe("useGrammarTest", () => {
     });
 
     it("should update borderType to 'incorrect' when answer is wrong", async () => {
-      mockHandleAnswer.mockReturnValue("incorrect");
+      mockBorder.type = "incorrect";
       const { result } = renderHook(() => useGrammarTest());
 
       act(() => {

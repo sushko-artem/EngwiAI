@@ -4,7 +4,7 @@ import { useClearDraftLogic } from "@shared/hooks";
 import { memo, useCallback } from "react";
 
 const Footer = memo(({ onPolicyClick }: { onPolicyClick: () => void }) => (
-  <footer className="text-center text-sm text-gray-500 py-4">
+  <footer className="flex justify-center text-sm text-gray-500 py-4">
     © 2027 EngwiAI.{" "}
     <span onClick={onPolicyClick} className="underline cursor-pointer">
       Cookies policies
@@ -23,7 +23,7 @@ export const AppLayout = () => {
   }, [warning]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col">
       <div className="fixed inset-0 -z-10 backdrop-blur-[6px]"></div>
       <ModalRootContainer />
 

@@ -32,13 +32,6 @@ vi.mock("@shared/hooks", async () => {
     ...actual,
     useNavigationGuard: mockUseNavigationGuard,
     usePreventReload: mockPreventReload,
-    useSound: () => ({
-      play: vi.fn(),
-      toggleGroup: vi.fn(),
-      isGroupMuted: vi.fn(),
-      muteAll: vi.fn(),
-      unMuteAll: vi.fn(),
-    }),
   };
 });
 
@@ -111,7 +104,7 @@ describe("useSpellTest", () => {
     expect(result.current.index).toBe(0);
 
     act(() => {
-      result.current.handleUserAnswer("hello", "hello");
+      result.current.handleAnswer("hello", "hello");
     });
 
     rerender();
@@ -133,7 +126,7 @@ describe("useSpellTest", () => {
     });
 
     act(() => {
-      result.current.handleUserAnswer("hello", "hello");
+      result.current.handleAnswer("hello", "hello");
     });
 
     act(() => {

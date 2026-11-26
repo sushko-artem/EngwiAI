@@ -4,15 +4,25 @@ import { useTestReducer } from "./useTestReducer";
 
 const mockPlay = vi.hoisted(() => vi.fn());
 
+vi.mock("@shared/hooks", () => ({
+  useSound: () => ({
+    play: mockPlay,
+    toggleGroup: vi.fn(),
+    isGroupMuted: vi.fn(),
+    muteAll: vi.fn(),
+    unMuteAll: vi.fn(),
+  }),
+}));
+
 describe("useTestReducer", () => {
   it("should set testLength", () => {
-    const { result } = renderHook(() => useTestReducer(5, mockPlay));
+    const { result } = renderHook(() => useTestReducer(5));
     expect(result.current.state.testLength).toBe(5);
   });
 
   describe("handleAnswer", () => {
     it("should increment index and counter for correct answer", () => {
-      const { result } = renderHook(() => useTestReducer(5, mockPlay));
+      const { result } = renderHook(() => useTestReducer(5));
       act(() => {
         result.current.handleAnswer("hello", "hello");
       });
@@ -22,7 +32,7 @@ describe("useTestReducer", () => {
     });
 
     it("should increment index but not counter for incorrect answer", () => {
-      const { result } = renderHook(() => useTestReducer(5, mockPlay));
+      const { result } = renderHook(() => useTestReducer(5));
       act(() => {
         result.current.handleAnswer("hello", "world");
       });
@@ -32,7 +42,7 @@ describe("useTestReducer", () => {
     });
 
     it("should save mistake for incorrect answer", () => {
-      const { result } = renderHook(() => useTestReducer(5, mockPlay));
+      const { result } = renderHook(() => useTestReducer(5));
       act(() => {
         result.current.handleAnswer("hell", "hello");
         result.current.handleAnswer("word", "world");
@@ -43,26 +53,8 @@ describe("useTestReducer", () => {
       });
     });
 
-    it("should return correct status for correct answer", () => {
-      const { result } = renderHook(() => useTestReducer(5, mockPlay));
-      let status: string = "";
-      act(() => {
-        status = result.current.handleAnswer("hello", "hello");
-      });
-      expect(status).toBe("correct");
-    });
-
-    it("should return incorrect status for incorrect answer", () => {
-      const { result } = renderHook(() => useTestReducer(5, mockPlay));
-      let status: string = "";
-      act(() => {
-        status = result.current.handleAnswer("hell", "hello");
-      });
-      expect(status).toBe("incorrect");
-    });
-
     it("should set testInProgress=false and open summaryModal when last question answered", () => {
-      const { result } = renderHook(() => useTestReducer(1, mockPlay));
+      const { result } = renderHook(() => useTestReducer(1));
       act(() => {
         result.current.handleAnswer("hello", "hello");
       });
@@ -71,8 +63,19 @@ describe("useTestReducer", () => {
     });
   });
 
+  it("should close menu", () => {
+    const { result } = renderHook(() => useTestReducer(5));
+    act(() => {
+      result.current.toggleMenu();
+    });
+    act(() => {
+      result.current.closeMenu();
+    });
+    expect(result.current.state.isMenuOptionsOpen).toBe(false);
+  });
+
   it("should toggle menu options", () => {
-    const { result } = renderHook(() => useTestReducer(5, mockPlay));
+    const { result } = renderHook(() => useTestReducer(5));
     expect(result.current.state.isMenuOptionsOpen).toBe(false);
     act(() => {
       result.current.toggleMenu();
@@ -85,7 +88,7 @@ describe("useTestReducer", () => {
   });
 
   it("testInProgress should be true when index>0", () => {
-    const { result } = renderHook(() => useTestReducer(5, mockPlay));
+    const { result } = renderHook(() => useTestReducer(5));
     expect(result.current.testInProgress).toBe(false);
     act(() => {
       result.current.handleAnswer("hello", "hello");
@@ -95,7 +98,7 @@ describe("useTestReducer", () => {
   });
 
   it("should reset test to initial state", () => {
-    const { result } = renderHook(() => useTestReducer(5, mockPlay));
+    const { result } = renderHook(() => useTestReducer(5));
     act(() => {
       result.current.handleAnswer("hello", "hello");
       result.current.handleAnswer("world", "word");

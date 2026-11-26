@@ -202,6 +202,7 @@ body {
 }
 
 .card-container {
+  backface-visibility: hidden;
   position: absolute;
   cursor: pointer;
   width: 100%;
