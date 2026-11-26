@@ -2,7 +2,7 @@ import { useCallback, useEffect, useReducer, useState } from "react";
 import { initialState, testReducer } from "./reducers/testReducer";
 import { compareUserAnswer } from "@shared/helpers";
 import type { SoundNameType } from "@shared/constants/sounds";
-import { useSound } from "./useSound";
+import { useSound } from "@shared/hooks";
 
 export const useTestReducer = (testLength: number | undefined) => {
   const [state, dispatch] = useReducer(testReducer, initialState);
